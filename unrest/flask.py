@@ -1,6 +1,6 @@
 import logging
 
-from flask import request, current_app
+from flask import current_app, jsonify, request
 
 log = logging.getLogger('unrest.flask')
 
@@ -31,3 +31,6 @@ class FlaskUnRest(object):
             (json, '\n'),
             mimetype=current_app.config['JSONIFY_MIMETYPE']
         )
+
+    def send_error(self, message, status_code):
+        return jsonify(message), status_code

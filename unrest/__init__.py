@@ -2,6 +2,13 @@ import json
 
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
+from .marshalling import marshall
+
+
+class RestError(Exception):
+    def __init__(self, message, status):
+        self.message = message
+        self.status = status
 
 
 class Rest(object):
@@ -10,6 +17,7 @@ class Rest(object):
                  methods=['GET'], name=None, only=None, exclude=None):
         self.unrest = unrest
         self.Model = Model
+        self.name = name or self.table.name
         self.methods = methods
         self.only = only
         self.exclude = exclude
@@ -21,6 +29,10 @@ class Rest(object):
         if kwargs:
             pks = self.kwargs_to_pks(kwargs)
             model = self.Model.query.get(pks)
+            if model is None:
+                raise RestError(
+                    '%s(%s) not found' % (self.name, pks), 404)
+
             return self.serialize(model)
 
         models = self.Model.query
@@ -43,7 +55,7 @@ class Rest(object):
 
     def serialize(self, model):
         return {
-            column: getattr(model, column)
+            column.name: marshall(model, column)
             for column in self.columns
         }
 
@@ -59,7 +71,11 @@ class Rest(object):
         def wrapped(**kwargs):
             json = self.unrest.framework.request_json()
             payload = self.unjson(json)
-            data = method(payload, **kwargs)
+            try:
+                data = method(payload, **kwargs)
+            except RestError as e:
+                return self.unrest.framework.send_error(
+                    {'message': e.message}, e.status)
             json = self.json(data)
             return self.unrest.framework.send_json(json)
         return wrapped
@@ -104,15 +120,15 @@ class Rest(object):
     def model_columns(self):
         for column in inspect(self.Model).columns:
             if isinstance(column, Column):
-                yield column.name
+                yield column
 
     @property
     def columns(self):
         for column in self.model_columns:
-            if column not in self.primary_keys:
-                if self.only and column not in self.only:
+            if column.name not in [pk.name for pk in self.primary_keys]:
+                if self.only and column.name not in self.only:
                     continue
-                if self.exclude and column in self.exclude:
+                if self.exclude and column.name in self.exclude:
                     continue
             yield column
 
