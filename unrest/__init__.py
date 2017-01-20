@@ -1,10 +1,13 @@
-from .flask import FlaskUnRest
+import json
+
 from sqlalchemy.inspection import inspect
+from sqlalchemy.schema import Column
 
 
 class Rest(object):
     """Model path on /root_path/schema/model if schema is not public"""
-    def __init__(self, unrest, Model, methods=['GET'], only=None, exclude=[]):
+    def __init__(self, unrest, Model,
+                 methods=['GET'], name=None, only=None, exclude=None):
         self.unrest = unrest
         self.Model = Model
         self.methods = methods
@@ -14,37 +17,68 @@ class Rest(object):
         for method in methods:
             self.register_method(method)
 
-    def get(self, **kwargs):
+    def get(self, payload, **kwargs):
         if kwargs:
             pks = self.kwargs_to_pks(kwargs)
             model = self.Model.query.get(pks)
-            return str(getattr(model, list(kwargs.keys())[0]))
-        models = self.Model.query.all()
-        return str([
-            getattr(model, self.primary_keys[0].name) for model in models])
+            return self.serialize(model)
 
-    def post(self, **kwargs):
+        models = self.Model.query
+        return self.serialize_all(models)
+
+    def post(self, payload, **kwargs):
         pks = self.kwargs_to_pks(kwargs)
         return 'POST %s %s' % ('.'.join(self.name_parts), pks)
 
-    def put(self, **kwargs):
+    def put(self, payload, **kwargs):
         pks = self.kwargs_to_pks(kwargs)
         return 'PUT %s %s' % ('.'.join(self.name_parts), pks)
 
-    def delete(self, **kwargs):
+    def delete(self, payload, **kwargs):
         pks = self.kwargs_to_pks(kwargs)
         return 'DELETE %s %s' % ('.'.join(self.name_parts), pks)
 
     def kwargs_to_pks(self, kwargs):
         return tuple(kwargs.get(pk.name) for pk in self.primary_keys)
 
+    def serialize(self, model):
+        return {
+            column: getattr(model, column)
+            for column in self.columns
+        }
+
+    def serialize_all(self, query):
+        return {
+            'occurences': query.count(),
+            'objects': [
+                self.serialize(model) for model in query  # Pagination ?
+            ]
+        }
+
+    def wrap_native(self, method):
+        def wrapped(**kwargs):
+            json = self.unrest.framework.request_json()
+            payload = self.unjson(json)
+            data = method(payload, **kwargs)
+            json = self.json(data)
+            return self.unrest.framework.send_json(json)
+        return wrapped
+
     def register_method(self, method, method_fun=None):
             method_fun = method_fun or getattr(self, method.lower())
-            method_fun.__func__.__name__ = '_'.join(
-                (method_fun.__func__.__name__,) + self.name_parts)
+            method_fun = self.wrap_native(method_fun)
+            method_fun.__name__ = '_'.join(
+                (method_fun.__name__,) + self.name_parts)
             self.unrest.framework.register_route(
                 self.path, method, self.primary_keys,
                 method_fun)
+
+    def json(self, data):
+        return json.dumps(data)
+
+    def unjson(self, data):
+        if data:
+            return json.loads(data)
 
     @property
     def name_parts(self):
@@ -66,6 +100,22 @@ class Rest(object):
     def primary_keys(self):
         return inspect(self.Model).primary_key
 
+    @property
+    def model_columns(self):
+        for column in inspect(self.Model).columns:
+            if isinstance(column, Column):
+                yield column.name
+
+    @property
+    def columns(self):
+        for column in self.model_columns:
+            if column not in self.primary_keys:
+                if self.only and column not in self.only:
+                    continue
+                if self.exclude and column in self.exclude:
+                    continue
+            yield column
+
 
 class UnRest(object):
     """Root path on /path/version/ if version else /path/ """
@@ -73,7 +123,21 @@ class UnRest(object):
         self.app = app
         self.path = path
         self.version = version
-        self.framework = (framework or FlaskUnRest)(app)
+        if framework:
+            self.framework = framework(app)
+        else:
+            try:
+                from flask import Flask
+            except ImportError:
+                pass
+            else:
+                if isinstance(app, Flask):
+                    from .flask import FlaskUnRest
+                    self.framework = FlaskUnRest(app)
+        if not self.framework:
+            raise NotImplemented(
+                'Your framework %s is not recognized. '
+                'Please provide a framework argument to UnRest' % type(app))
 
     def init_app(self, app):
         self.app = app
