@@ -3,7 +3,7 @@ import logging
 
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
-from .coercers import Serialize
+from .coercers import Serialize, Deserialize
 
 log = logging.getLogger('unrest')
 
@@ -14,11 +14,16 @@ class RestError(Exception):
         self.status = status
 
 
+class BatchNotAllowed(Exception):
+    pass
+
+
 class Rest(object):
     """Model path on /root_path/schema/model if schema is not public"""
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
-                 query=None, query_factory=None, SerializeClass=Serialize):
+                 query=None, query_factory=None, allow_batch=False,
+                 SerializeClass=Serialize, DeserializeClass=Deserialize):
         self.SerializeClass = SerializeClass
 
         self.unrest = unrest
@@ -26,8 +31,9 @@ class Rest(object):
         self.name = name or self.table.name
         self.methods = methods
         self.only = only
+        self.allow_batch = allow_batch
         self.exclude = exclude
-        self._query = query or self.Model.query
+        self._query = query or self.session().query(Model)
         self.query_factory = query_factory
 
         for method in methods:
@@ -36,43 +42,84 @@ class Rest(object):
     def get(self, payload, **kwargs):
         if kwargs:
             pks = self.kwargs_to_pks(kwargs)
-            model = self.query.get(pks)
-            if model is None:
+            item = self.query.filter_by(**pks).first()
+            if item is None:
                 raise RestError(
                     '%s(%s) not found' % (self.name, pks), 404)
 
-            return self.serialize(model)
+            return self.serialize(item)
 
-        models = self.query
-        return self.serialize_all(models)
+        items = self.query
+        return self.serialize_all(items)
 
     def put(self, payload, **kwargs):
-        pks = self.kwargs_to_pks(kwargs)
-        return 'PUT %s %s' % ('.'.join(self.name_parts), pks)
+        if kwargs:
+            pks = self.kwargs_to_pks(kwargs)
+            existingItem = self.query.filter_by(**pks).first()
+            item = self.deserialize(payload, existingItem or self.Model())
+            if existingItem is None:
+                self.session.add(item)
+            self.session.commit()
+            return self.serialize(item)
+
+        if not self.allow_batch:
+            raise BatchNotAllowed(
+                'You must set allow_batch to True '
+                'if you want to use batch methods.')
+
+        self.query.delete()
+        items = self.deserialize_all(payload)
+        self.session.add_all(items)
+        self.session.commit()
+        return self.serialize_all(items)
 
     def post(self, payload, **kwargs):
         if kwargs:
-            # Create a collection ?
+            # Create a collection?
             raise NotImplemented(
                 "You can't create a new collection here. "
                 "If you want to update an item use the PUT method")
 
+        item = self.deserialize(payload, self.Model())
+        self.session.add(item)
+        self.session.commit()
+        return self.serialize(item)
 
     def delete(self, payload, **kwargs):
-        pks = self.kwargs_to_pks(kwargs)
-        return 'DELETE %s %s' % ('.'.join(self.name_parts), pks)
+        if kwargs:
+            pks = self.kwargs_to_pks(kwargs)
+            item = self.query.filter_by(**pks).first()
+            if item:
+                self.session.remove(item)
+            return self.serialize(item)
+
+        if not self.allow_batch:
+            raise BatchNotAllowed(
+                'You must set allow_batch to True '
+                'if you want to use batch methods.')
+
+        items = self.query.all()
+        self.query.delete()
+        self.session.commit()
+        return self.serialize_all(items)
 
     def kwargs_to_pks(self, kwargs):
-        return tuple(kwargs.get(pk.name) for pk in self.primary_keys)
+        return {pk.name: kwargs.get(pk.name) for pk in self.primary_keys}
 
-    def serialize(self, model):
-        return self.SerializeClass(model, self.columns).dict()
+    def deserialize(self, payload, item):
+        return self.DeserializeClass(payload, self.columns).merge(item)
+
+    def deserialize_all(self, payload, items):
+        return self.DeserializeClass(payload, self.columns).create(self.Model)
+
+    def serialize(self, item):
+        return self.SerializeClass(item, self.columns).dict()
 
     def serialize_all(self, query):
         return {
             'occurences': query.count(),
             'objects': [
-                self.serialize(model) for model in query  # Pagination ?
+                self.serialize(item) for item in query  # Pagination ?
             ]
         }
 
@@ -105,6 +152,10 @@ class Rest(object):
     def unjson(self, data):
         if data:
             return json.loads(data)
+
+    @property
+    def session(self):
+        return self.unrest.session
 
     @property
     def query(self):
@@ -151,12 +202,21 @@ class Rest(object):
 
 class UnRest(object):
     """Root path on /path/version/ if version else /path/ """
-    def __init__(self, app=None, path='/api', version='', framework=None):
-        self.app = app
+    def __init__(self,
+                 app=None, session=None,
+                 path='/api', version='', framework=None):
         self.path = path
         self.version = version
-        if framework:
-            self.framework = framework(app)
+        self._framework = framework
+        if app is not None:
+            self.init_app(app)
+        if session is not None:
+            self.init_session(session)
+
+    def init_app(self, app):
+        self.app = app
+        if self._framework:
+            self.framework = self._framework(app)
         else:
             try:
                 from flask import Flask
@@ -171,8 +231,8 @@ class UnRest(object):
                 'Your framework %s is not recognized. '
                 'Please provide a framework argument to UnRest' % type(app))
 
-    def init_app(self, app):
-        self.app = app
+    def init_session(self, session):
+        self.session = session
 
     @property
     def root_path(self):

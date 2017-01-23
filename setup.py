@@ -40,6 +40,7 @@ setup(
     packages=find_packages(),
     provides=['unrest'],
     keywords=['rest', 'api', 'sqlalchemy'],
+    install_requires=['python-dateutil'],
     setup_requires=['pytest-runner'],
     test_requires=tests_requirements,
     extras_require={
