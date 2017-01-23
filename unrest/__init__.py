@@ -17,7 +17,10 @@ class RestError(Exception):
 class Rest(object):
     """Model path on /root_path/schema/model if schema is not public"""
     def __init__(self, unrest, Model,
-                 methods=['GET'], name=None, only=None, exclude=None):
+                 methods=['GET'], name=None, only=None, exclude=None,
+                 SerializeClass=Serialize):
+        self.SerializeClass = SerializeClass
+
         self.unrest = unrest
         self.Model = Model
         self.name = name or self.table.name
@@ -57,7 +60,7 @@ class Rest(object):
         return tuple(kwargs.get(pk.name) for pk in self.primary_keys)
 
     def serialize(self, model):
-        return Serialize(model, self.columns).dict()
+        return self.SerializeClass(model, self.columns).dict()
 
     def serialize_all(self, query):
         return {
@@ -75,7 +78,8 @@ class Rest(object):
                 data = method(payload, **kwargs)
             except RestError as e:
                 json = {'message': e.message}
-                return self.unrest.framework.send_error({'message': e.message}, e.stat)
+                return self.unrest.framework.send_error(
+                    {'message': e.message}, e.status)
             json = self.json(data)
             return self.unrest.framework.send_json(json)
         return wrapped
