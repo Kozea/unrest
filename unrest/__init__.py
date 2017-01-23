@@ -1,8 +1,11 @@
 import json
+import logging
 
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
-from .marshalling import marshall
+from unrest.coercers import Serialize
+
+log = logging.getLogger('unrest')
 
 
 class RestError(Exception):
@@ -54,10 +57,7 @@ class Rest(object):
         return tuple(kwargs.get(pk.name) for pk in self.primary_keys)
 
     def serialize(self, model):
-        return {
-            column.name: marshall(model, column)
-            for column in self.columns
-        }
+        return Serialize(model, self.columns).dict()
 
     def serialize_all(self, query):
         return {
@@ -74,8 +74,8 @@ class Rest(object):
             try:
                 data = method(payload, **kwargs)
             except RestError as e:
-                return self.unrest.framework.send_error(
-                    {'message': e.message}, e.status)
+                json = {'message': e.message}
+                return self.unrest.framework.send_error({'message': e.message}, e.stat)
             json = self.json(data)
             return self.unrest.framework.send_json(json)
         return wrapped
