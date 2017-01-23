@@ -3,7 +3,7 @@ import logging
 
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
-from unrest.coercers import Serialize
+from .coercers import Serialize
 
 log = logging.getLogger('unrest')
 
@@ -18,7 +18,7 @@ class Rest(object):
     """Model path on /root_path/schema/model if schema is not public"""
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
-                 SerializeClass=Serialize):
+                 query=None, query_factory=None, SerializeClass=Serialize):
         self.SerializeClass = SerializeClass
 
         self.unrest = unrest
@@ -27,6 +27,8 @@ class Rest(object):
         self.methods = methods
         self.only = only
         self.exclude = exclude
+        self._query = query or self.Model.query
+        self.query_factory = query_factory
 
         for method in methods:
             self.register_method(method)
@@ -34,23 +36,27 @@ class Rest(object):
     def get(self, payload, **kwargs):
         if kwargs:
             pks = self.kwargs_to_pks(kwargs)
-            model = self.Model.query.get(pks)
+            model = self.query.get(pks)
             if model is None:
                 raise RestError(
                     '%s(%s) not found' % (self.name, pks), 404)
 
             return self.serialize(model)
 
-        models = self.Model.query
+        models = self.query
         return self.serialize_all(models)
-
-    def post(self, payload, **kwargs):
-        pks = self.kwargs_to_pks(kwargs)
-        return 'POST %s %s' % ('.'.join(self.name_parts), pks)
 
     def put(self, payload, **kwargs):
         pks = self.kwargs_to_pks(kwargs)
         return 'PUT %s %s' % ('.'.join(self.name_parts), pks)
+
+    def post(self, payload, **kwargs):
+        if kwargs:
+            # Create a collection ?
+            raise NotImplemented(
+                "You can't create a new collection here. "
+                "If you want to update an item use the PUT method")
+
 
     def delete(self, payload, **kwargs):
         pks = self.kwargs_to_pks(kwargs)
@@ -99,6 +105,12 @@ class Rest(object):
     def unjson(self, data):
         if data:
             return json.loads(data)
+
+    @property
+    def query(self):
+        if self.query_factory:
+            return self.query_factory(self._query)
+        return self._query
 
     @property
     def name_parts(self):
