@@ -18,6 +18,40 @@ def test_get_tree(rest, http):
     ]
 
 
+def test_get_tree_name(rest, http):
+    rest(Tree, name='forest')
+    code, json = http.get('/api/forest')
+    assert code == 200
+    assert json['occurences'] == 3
+    assert idsorted(json['objects']) == [
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+    ]
+
+
+def test_get_tree_query(rest, http, db):
+    base_query = db.session.query(Tree).filter(Tree.id > 1)
+    rest(Tree, query=base_query)
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 2
+    assert idsorted(json['objects']) == [
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+    ]
+
+
+def test_get_tree_query_factory(rest, http, db):
+    rest(Tree, query_factory=lambda q: q.filter(Tree.id < 2))
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 1
+    assert idsorted(json['objects']) == [
+        {'id': 1, 'name': 'pine'}
+    ]
+
+
 def test_get_fruits(rest, http):
     rest(Tree)
     rest(Fruit)

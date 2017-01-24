@@ -50,7 +50,7 @@ class Rest(object):
             item = self.query.filter_by(**pks).first()
             if item is None:
                 raise RestError(
-                    '%s(%s) not found' % (self.name, pks), 404)
+                    '%s(%r) not found' % (self.name, pks), 404)
 
             return self.serialize([item])
 
@@ -180,9 +180,9 @@ class Rest(object):
 
     @property
     def name_parts(self):
-        if self.table.schema:
-            return (self.table.schema, self.table.name)
-        return (self.table.name,)
+        if self.name == self.table.name and self.table.schema:
+            return (self.table.schema, self.name)
+        return (self.name,)
 
     @property
     def path(self):
