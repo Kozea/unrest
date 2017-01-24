@@ -41,7 +41,9 @@ class UnRest(object):
 
     @property
     def root_path(self):
-        return '/'.join((self.path, self.version))
+        if self.version:
+            return '/'.join((self.path, self.version))
+        return self.path
 
     def __call__(self, *args, **kwargs):
         rest = Rest(self, *args, **kwargs)

@@ -183,9 +183,7 @@ class Rest(object):
 
     @property
     def path(self):
-        return '%s%s' % (
-            self.unrest.root_path,
-            '/'.join(self.name_parts))
+        return '/'.join((self.unrest.root_path,) + self.name_parts)
 
     @property
     def table(self):

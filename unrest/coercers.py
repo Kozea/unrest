@@ -40,7 +40,6 @@ class Serialize(object):
 
     def serialize_datetime(self, type, data):
         return data.isoformat()
-
     serialize_date = serialize_datetime
     serialize_time = serialize_datetime
 
@@ -49,6 +48,7 @@ class Serialize(object):
 
     def serialize_decimal(self, type, data):
         return float(data)
+    serialize_numeric = serialize_decimal
 
 
 class Deserialize(object):
@@ -96,3 +96,4 @@ class Deserialize(object):
 
     def deserialize_decimal(self, type, data):
         return decimal.Decimal(data)
+    deserialize_numeric = deserialize_decimal

@@ -3,7 +3,7 @@
 # This file is part of unrest
 #
 # A troubling rest api library for sqlalchemy models
-# Copyright © 2016 Kozea Florian Mounier
+# Copyright © 2017 Kozea Florian Mounier
 #
 # This library is free software: you can redistribute it and/or modify it under
 # the terms of the GNU Lesser General Public License as published by the Free
@@ -25,13 +25,14 @@ __version__ = '0.0.1'
 
 tests_requirements = [
     'pytest-runner', 'pytest-cov', 'pytest-flake8', 'pytest-isort',
-    'pytest'
+    'pytest', 'flask', 'flask-sqlalchemy'
 ]
 
 setup(
     name="unrest",
     version=__version__,
-    description="A troubling rest api library for sqlalchemy models (pre-release)",
+    description="A troubling rest api library for sqlalchemy models "
+    "(pre-release)",
     author="Kozea",
     url="http://pygal.org/",
     author_email="florian.mounier@kozea.fr",
@@ -39,8 +40,8 @@ setup(
     platforms="Any",
     packages=find_packages(),
     provides=['unrest'],
-    keywords=['rest', 'api', 'sqlalchemy'],
-    install_requires=['python-dateutil'],
+    keywords=['rest', 'flask', 'api', 'sqlalchemy'],
+    install_requires=['sqlalchemy', 'python-dateutil'],
     setup_requires=['pytest-runner'],
     test_requires=tests_requirements,
     extras_require={
