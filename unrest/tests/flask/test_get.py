@@ -1,4 +1,4 @@
-from ..model import Tree, Fruit
+from ..model import Fruit, Tree
 
 
 def idsorted(it, key='id'):
@@ -55,5 +55,90 @@ def test_get_fruits(rest, http):
             'size': 100.0,
             'age': 7200.000012,
             'tree_id': 2
+        }
+    ]
+
+
+def test_get_fruits_only(rest, http):
+    rest(Fruit, only=['color', 'size'])
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'grey',
+            'size': 12.0
+        }, {
+            'fruit_id': 2,
+            'color': 'darkgrey',
+            'size': 23.0
+        }, {
+            'fruit_id': 3,
+            'color': 'brown',
+            'size': 2.12
+        }, {
+            'fruit_id': 4,
+            'color': 'red',
+            'size': 0.5
+        }, {
+            'fruit_id': 5,
+            'color': 'orangered',
+            'size': 100.0
+        }
+    ]
+
+
+def test_get_fruits_exclude(rest, http):
+    rest(Fruit, exclude=['color', 'age'])
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'size': 12.0,
+            'tree_id': 1
+        }, {
+            'fruit_id': 2,
+            'size': 23.0,
+            'tree_id': 1
+        }, {
+            'fruit_id': 3,
+            'size': 2.12,
+            'tree_id': 1
+        }, {
+            'fruit_id': 4,
+            'size': 0.5,
+            'tree_id': 2
+        }, {
+            'fruit_id': 5,
+            'size': 100.0,
+            'tree_id': 2
+        }
+    ]
+
+
+def test_get_fruits_only_exclude(rest, http):
+    rest(Fruit, only=['color', 'size'], exclude=['color', 'age'])
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'size': 12.0
+        }, {
+            'fruit_id': 2,
+            'size': 23.0
+        }, {
+            'fruit_id': 3,
+            'size': 2.12
+        }, {
+            'fruit_id': 4,
+            'size': 0.5
+        }, {
+            'fruit_id': 5,
+            'size': 100.0
         }
     ]

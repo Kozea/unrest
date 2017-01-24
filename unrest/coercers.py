@@ -63,8 +63,7 @@ class Deserialize(object):
 
     def create(self, factory):
         return [
-            items.append(self.merge(factory(), item))
-            for item in self.payload['objects']]
+            self.merge(factory(), item) for item in self.payload['objects']]
 
     def deserialize(self, column, payload=None):
         return self._deserialize(

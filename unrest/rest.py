@@ -46,7 +46,7 @@ class Rest(object):
             self.register_method(method)
 
     def get(self, payload, **pks):
-        if all(val is not None for val in pks.values()):
+        if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item is None:
                 raise RestError(
@@ -58,7 +58,7 @@ class Rest(object):
         return self.serialize(items, self.query.count())
 
     def put(self, payload, **pks):
-        if all(val is not None for val in pks.values()):
+        if self.has(pks):
             existingItem = self.query.filter_by(**pks).first()
             item = self.deserialize(payload, existingItem or self.Model())
             if existingItem is None:
@@ -78,7 +78,7 @@ class Rest(object):
         return self.serialize(items, self.query.count())
 
     def post(self, payload, **pks):
-        if kwargs:
+        if self.has(pks):
             # Create a collection?
             raise NotImplemented(
                 "You can't create a new collection here. "
@@ -90,7 +90,7 @@ class Rest(object):
         return self.serialize([item])
 
     def delete(self, payload, **pks):
-        if all(val is not None for val in pks.values()):
+        if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item:
                 self.session.remove(item)
@@ -164,6 +164,9 @@ class Rest(object):
     def unjson(self, data):
         if data:
             return json.loads(data)
+
+    def has(self, pks):
+        return all(val is not None for val in pks.values())
 
     @property
     def session(self):
