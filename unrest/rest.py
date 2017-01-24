@@ -112,7 +112,11 @@ class Rest(object):
         return register_fun
 
     def kwargs_to_pks(self, kwargs):
-        return {pk.name: kwargs.get(pk.name) for pk in self.primary_keys}
+        if not kwargs:
+            return {}
+        item = self.Model()
+        self.DeserializeClass(kwargs, self.primary_keys).merge(item)
+        return {pk.name: getattr(item, pk.name) for pk in self.primary_keys}
 
     def deserialize(self, payload, item):
         return self.DeserializeClass(payload, self.columns).merge(item)
@@ -166,7 +170,7 @@ class Rest(object):
             return json.loads(data)
 
     def has(self, pks):
-        return all(val is not None for val in pks.values())
+        return pks and all(val is not None for val in pks.values())
 
     @property
     def session(self):

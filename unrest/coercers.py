@@ -67,7 +67,7 @@ class Deserialize(object):
 
     def deserialize(self, column, payload=None):
         return self._deserialize(
-            column.type, getattr(payload or self.payload, column.name))
+            column.type, (payload or self.payload)[column.name])
 
     def _deserialize(self, type, data):
         if data is None:
@@ -92,6 +92,9 @@ class Deserialize(object):
 
     def deserialize_interval(self, type, data):
         return datetime.timedelta(seconds=data)
+
+    def deserialize_integer(self, type, data):
+        return int(data)
 
     def deserialize_decimal(self, type, data):
         return decimal.Decimal(data)

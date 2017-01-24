@@ -1,5 +1,5 @@
 from unrest import UnRest
-from unrest.flask import FlaskUnRest
+from unrest.flask_framework import FlaskUnRest
 
 from ..model import Tree
 

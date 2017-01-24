@@ -29,7 +29,7 @@ class UnRest(object):
                 pass
             else:
                 if isinstance(app, Flask):
-                    from .flask import FlaskUnRest
+                    from .flask_framework import FlaskUnRest
                     self.framework = FlaskUnRest(app)
         if not self.framework:
             raise NotImplemented(
