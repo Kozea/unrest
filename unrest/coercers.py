@@ -82,17 +82,17 @@ class Deserialize(object):
 
         return data
 
-    def _deserialize_datetime(self, type, data):
+    def deserialize_datetime(self, type, data):
         return dateutil.parser.parse(data)
 
-    def _deserialize_date(self, type, data):
+    def deserialize_date(self, type, data):
         return dateutil.parser.parse(data).date()
 
-    def _deserialize_time(self, type, data):
+    def deserialize_time(self, type, data):
         return dateutil.parser.parse(data).time()
 
-    def _deserialize_interval(self, type, data):
+    def deserialize_interval(self, type, data):
         return datetime.timedelta(seconds=data)
 
-    def _deserialize_decimal(self, type, data):
+    def deserialize_decimal(self, type, data):
         return decimal.Decimal(data)
