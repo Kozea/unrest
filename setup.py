@@ -20,7 +20,7 @@
 
 from setuptools import setup, find_packages
 
-__version__ = '0.1.0'
+__version__ = '0.0.1'
 
 
 tests_requirements = [
@@ -31,7 +31,7 @@ tests_requirements = [
 setup(
     name="unrest",
     version=__version__,
-    description="A troubling rest api library for sqlalchemy models",
+    description="A troubling rest api library for sqlalchemy models (pre-release)",
     author="Kozea",
     url="http://pygal.org/",
     author_email="florian.mounier@kozea.fr",
@@ -47,7 +47,7 @@ setup(
         'test': tests_requirements
     },
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 2 - Pre-Alpha",
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: "
