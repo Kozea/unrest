@@ -29,3 +29,22 @@ To activate data modification, set the methods array like this:
 rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE'])
 ```
 You will get both routes on the four methods. Please see [the wikipedia page](https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URL_and_HTTP_methods) for their signification.
+
+You can also override the default methods like this:
+
+```python
+person = rest(Person)
+
+@person.declare('GET')
+def get(payload, login=None):
+    # Pre get hook
+    if login:
+        login = login.upper()
+    rv = person.get(payload, login=login)
+    # Post get hook
+    return {
+        'occurences': rv['occurences'],
+        'objects': [
+            {'login': person['login'].lower()} for person in rv['objects']
+        ]
+    }
