@@ -14,6 +14,11 @@ from ..model import Base, fill_data
 
 class HTTPClient(FlaskClient):
     def open(self, *args, **kwargs):
+        json_data = kwargs.pop('json', '')
+        if json_data:
+            kwargs.setdefault('data', json.dumps(json_data))
+            kwargs.setdefault('content_type', 'application/json')
+
         response = super(HTTPClient, self).open(*args, **kwargs)
 
         if response.content_type == 'application/json':

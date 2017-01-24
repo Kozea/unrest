@@ -59,6 +59,13 @@ class Rest(object):
 
     def put(self, payload, **pks):
         if self.has(pks):
+            for pk, val in pks.items():
+                if pk in payload:
+                    assert payload[pk] == val, (
+                        'Incoherent primary_key (%s) in payload (%r) '
+                        'and url (%r) for PUT' % (pk, payload[pk], val))
+                else:
+                    payload[pk] = val
             existingItem = self.query.filter_by(**pks).first()
             item = self.deserialize(payload, existingItem or self.Model())
             if existingItem is None:
@@ -209,10 +216,12 @@ class Rest(object):
 
     @property
     def columns(self):
-        for column in self.model_columns:
-            if column.name not in [pk.name for pk in self.primary_keys]:
-                if self.only and column.name not in self.only:
-                    continue
-                if self.exclude and column.name in self.exclude:
-                    continue
-            yield column
+        def gen():
+            for column in self.model_columns:
+                if column.name not in [pk.name for pk in self.primary_keys]:
+                    if self.only and column.name not in self.only:
+                        continue
+                    if self.exclude and column.name in self.exclude:
+                        continue
+                yield column
+        return list(gen())
