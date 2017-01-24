@@ -99,9 +99,12 @@ class Rest(object):
     def delete(self, payload, **pks):
         if self.has(pks):
             item = self.query.filter_by(**pks).first()
-            if item:
-                self.session.remove(item)
-            return self.serialize(item, self.query.filter_by(**pks).count())
+            if item is None:
+                raise RestError(
+                    '%s(%r) not found' % (self.name, pks), 404)
+            self.session.delete(item)
+            self.session.commit()
+            return self.serialize([item])
 
         if not self.allow_batch:
             raise BatchNotAllowed(
@@ -109,9 +112,10 @@ class Rest(object):
                 'if you want to use batch methods.')
 
         items = self.query.all()
+        count = self.query.count()
         self.query.delete()
         self.session.commit()
-        return self.serialize(items, self.query.count())
+        return self.serialize(items, count)
 
     def declare(self, method):
         def register_fun(fun):
