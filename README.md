@@ -1,19 +1,14 @@
 # unrest
-### A troubling rest api library for sqlalchemy models
+## A troubling rest api library for sqlalchemy models
 
-## This is a work in progress
 
-## Simple sqlalchemy rest api generation.
-
-### Usage (Flask, Tornado, ...)
+*Simple sqlalchemy rest api generation.*
 
 
 ```python
 
 from unrest import UnRest
-rest = UnRest(app)
-
-###
+rest = UnRest(app)  # Flask app or a tornado appilcation (coming soon) or anything else (you will have to implement the framework class)
 
 from .model import Person
 
