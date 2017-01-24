@@ -52,10 +52,10 @@ class Rest(object):
                 raise RestError(
                     '%s(%s) not found' % (self.name, pks), 404)
 
-            return self.serialize(item)
+            return self.serialize([item])
 
         items = self.query
-        return self.serialize_all(items)
+        return self.serialize(items, self.query.count())
 
     def put(self, payload, **pks):
         if all(val is not None for val in pks.values()):
@@ -64,7 +64,7 @@ class Rest(object):
             if existingItem is None:
                 self.session.add(item)
             self.session.commit()
-            return self.serialize(item)
+            return self.serialize([item])
 
         if not self.allow_batch:
             raise BatchNotAllowed(
@@ -75,7 +75,7 @@ class Rest(object):
         items = self.deserialize_all(payload)
         self.session.add_all(items)
         self.session.commit()
-        return self.serialize_all(items)
+        return self.serialize(items, self.query.count())
 
     def post(self, payload, **pks):
         if kwargs:
@@ -87,14 +87,14 @@ class Rest(object):
         item = self.deserialize(payload, self.Model())
         self.session.add(item)
         self.session.commit()
-        return self.serialize(item)
+        return self.serialize([item])
 
     def delete(self, payload, **pks):
         if all(val is not None for val in pks.values()):
             item = self.query.filter_by(**pks).first()
             if item:
                 self.session.remove(item)
-            return self.serialize(item)
+            return self.serialize(item, self.query.filter_by(**pks).count())
 
         if not self.allow_batch:
             raise BatchNotAllowed(
@@ -104,7 +104,7 @@ class Rest(object):
         items = self.query.all()
         self.query.delete()
         self.session.commit()
-        return self.serialize_all(items)
+        return self.serialize(items, self.query.count())
 
     def declare(self, method):
         def register_fun(fun):
@@ -117,20 +117,19 @@ class Rest(object):
     def deserialize(self, payload, item):
         return self.DeserializeClass(payload, self.columns).merge(item)
 
-    def deserialize_all(self, payload, items):
+    def deserialize_all(self, payload):
         return self.DeserializeClass(payload, self.columns).create(self.Model)
 
-    def serialize(self, item):
-        return {
-            'occurences': 1,
-            'objects': [self.SerializeClass(item, self.columns).dict()]
-        }
+    def serialize_object(self, item):
+        return self.SerializeClass(item, self.columns).dict()
 
-    def serialize_all(self, query):
+    def serialize(self, items, count=None):
+        if count is None:
+            count = len(items)
         return {
-            'occurences': query.count(),
+            'occurences': count,
             'objects': [
-                self.serialize(item) for item in query  # Pagination?
+                self.serialize_object(item) for item in items  # Pagination?
             ]
         }
 

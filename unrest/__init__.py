@@ -1,6 +1,6 @@
 import logging
 
-from . import Rest
+from .rest import Rest
 
 log = logging.getLogger('unrest')
 
