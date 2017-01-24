@@ -66,8 +66,10 @@ class Deserialize(object):
             self.merge(factory(), item) for item in self.payload['objects']]
 
     def deserialize(self, column, payload=None):
-        return self._deserialize(
-            column.type, (payload or self.payload)[column.name])
+        payload = payload or self.payload
+        if column.name not in payload:
+            return None
+        return self._deserialize(column.type, payload[column.name])
 
     def _deserialize(self, type, data):
         if data is None:

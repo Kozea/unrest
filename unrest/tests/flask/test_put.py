@@ -1,4 +1,4 @@
-from ..model import Fruit, Tree
+from ..model import Tree
 
 
 def idsorted(it, key='id'):
