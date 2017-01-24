@@ -156,8 +156,9 @@ class Rest(object):
     def register_method(self, method, method_fun=None):
             method_fun = method_fun or getattr(self, method.lower())
             method_fun = self.wrap_native(method_fun)
-            method_fun.__name__ = '_'.join(
-                ('unrest', method) + self.name_parts)
+            # str() for python 2 compat
+            method_fun.__name__ = str('_'.join(
+                ('unrest', method) + self.name_parts))
             self.unrest.framework.register_route(
                 self.path, method, self.primary_keys,
                 method_fun)
