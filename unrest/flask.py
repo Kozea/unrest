@@ -17,6 +17,8 @@ class FlaskUnRest(object):
             '<%s>' % param.name for param in parameters)
         log.info(
             'Registering route for %s for %s' % (path_with_params, method))
+        if self.app.view_functions.pop(fun.__name__, None):
+            log.info('Overriding route %s' % fun.__name__)
         self.app.route(path, methods=[method])(
             self.app.route(path_with_params, methods=[method])(
                 fun))

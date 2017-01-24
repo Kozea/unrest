@@ -1,9 +1,11 @@
 import json
 import logging
+from functools import wraps
 
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
-from .coercers import Serialize, Deserialize
+
+from .coercers import Deserialize, Serialize
 
 log = logging.getLogger('unrest')
 
@@ -19,7 +21,10 @@ class BatchNotAllowed(Exception):
 
 
 class Rest(object):
-    """Model path on /root_path/schema/model if schema is not public"""
+    """
+    This is the entry point for generating a REST endpoint for a specific model
+    It takes the Unrest instance given by calling it.
+    """
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
                  query=None, query_factory=None, allow_batch=False,
@@ -39,9 +44,8 @@ class Rest(object):
         for method in methods:
             self.register_method(method)
 
-    def get(self, payload, **kwargs):
-        if kwargs:
-            pks = self.kwargs_to_pks(kwargs)
+    def get(self, payload, **pks):
+        if all(val is not None for val in pks.values()):
             item = self.query.filter_by(**pks).first()
             if item is None:
                 raise RestError(
@@ -52,9 +56,8 @@ class Rest(object):
         items = self.query
         return self.serialize_all(items)
 
-    def put(self, payload, **kwargs):
-        if kwargs:
-            pks = self.kwargs_to_pks(kwargs)
+    def put(self, payload, **pks):
+        if all(val is not None for val in pks.values()):
             existingItem = self.query.filter_by(**pks).first()
             item = self.deserialize(payload, existingItem or self.Model())
             if existingItem is None:
@@ -73,7 +76,7 @@ class Rest(object):
         self.session.commit()
         return self.serialize_all(items)
 
-    def post(self, payload, **kwargs):
+    def post(self, payload, **pks):
         if kwargs:
             # Create a collection?
             raise NotImplemented(
@@ -85,9 +88,8 @@ class Rest(object):
         self.session.commit()
         return self.serialize(item)
 
-    def delete(self, payload, **kwargs):
-        if kwargs:
-            pks = self.kwargs_to_pks(kwargs)
+    def delete(self, payload, **pks):
+        if all(val is not None for val in pks.values()):
             item = self.query.filter_by(**pks).first()
             if item:
                 self.session.remove(item)
@@ -102,6 +104,11 @@ class Rest(object):
         self.query.delete()
         self.session.commit()
         return self.serialize_all(items)
+
+    def declare(self, method):
+        def register_fun(fun):
+            self.register_method(method, fun)
+        return register_fun
 
     def kwargs_to_pks(self, kwargs):
         return {pk.name: kwargs.get(pk.name) for pk in self.primary_keys}
@@ -119,16 +126,18 @@ class Rest(object):
         return {
             'occurences': query.count(),
             'objects': [
-                self.serialize(item) for item in query  # Pagination ?
+                self.serialize(item) for item in query  # Pagination?
             ]
         }
 
     def wrap_native(self, method):
+        @wraps(method)
         def wrapped(**kwargs):
+            pks = self.kwargs_to_pks(kwargs)
             json = self.unrest.framework.request_json()
             payload = self.unjson(json)
             try:
-                data = method(payload, **kwargs)
+                data = method(payload, **pks)
             except RestError as e:
                 json = {'message': e.message}
                 return self.unrest.framework.send_error(
@@ -141,7 +150,7 @@ class Rest(object):
             method_fun = method_fun or getattr(self, method.lower())
             method_fun = self.wrap_native(method_fun)
             method_fun.__name__ = '_'.join(
-                (method_fun.__name__,) + self.name_parts)
+                ('unrest', method) + self.name_parts)
             self.unrest.framework.register_route(
                 self.path, method, self.primary_keys,
                 method_fun)
