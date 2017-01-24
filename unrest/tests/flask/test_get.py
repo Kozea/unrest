@@ -176,3 +176,46 @@ def test_get_fruits_only_exclude(rest, http):
             'size': 100.0
         }
     ]
+
+
+def test_no_method(rest, http):
+    rest(Fruit, methods=[])
+    code, json = http.get('/api/fruit')
+    assert code == 404
+
+
+def test_get_custom(rest, http):
+    fruit = rest(Fruit)
+
+    @fruit.declare('GET')
+    def get(payload, fruit_id=None):
+        return {'Hey': 'Overridden'}
+
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json == {'Hey': 'Overridden'}
+
+
+def test_get_custom_extend(rest, http):
+    fruit = rest(Fruit)
+
+    @fruit.declare('GET')
+    def get(payload, fruit_id=None):
+        rv = fruit.get(payload, fruit_id=fruit_id)
+        return {
+            'occurences': rv['occurences'],
+            'objects': [
+                {'id': fruit['fruit_id']} for fruit in rv['objects']
+            ]
+        }
+
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert idsorted(json['objects']) == [
+        {'id': 1},
+        {'id': 2},
+        {'id': 3},
+        {'id': 4},
+        {'id': 5}
+    ]

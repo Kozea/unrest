@@ -16,6 +16,14 @@ def test_get_pk_tree(rest, http):
     ]
 
 
+def test_get_pk_unknown_tree(rest, http):
+    rest(Tree)
+    rest(Fruit)
+    code, json = http.get('/api/tree/6')
+    assert code == 404
+    assert json['message'] == "tree({'id': 6}) not found"
+
+
 def test_get_pk_tree_name(rest, http):
     rest(Tree, name='forest')
     code, json = http.get('/api/forest/2')
@@ -116,5 +124,45 @@ def test_get_pk_fruits_only_exclude(rest, http):
         {
             'fruit_id': 4,
             'size': 0.5
+        }
+    ]
+
+
+def test_no_method(rest, http):
+    rest(Fruit, methods=[])
+    code, json = http.get('/api/fruit/1')
+    assert code == 404
+
+
+def test_get_custom(rest, http):
+    fruit = rest(Fruit)
+
+    @fruit.declare('GET')
+    def get(payload, fruit_id=None):
+        return {'Hey': 'Overridden'}
+
+    code, json = http.get('/api/fruit/3')
+    assert code == 200
+    assert json == {'Hey': 'Overridden'}
+
+
+def test_get_custom_extend(rest, http):
+    fruit = rest(Fruit)
+
+    @fruit.declare('GET')
+    def get(payload, fruit_id=None):
+        fruit_id += 1
+        return fruit.get(payload, fruit_id=fruit_id)
+
+    code, json = http.get('/api/fruit/4')
+    assert code == 200
+    assert json['occurences'] == 1
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 5,
+            'color': 'orangered',
+            'size': 100.0,
+            'age': 7200.000012,
+            'tree_id': 2
         }
     ]
