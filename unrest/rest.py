@@ -17,7 +17,27 @@ class BatchNotAllowed(Exception):
 class Rest(object):
     """
     This is the entry point for generating a REST endpoint for a specific model
-    It takes the Unrest instance given by calling it.
+    The final uri if the path is '/api' and version 'v2' would be:
+    `/api/v2/model` and `/api/v2/model/pk1/pk2` if model is not in public schema
+    `/api/v2/schema/model` and `/api/v2/schema/model/pk1/pk2`
+
+    # Arguments
+        unrest: The unrest instance given automatically on UnRest call.
+        Model: The sqlalchemy orm model class.
+        methods: The allowed method list on this endpoint. Possible values are
+            GET, PUT, POST, DELETE and rest.all
+        name: If specified replaces the model name in url
+            (and the schema if any).
+        only: If specified restricts the json fields to this list.
+        exclude: If specified removes the json fields in this list.
+        query: A function that takes the Model query and returns your specific
+            query. Can be useful to filter data for all the methods.
+        allow_batch: Allow batch operations: PUT and DELETE without primary key
+        auth: A decorator that will always be called
+        read_auth: A decorator that will be called on GET
+        write_auth: A decorator that will be called on PUT, POST and DELETE
+        SerializeClass: An alternative #Serialize class.
+        DeserializeClass: An alternative #Deserialize class.
     """
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
@@ -45,6 +65,7 @@ class Rest(object):
             self.register_method(method)
 
     def get(self, payload, **pks):
+        """The GET method"""
         if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item is None:
@@ -56,6 +77,7 @@ class Rest(object):
         return self.serialize(items, self.query.count())
 
     def put(self, payload, **pks):
+        """The PUT method"""
         if self.has(pks):
             for pk, val in pks.items():
                 if pk in payload:
@@ -83,6 +105,7 @@ class Rest(object):
         return self.serialize(items, self.query.count())
 
     def post(self, payload, **pks):
+        """The POST method"""
         if self.has(pks):
             # Create a collection?
             raise NotImplementedError(
@@ -95,6 +118,7 @@ class Rest(object):
         return self.serialize([item])
 
     def delete(self, payload, **pks):
+        """The DELETE method"""
         if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item is None:
@@ -116,6 +140,13 @@ class Rest(object):
         return self.serialize(items, count)
 
     def declare(self, method):
+        """
+        A decorator to register an alternative method.
+        The origial is still callable with rest.{method}
+
+        # Arguments
+            method: The method to override ('GET' for exemple)
+        """
         def register_fun(fun):
             self.register_method(method, fun)
         return register_fun
@@ -174,6 +205,7 @@ class Rest(object):
         return wrapped
 
     def register_method(self, method, method_fun=None):
+            assert method in self.unrest.all, 'Unknown method %s' % method
             method_fun = method_fun or getattr(self, method.lower())
             method_fun = self.wrap_native(method, method_fun)
             # str() for python 2 compat

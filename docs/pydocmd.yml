@@ -2,7 +2,8 @@ site_name: unrest Documentation
 repo_url: https://github.com/Kozea/unrest
 generate:
 - unrest.md:
-  - unrest.UnRest+
+  - unrest.UnRest+:
+    - unrest.UnRest.__call__
 - rest.md:
   - unrest.rest:
     - unrest.rest.Rest+

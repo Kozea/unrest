@@ -103,10 +103,15 @@ class UnRest(object):
         Raise an error that will be handled by the rest wrapper, which
         will return a json response with status as HTTP status code
         and message as content.
+
+        # Arguments
+            status: The http status code corresponding to the error
+                (404 for instance)
+            message: The message that will be returned in the json response
         """
         raise self.RestError(status, message)
 
     def __call__(self, *args, **kwargs):
-        """Returns a #unrest.Rest instance."""
+        """Returns a #unrest.Rest instance. See rest entry points."""
         rest = Rest(self, *args, **kwargs)
         return rest
