@@ -35,7 +35,8 @@ def test_get_pk_tree_name(rest, http):
 
 
 def test_get_pk_tree_query(rest, http, db):
-    base_query = lambda q: db.session.query(Tree).filter(Tree.id > 1)
+    def base_query(q):
+        return db.session.query(Tree).filter(Tree.id > 1)
     rest(Tree, query=base_query)
     code, json = http.get('/api/tree/2')
     assert code == 200
@@ -46,7 +47,8 @@ def test_get_pk_tree_query(rest, http, db):
 
 
 def test_get_pk_tree_query_not_found(rest, http, db):
-    base_query = lambda q: db.session.query(Tree).filter(Tree.id > 1)
+    def base_query(q):
+        return db.session.query(Tree).filter(Tree.id > 1)
     rest(Tree, query=base_query)
     code, json = http.get('/api/tree/1')
     assert code == 404
