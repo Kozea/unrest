@@ -8,7 +8,7 @@
 ```python
 
 from unrest import UnRest
-rest = UnRest(app)  # Flask app or a tornado appilcation (coming soon) or anything else (you will have to implement the framework class)
+rest = UnRest(app)  # Flask app or a tornado application (coming soon) or anything else (you will have to implement the framework class)
 
 from .model import Person
 
