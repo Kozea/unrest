@@ -17,13 +17,18 @@
         },
         {
             "location": "/unrest/",
-            "text": "UnRest\n\n\nUnRest(app=None, session=None, path='/api', version='', framework=None)\n\n\n\n\nA troubling rest api library for sqlalchemy models.\nThis is the main entry point of unrest.\n\n\nCommon usage is as following:\n\n\nrest = UnRest(app, session)  # app is your application\n# When called, it instanciate a `Rest` object that will register the\n# REST endpoints. See the `Rest` class.\nrest(Model1)\nrest(Model2)\n\n\n\n\nArguments\n\n\n\n\napp\n: Your web application,\n        can be set afterwards using \nUnRest.init_app\n\n\nsession\n: Your sqlalchemy session,\n        can be set afterwards using \nUnRest.init_session\n\n        and \ninit_session\n method.\n\n\npath\n: Default '/api', sets the root url path for your endpoints\n\n\nversion\n: Adds a version to the root url path if specified\n        (i.e. /api/v2)\n\n\nframework\n: Your specific framework class, defaults to auto detect.\n\n\n\n\nUnrest aims to be framework agnostic.\nIt currently works with Flask out of the box, for another web framework\nyou will have to implement your own Framework class.\nSee \nFlaskUnRest\n in \nflask_framework.py\n\n\n\n\nRestError\n\n\nUnRest.RestError(status, message)\n\n\n\n\nException raised by rest methods. It's catched by the REST method\nwrapper and will return a \nstatus\n http error with the specified\n\nmessage\n.\n\n\n\n\nall\n\n\nReturn all supported methods. Useful for the rest\n\nmethod\n keyword argument.\n\n\n\n\ninit_app\n\n\nUnRest.init_app(app)\n\n\n\n\nSets the app on UnRest if it was missing during instantiation.\n\n\n\ninit_session\n\n\nUnRest.init_session(session)\n\n\n\n\nSets the sqlalchemy session on UnRest\nif it was missing during instantiation.\n\n\n\n\nraise_error\n\n\nUnRest.raise_error(status, message)\n\n\n\n\nRaise an error that will be handled by the rest wrapper, which\nwill return a json response with status as HTTP status code\nand message as content.",
+            "text": "UnRest\n\n\nUnRest(app=None, session=None, path='/api', version='', framework=None)\n\n\n\n\nA troubling rest api library for sqlalchemy models.\nThis is the main entry point of unrest.\n\n\nCommon usage is as following:\n\n\nrest = UnRest(app, session)  # app is your application\n# When called, it instanciate a `Rest` object that will register the\n# REST endpoints. See the `Rest` class.\nrest(Model1)\nrest(Model2)\n\n\n\n\nArguments\n\n\n\n\napp\n: Your web application,\n        can be set afterwards using \nUnRest.init_app\n\n\nsession\n: Your sqlalchemy session,\n        can be set afterwards using \nUnRest.init_session\n\n        and \ninit_session\n method.\n\n\npath\n: Default '/api', sets the root url path for your endpoints\n\n\nversion\n: Adds a version to the root url path if specified\n        (i.e. /api/v2)\n\n\nframework\n: Your specific framework class, defaults to auto detect.\n\n\n\n\nUnrest aims to be framework agnostic.\nIt currently works with Flask out of the box, for another web framework\nyou will have to implement your own Framework class.\nSee \nFlaskUnRest\n in \nflask_framework.py\n\n\n\n\ncall\n\n\nUnRest.__call__()\n\n\n\n\nReturns a \nunrest.Rest\n instance. See rest entry points.\n\n\n\nRestError\n\n\nUnRest.RestError(status, message)\n\n\n\n\nException raised by rest methods. It's catched by the REST method\nwrapper and will return a \nstatus\n http error with the specified\n\nmessage\n.\n\n\n\n\nall\n\n\nReturn all supported methods. Useful for the rest\n\nmethod\n keyword argument.\n\n\n\n\ninit_app\n\n\nUnRest.init_app(app)\n\n\n\n\nSets the app on UnRest if it was missing during instantiation.\n\n\n\ninit_session\n\n\nUnRest.init_session(session)\n\n\n\n\nSets the sqlalchemy session on UnRest\nif it was missing during instantiation.\n\n\n\n\nraise_error\n\n\nUnRest.raise_error(status, message)\n\n\n\n\nRaise an error that will be handled by the rest wrapper, which\nwill return a json response with status as HTTP status code\nand message as content.\n\n\nArguments\n\n\n\n\nstatus\n: The http status code corresponding to the error\n        (404 for instance)\n\n\nmessage\n: The message that will be returned in the json response",
             "title": "UnRest"
         },
         {
             "location": "/unrest/#unrest",
             "text": "UnRest(app=None, session=None, path='/api', version='', framework=None)  A troubling rest api library for sqlalchemy models.\nThis is the main entry point of unrest.  Common usage is as following:  rest = UnRest(app, session)  # app is your application\n# When called, it instanciate a `Rest` object that will register the\n# REST endpoints. See the `Rest` class.\nrest(Model1)\nrest(Model2)  Arguments   app : Your web application,\n        can be set afterwards using  UnRest.init_app  session : Your sqlalchemy session,\n        can be set afterwards using  UnRest.init_session \n        and  init_session  method.  path : Default '/api', sets the root url path for your endpoints  version : Adds a version to the root url path if specified\n        (i.e. /api/v2)  framework : Your specific framework class, defaults to auto detect.   Unrest aims to be framework agnostic.\nIt currently works with Flask out of the box, for another web framework\nyou will have to implement your own Framework class.\nSee  FlaskUnRest  in  flask_framework.py",
             "title": "UnRest"
+        },
+        {
+            "location": "/unrest/#call",
+            "text": "UnRest.__call__()  Returns a  unrest.Rest  instance. See rest entry points.",
+            "title": "call"
         },
         {
             "location": "/unrest/#resterror",
@@ -47,12 +52,12 @@
         },
         {
             "location": "/unrest/#raise_error",
-            "text": "UnRest.raise_error(status, message)  Raise an error that will be handled by the rest wrapper, which\nwill return a json response with status as HTTP status code\nand message as content.",
+            "text": "UnRest.raise_error(status, message)  Raise an error that will be handled by the rest wrapper, which\nwill return a json response with status as HTTP status code\nand message as content.  Arguments   status : The http status code corresponding to the error\n        (404 for instance)  message : The message that will be returned in the json response",
             "title": "raise_error"
         },
         {
             "location": "/rest/",
-            "text": "unrest.rest\n\n\n\n\nRest\n\n\nRest(unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, SerializeClass=<class 'unrest.coercers.Serialize'>, DeserializeClass=<class 'unrest.coercers.Deserialize'>)\n\n\n\n\nThis is the entry point for generating a REST endpoint for a specific model\nIt takes the Unrest instance given by calling it.",
+            "text": "unrest.rest\n\n\n\n\nRest\n\n\nRest(unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, SerializeClass=<class 'unrest.coercers.Serialize'>, DeserializeClass=<class 'unrest.coercers.Deserialize'>)\n\n\n\n\nThis is the entry point for generating a REST endpoint for a specific model\nThe final uri if the path is '/api' and version 'v2' would be:\n\n/api/v2/model\n and \n/api/v2/model/pk1/pk2\n if model is not in public schema\n\n/api/v2/schema/model\n and \n/api/v2/schema/model/pk1/pk2\n\n\nArguments\n\n\n\n\nunrest\n: The unrest instance given automatically on UnRest call.\n\n\nModel\n: The sqlalchemy orm model class.\n\n\nmethods\n: The allowed method list on this endpoint. Possible values are\n        GET, PUT, POST, DELETE and rest.all\n\n\nname\n: If specified replaces the model name in url\n        (and the schema if any).\n\n\nonly\n: If specified restricts the json fields to this list.\n\n\nexclude\n: If specified removes the json fields in this list.\n\n\nquery\n: A function that takes the Model query and returns your specific\n        query. Can be useful to filter data for all the methods.\n\n\nallow_batch: Allow batch operations\n: PUT and DELETE without primary key\n\n\nauth\n: A decorator that will always be called\n\n\nread_auth\n: A decorator that will be called on GET\n\n\nwrite_auth\n: A decorator that will be called on PUT, POST and DELETE\n\n\nSerializeClass\n: An alternative \nSerialize\n class.\n\n\nDeserializeClass\n: An alternative \nDeserialize\n class.\n\n\n\n\n\n\ndeclare\n\n\nRest.declare(method)\n\n\n\n\nA decorator to register an alternative method.\nThe origial is still callable with rest.{method}\n\n\nArguments\n\n\n\n\nmethod\n: The method to override ('GET' for exemple)\n\n\n\n\n\n\ndelete\n\n\nRest.delete(payload)\n\n\n\n\nThe DELETE method\n\n\n\nget\n\n\nRest.get(payload)\n\n\n\n\nThe GET method\n\n\n\npost\n\n\nRest.post(payload)\n\n\n\n\nThe POST method\n\n\n\nput\n\n\nRest.put(payload)\n\n\n\n\nThe PUT method",
             "title": "Rest entry points"
         },
         {
@@ -62,8 +67,33 @@
         },
         {
             "location": "/rest/#rest",
-            "text": "Rest(unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, SerializeClass=<class 'unrest.coercers.Serialize'>, DeserializeClass=<class 'unrest.coercers.Deserialize'>)  This is the entry point for generating a REST endpoint for a specific model\nIt takes the Unrest instance given by calling it.",
+            "text": "Rest(unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, SerializeClass=<class 'unrest.coercers.Serialize'>, DeserializeClass=<class 'unrest.coercers.Deserialize'>)  This is the entry point for generating a REST endpoint for a specific model\nThe final uri if the path is '/api' and version 'v2' would be: /api/v2/model  and  /api/v2/model/pk1/pk2  if model is not in public schema /api/v2/schema/model  and  /api/v2/schema/model/pk1/pk2  Arguments   unrest : The unrest instance given automatically on UnRest call.  Model : The sqlalchemy orm model class.  methods : The allowed method list on this endpoint. Possible values are\n        GET, PUT, POST, DELETE and rest.all  name : If specified replaces the model name in url\n        (and the schema if any).  only : If specified restricts the json fields to this list.  exclude : If specified removes the json fields in this list.  query : A function that takes the Model query and returns your specific\n        query. Can be useful to filter data for all the methods.  allow_batch: Allow batch operations : PUT and DELETE without primary key  auth : A decorator that will always be called  read_auth : A decorator that will be called on GET  write_auth : A decorator that will be called on PUT, POST and DELETE  SerializeClass : An alternative  Serialize  class.  DeserializeClass : An alternative  Deserialize  class.",
             "title": "Rest"
+        },
+        {
+            "location": "/rest/#declare",
+            "text": "Rest.declare(method)  A decorator to register an alternative method.\nThe origial is still callable with rest.{method}  Arguments   method : The method to override ('GET' for exemple)",
+            "title": "declare"
+        },
+        {
+            "location": "/rest/#delete",
+            "text": "Rest.delete(payload)  The DELETE method",
+            "title": "delete"
+        },
+        {
+            "location": "/rest/#get",
+            "text": "Rest.get(payload)  The GET method",
+            "title": "get"
+        },
+        {
+            "location": "/rest/#post",
+            "text": "Rest.post(payload)  The POST method",
+            "title": "post"
+        },
+        {
+            "location": "/rest/#put",
+            "text": "Rest.put(payload)  The PUT method",
+            "title": "put"
         },
         {
             "location": "/coercers/",

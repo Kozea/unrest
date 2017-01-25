@@ -66,6 +66,8 @@
             
                 <li class="toctree-l3"><a href="#unrest">UnRest</a></li>
                 
+                    <li><a class="toctree-l4" href="#call">call</a></li>
+                
             
                 <li class="toctree-l3"><a href="#resterror">RestError</a></li>
                 
@@ -189,7 +191,13 @@ rest(Model2)
 It currently works with Flask out of the box, for another web framework
 you will have to implement your own Framework class.
 See <code>FlaskUnRest</code> in <code>flask_framework.py</code></p>
-<p><a name="unrest.UnRest.RestError"></a></p>
+<p><a name="unrest.UnRest.__call__"></a></p>
+<h2 id="call"><strong>call</strong></h2>
+<pre><code class="python">UnRest.__call__()
+</code></pre>
+
+<p>Returns a <code>unrest.Rest</code> instance. See rest entry points.
+<a name="unrest.UnRest.RestError"></a></p>
 <h1 id="resterror">RestError</h1>
 <pre><code class="python">UnRest.RestError(status, message)
 </code></pre>
@@ -222,6 +230,12 @@ if it was missing during instantiation.</p>
 <p>Raise an error that will be handled by the rest wrapper, which
 will return a json response with status as HTTP status code
 and message as content.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>status</strong>: The http status code corresponding to the error
+        (404 for instance)</li>
+<li><strong>message</strong>: The message that will be returned in the json response</li>
+</ul>
               
             </div>
           </div>
