@@ -6,9 +6,32 @@ log = logging.getLogger('unrest')
 
 
 class UnRest(object):
-    """Root path on /path/version/ if version else /path/ """
+    """
+    A troubling rest api library for sqlalchemy models
+
+    This is the main entry point of unrest.
+    Common usage is as following:
+
+    ```python
+    rest = Unrest(app)  # app is your application
+
+    rest(Model1)
+    rest(Model2)
+    ```
+
+    Unrest aims to be framework agnostic.
+    It currently works with Flask out of the box, for another framework
+    you will have to implement your own Framework class.
+    See `FlaskUnRest` in `flask_framework.py`
+    """
 
     class RestError(Exception):
+        """
+        Exception raised by rest methods.
+        It's catched by the REST method wrapper
+        and will return a `status` http error with the
+        specified `message`.
+        """
         def __init__(self, status, message):
             self.status = status
             self.message = message
