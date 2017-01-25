@@ -205,7 +205,7 @@ def test_get_custom_extend(rest, http):
         return {
             'occurences': rv['occurences'],
             'objects': [
-                {'id': fruit['fruit_id']} for fruit in rv['objects']
+                {'id': obj['fruit_id']} for obj in rv['objects']
             ]
         }
 

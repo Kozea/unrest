@@ -26,7 +26,8 @@ class FlaskUnRest(object):
     def request_json(self):
         if not request.is_json:
             return None
-        return request.data
+
+        return request.data.decode('utf-8')
 
     def send_json(self, json):
         return current_app.response_class(
