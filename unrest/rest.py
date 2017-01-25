@@ -10,12 +10,6 @@ from .coercers import Deserialize, Serialize
 log = logging.getLogger('unrest.rest')
 
 
-class RestError(Exception):
-    def __init__(self, message, status):
-        self.message = message
-        self.status = status
-
-
 class BatchNotAllowed(Exception):
     pass
 
@@ -27,20 +21,25 @@ class Rest(object):
     """
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
-                 query=None, query_factory=None, allow_batch=False,
+                 query=None, allow_batch=False,
+                 auth=None, read_auth=None, write_auth=None,
                  SerializeClass=Serialize, DeserializeClass=Deserialize):
-        self.SerializeClass = SerializeClass
-        self.DeserializeClass = DeserializeClass
-
         self.unrest = unrest
         self.Model = Model
-        self.name = name or self.table.name
+
         self.methods = methods
+        self.name = name or self.table.name
         self.only = only
-        self.allow_batch = allow_batch
         self.exclude = exclude
-        self._query = query or self.session().query(Model)
-        self.query_factory = query_factory
+        self.query_factory = query or (lambda q: q)
+        self.allow_batch = allow_batch
+
+        self.auth = auth
+        self.read_auth = read_auth
+        self.write_auth = write_auth
+
+        self.SerializeClass = SerializeClass
+        self.DeserializeClass = DeserializeClass
 
         for method in methods:
             self.register_method(method)
@@ -49,8 +48,7 @@ class Rest(object):
         if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item is None:
-                raise RestError(
-                    '%s(%r) not found' % (self.name, pks), 404)
+                self.raise_error(404, '%s(%r) not found' % (self.name, pks))
 
             return self.serialize([item])
 
@@ -87,7 +85,7 @@ class Rest(object):
     def post(self, payload, **pks):
         if self.has(pks):
             # Create a collection?
-            raise NotImplemented(
+            raise NotImplementedError(
                 "You can't create a new collection here. "
                 "If you want to update an item use the PUT method")
 
@@ -100,8 +98,8 @@ class Rest(object):
         if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item is None:
-                raise RestError(
-                    '%s(%r) not found' % (self.name, pks), 404)
+                self.raise_error(404, '%s(%r) not found' % (self.name, pks))
+
             self.session.delete(item)
             self.session.commit()
             return self.serialize([item])
@@ -148,15 +146,26 @@ class Rest(object):
             ]
         }
 
-    def wrap_native(self, method):
-        @wraps(method)
+    def raise_error(self, status, message):
+        self.unrest.raise_error(status, message)
+
+    def wrap_native(self, method, method_fun):
+        @wraps(method_fun)
         def wrapped(**kwargs):
             pks = self.kwargs_to_pks(kwargs)
             json = self.unrest.framework.request_json()
             payload = self.unjson(json)
             try:
-                data = method(payload, **pks)
-            except RestError as e:
+                decorated = method_fun
+                if method == 'GET' and self.read_auth:
+                    decorated = self.read_auth(decorated)
+                if method in ['PUT', 'POST', 'DELETE'] and self.write_auth:
+                    decorated = self.write_auth(decorated)
+                if self.auth:
+                    decorated = self.auth(decorated)
+
+                data = decorated(payload, **pks)
+            except self.unrest.RestError as e:
                 json = {'message': e.message}
                 return self.unrest.framework.send_error(
                     {'message': e.message}, e.status)
@@ -166,7 +175,7 @@ class Rest(object):
 
     def register_method(self, method, method_fun=None):
             method_fun = method_fun or getattr(self, method.lower())
-            method_fun = self.wrap_native(method_fun)
+            method_fun = self.wrap_native(method, method_fun)
             # str() for python 2 compat
             method_fun.__name__ = str('_'.join(
                 ('unrest', method) + self.name_parts))
@@ -190,9 +199,7 @@ class Rest(object):
 
     @property
     def query(self):
-        if self.query_factory:
-            return self.query_factory(self._query)
-        return self._query
+        return self.query_factory(self.session.query(self.Model))
 
     @property
     def name_parts(self):

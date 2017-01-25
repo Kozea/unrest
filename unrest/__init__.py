@@ -7,6 +7,12 @@ log = logging.getLogger('unrest')
 
 class UnRest(object):
     """Root path on /path/version/ if version else /path/ """
+
+    class RestError(Exception):
+        def __init__(self, status, message):
+            self.status = status
+            self.message = message
+
     def __init__(self,
                  app=None, session=None,
                  path='/api', version='', framework=None):
@@ -32,7 +38,7 @@ class UnRest(object):
                     from .flask_framework import FlaskUnRest
                     self.framework = FlaskUnRest(app)
         if not self.framework:
-            raise NotImplemented(
+            raise NotImplementedError(
                 'Your framework %s is not recognized. '
                 'Please provide a framework argument to UnRest' % type(app))
 
@@ -44,6 +50,13 @@ class UnRest(object):
         if self.version:
             return '/'.join((self.path, self.version))
         return self.path
+
+    @property
+    def all(self):
+        return ['GET', 'PUT', 'POST', 'DELETE']
+
+    def raise_error(self, status, message):
+        raise self.RestError(status, message)
 
     def __call__(self, *args, **kwargs):
         rest = Rest(self, *args, **kwargs)

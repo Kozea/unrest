@@ -54,7 +54,9 @@ def db_init(app):
 def db(request, db_init):
     db = db_init
     Base.metadata.create_all(bind=db.engine)
+
     fill_data(db.session)
+    db.session.remove()
 
     def drop_all():
         Base.metadata.drop_all(bind=db.engine)

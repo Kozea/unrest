@@ -31,7 +31,7 @@ def test_get_tree_name(rest, http):
 
 
 def test_get_tree_query(rest, http, db):
-    base_query = db.session.query(Tree).filter(Tree.id > 1)
+    base_query = lambda q: db.session.query(Tree).filter(Tree.id > 1)
     rest(Tree, query=base_query)
     code, json = http.get('/api/tree')
     assert code == 200
@@ -43,7 +43,7 @@ def test_get_tree_query(rest, http, db):
 
 
 def test_get_tree_query_factory(rest, http, db):
-    rest(Tree, query_factory=lambda q: q.filter(Tree.id < 2))
+    rest(Tree, query=lambda q: q.filter(Tree.id < 2))
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 1

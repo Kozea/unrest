@@ -7,7 +7,7 @@ def idsorted(it, key='id'):
 
 def test_post_tree_with_pk(rest, http):
     rest(Tree, methods=['GET', 'POST'])
-    code, json = http.post('/api/tree')
+    code, json = http.post('/api/tree/6', json={'name': 'mango'})
     assert code == 500
 
 
