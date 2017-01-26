@@ -154,10 +154,75 @@
 <pre><code class="python">Serialize(model, columns)
 </code></pre>
 
+<p>Base serializer class</p>
+<p>Casts python sqlalchemy data into a JSON compliant type according to
+the sqlalchemy column type.</p>
+<p>Not all types are implemented as of now and it's fairly easy to add:
+Just add a <code>serialize_type</code> method for <code>type</code> and it shall work.</p>
+<p>The serialize class can be configured with the rest function and
+on the UnRest declaration.</p>
+<p>For example:</p>
+<pre><code class="python">from unrest.coercers import Serialize
+
+class BetterSerialize(Serialize):
+    def serialize_matrix(self, type, data):
+        return data.matrix_to_string()
+
+rest = UnRest(app, session, SerializeClass=BetterSerialize)
+...
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>model</strong>: The sqlachemy item to serialize.</li>
+<li><strong>columns</strong>: The list of columns to serialize.</li>
+</ul>
 <p><a name="unrest.coercers.Deserialize"></a></p>
 <h2 id="deserialize">Deserialize</h2>
 <pre><code class="python">Deserialize(payload, columns)
 </code></pre>
+
+<p>Base deserializer class</p>
+<p>Casts JSON data back to compatible python sqlalchemy type.</p>
+<p>Not all types are implemented as of now and it's fairly easy to add:
+Just add a <code>deserialize_type</code> method for <code>type</code> and it shall work.</p>
+<p>The deserialize class can be configured with the rest function and
+on the UnRest declaration.</p>
+<p>For example:</p>
+<pre><code class="python">from unrest.coercers import Deserialize
+
+class BetterDeserialize(Deserialize):
+    def deserialize_matrix(self, type, data):
+        return Matrix.from_string(data)
+
+rest = UnRest(app, session, DeserializeClass=BetterDeserialize)
+...
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The JSON payload to deserialize</li>
+<li><strong>columns</strong>: The list of columns to deserialize</li>
+</ul>
+<p><a name="unrest.coercers.Serialize.dict"></a></p>
+<h3 id="dict">dict</h3>
+<pre><code class="python">Serialize.dict()
+</code></pre>
+
+<p>Serialize the given model to a JSON compatible dict
+<a name="unrest.coercers.Deserialize.merge"></a></p>
+<h3 id="merge">merge</h3>
+<pre><code class="python">Deserialize.merge(item, payload=None)
+</code></pre>
+
+<p>Deserialize the given payload into the existing sqlachemy <code>item</code>
+<a name="unrest.coercers.Deserialize.create"></a></p>
+<h3 id="create">create</h3>
+<pre><code class="python">Deserialize.create(factory)
+</code></pre>
+
+<p>Deserialize objects in the given payload into a list of new items
+created with the <code>factory</code> function.</p>
               
             </div>
           </div>

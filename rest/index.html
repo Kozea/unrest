@@ -76,21 +76,6 @@
                     <li><a class="toctree-l4" href="#rest">Rest</a></li>
                 
             
-                <li class="toctree-l3"><a href="#declare">declare</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#delete">delete</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#get">get</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#post">post</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#put">put</a></li>
-                
-            
             </ul>
         
     </li>
@@ -169,62 +154,112 @@
 
 <p>This is the entry point for generating a REST endpoint for a specific model
 The final uri if the path is '/api' and version 'v2' would be:
-<code>/api/v2/model</code> and <code>/api/v2/model/pk1/pk2</code> if model is not in public schema
-<code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/pk1/pk2</code></p>
+<code>/api/v2/model</code> and <code>/api/v2/model/pk1/pk2</code> and if model is not in the
+public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/pk1/pk2</code>.</p>
+<p>Usage:</p>
+<pre><code class="python">    rest = UnRest(app)
+    rest(Person, only=['name', 'sex', 'age'], methods=rest.all,
+         query=lambda q: q.filter(Person.age &gt; 16))
+</code></pre>
+
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>unrest</strong>: The unrest instance given automatically on UnRest call.</li>
 <li><strong>Model</strong>: The sqlalchemy orm model class.</li>
 <li><strong>methods</strong>: The allowed method list on this endpoint. Possible values are
         GET, PUT, POST, DELETE and rest.all</li>
-<li><strong>name</strong>: If specified replaces the model name in url
-        (and the schema if any).</li>
+<li><strong>name</strong>: If specified replaces the model name in url.</li>
 <li><strong>only</strong>: If specified restricts the json fields to this list.</li>
 <li><strong>exclude</strong>: If specified removes the json fields in this list.</li>
 <li><strong>query</strong>: A function that takes the Model query and returns your specific
         query. Can be useful to filter data for all the methods.</li>
-<li><strong>allow_batch: Allow batch operations</strong>: PUT and DELETE without primary key</li>
-<li><strong>auth</strong>: A decorator that will always be called</li>
-<li><strong>read_auth</strong>: A decorator that will be called on GET</li>
-<li><strong>write_auth</strong>: A decorator that will be called on PUT, POST and DELETE</li>
+<li><strong>allow_batch</strong>: Allow batch operations (PUT and DELETE)
+        without primary key.</li>
+<li><strong>auth</strong>: A decorator that will always be called.</li>
+<li><strong>read_auth</strong>: A decorator that will be called on GET.</li>
+<li><strong>write_auth</strong>: A decorator that will be called on PUT, POST and DELETE.</li>
 <li><strong>SerializeClass</strong>: An alternative <code>Serialize</code> class.</li>
 <li><strong>DeserializeClass</strong>: An alternative <code>Deserialize</code> class.</li>
 </ul>
-<p><a name="unrest.rest.Rest.declare"></a></p>
-<h1 id="declare">declare</h1>
-<pre><code class="python">Rest.declare(method)
-</code></pre>
-
-<p>A decorator to register an alternative method.
-The origial is still callable with rest.{method}</p>
-<p><strong>Arguments</strong></p>
-<ul>
-<li><strong>method</strong>: The method to override ('GET' for exemple)</li>
-</ul>
-<p><a name="unrest.rest.Rest.delete"></a></p>
-<h1 id="delete">delete</h1>
-<pre><code class="python">Rest.delete(payload)
-</code></pre>
-
-<p>The DELETE method
-<a name="unrest.rest.Rest.get"></a></p>
-<h1 id="get">get</h1>
+<p><a name="unrest.rest.Rest.get"></a></p>
+<h3 id="get">get</h3>
 <pre><code class="python">Rest.get(payload)
 </code></pre>
 
-<p>The GET method
-<a name="unrest.rest.Rest.post"></a></p>
-<h1 id="post">post</h1>
-<pre><code class="python">Rest.post(payload)
-</code></pre>
-
-<p>The POST method
-<a name="unrest.rest.Rest.put"></a></p>
-<h1 id="put">put</h1>
+<p>The GET method</p>
+<p>No arguments: Returns all query elements. (/api/model/)
+Primary keys: Returns the element in query with the primary keys or
+    404. (/api/model/pk)</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The json request content ignored for GET.</li>
+<li><strong>pks</strong>: The primary keys in url if any.</li>
+</ul>
+<p><a name="unrest.rest.Rest.put"></a></p>
+<h3 id="put">put</h3>
 <pre><code class="python">Rest.put(payload)
 </code></pre>
 
 <p>The PUT method</p>
+<p>No arguments: If allow_batch set to true replace all the query elements
+    with the ones in the request payload.
+Primary keys: Create or replace the element associated
+    with the primary keys from the one in the request payload.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The json request content containing new elements.</li>
+<li><strong>pks</strong>: The primary keys in url if any.</li>
+</ul>
+<p><a name="unrest.rest.Rest.post"></a></p>
+<h3 id="post">post</h3>
+<pre><code class="python">Rest.post(payload)
+</code></pre>
+
+<p>The POST method</p>
+<p>No arguments: Add element from request payload.
+Primary keys: Correspond to new collection creation. Unused.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The json request content containing the new element.</li>
+<li><strong>pks</strong>: The primary keys in url if any.</li>
+</ul>
+<p><a name="unrest.rest.Rest.delete"></a></p>
+<h3 id="delete">delete</h3>
+<pre><code class="python">Rest.delete(payload)
+</code></pre>
+
+<p>The DELETE method</p>
+<p>No arguments: If allow_batch set to true delete all query elements.
+Primary keys: Delete the element associated with the primary keys.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The json request content ignored in DELETE.</li>
+<li><strong>pks</strong>: The primary keys of the element to delete.</li>
+</ul>
+<p><a name="unrest.rest.Rest.declare"></a></p>
+<h3 id="declare">declare</h3>
+<pre><code class="python">Rest.declare(method)
+</code></pre>
+
+<p>A decorator to register an alternative method.
+The original is still callable with rest.{method}</p>
+<pre><code class="python">fruit = rest(Fruit)
+
+@fruit.declare('GET')
+def get(payload, fruit_id=None):
+    rv = fruit.get(payload, fruit_id=fruit_id)
+    return {
+        'occurences': rv['occurences'],
+        'objects': [
+            {'id': obj['fruit_id']} for obj in rv['objects']
+        ]
+    }
+</code></pre>
+
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>method</strong>: The method to override ('GET' for exemple)</li>
+</ul>
               
             </div>
           </div>

@@ -93,10 +93,9 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#flaskunrest">FlaskUnRest</a></li>
+                <li class="toctree-l3"><a href="#unrestflask_framework">unrest.flask_framework</a></li>
                 
-            
-                <li class="toctree-l3"><a href="#register_route">register_route</a></li>
+                    <li><a class="toctree-l4" href="#flaskunrest">FlaskUnRest</a></li>
                 
             
             </ul>
@@ -146,17 +145,57 @@
           <div role="main">
             <div class="section">
               
-                <p><a name="unrest.flask_framework.FlaskUnRest"></a></p>
-<h1 id="flaskunrest">FlaskUnRest</h1>
+                <p><a name="unrest.flask_framework"></a></p>
+<h1 id="unrestflask_framework">unrest.flask_framework</h1>
+<p><a name="unrest.flask_framework.FlaskUnRest"></a></p>
+<h2 id="flaskunrest">FlaskUnRest</h2>
 <pre><code class="python">FlaskUnRest(app)
 </code></pre>
 
+<p>Unrest flask framework implementation.
+This is the framework abstraction you can implement for your own framework</p>
 <p><a name="unrest.flask_framework.FlaskUnRest.register_route"></a></p>
-<h1 id="register_route">register_route</h1>
+<h3 id="register_route">register_route</h3>
 <pre><code class="python">FlaskUnRest.register_route(path, method, parameters, fun)
 </code></pre>
 
-<p>Register fun for <code>path</code> for <code>method</code> with and without <code>parameters</code></p>
+<p>Register the given function for <code>path</code> and <code>method</code> with and without
+<code>parameters</code>.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>path</strong>: The url of the endoint without arguments. ('/api/person')</li>
+<li><strong>method</strong>: The HTTP method to register the route on.</li>
+<li><strong>parameters</strong>: The primary keys of the model that can be given
+        after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
+<li><strong>fun</strong>: The route function</li>
+</ul>
+<p><a name="unrest.flask_framework.FlaskUnRest.request_json"></a></p>
+<h3 id="request_json">request_json</h3>
+<pre><code class="python">FlaskUnRest.request_json()
+</code></pre>
+
+<p>Must return the string of the current JSON request content or None</p>
+<p><a name="unrest.flask_framework.FlaskUnRest.send_json"></a></p>
+<h3 id="send_json">send_json</h3>
+<pre><code class="python">FlaskUnRest.send_json(json)
+</code></pre>
+
+<p>Send a 200 JSON response with <code>json</code> as content</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>json</strong>: The JSON string to send.</li>
+</ul>
+<p><a name="unrest.flask_framework.FlaskUnRest.send_error"></a></p>
+<h3 id="send_error">send_error</h3>
+<pre><code class="python">FlaskUnRest.send_error(message, status_code)
+</code></pre>
+
+<p>Send an error as a JSON response with the given status code.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>message</strong>: The JSON string containing the error message.</li>
+<li><strong>status_code</strong>: The HTTP status code (i.e. 402)</li>
+</ul>
               
             </div>
           </div>

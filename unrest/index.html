@@ -64,24 +64,9 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#unrest">UnRest</a></li>
+                <li class="toctree-l3"><a href="#unrest">unrest</a></li>
                 
-                    <li><a class="toctree-l4" href="#call">call</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#resterror">RestError</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#all">all</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#init_app">init_app</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#init_session">init_session</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#raise_error">raise_error</a></li>
+                    <li><a class="toctree-l4" href="#unrest_1">UnRest</a></li>
                 
             
             </ul>
@@ -160,9 +145,11 @@
           <div role="main">
             <div class="section">
               
-                <p><a name="unrest.UnRest"></a></p>
-<h1 id="unrest">UnRest</h1>
-<pre><code class="python">UnRest(app=None, session=None, path='/api', version='', framework=None)
+                <p><a name="unrest"></a></p>
+<h1 id="unrest">unrest</h1>
+<p><a name="unrest.UnRest"></a></p>
+<h2 id="unrest_1">UnRest</h2>
+<pre><code class="python">UnRest(app=None, session=None, path='/api', version='', framework=None, SerializeClass=None, DeserializeClass=None)
 </code></pre>
 
 <p>A troubling rest api library for sqlalchemy models.
@@ -186,44 +173,46 @@ rest(Model2)
 <li><strong>version</strong>: Adds a version to the root url path if specified
         (i.e. /api/v2)</li>
 <li><strong>framework</strong>: Your specific framework class, defaults to auto detect.</li>
-</ul>
-<p>Unrest aims to be framework agnostic.
+<li><strong>SerializeClass</strong>: A global alternative for <code>Serialize</code> class.</li>
+<li><strong>DeserializeClass</strong>: A global alternative for <code>Deserialize</code> class.
+Unrest aims to be framework agnostic.
 It currently works with Flask out of the box, for another web framework
 you will have to implement your own Framework class.
-See <code>FlaskUnRest</code> in <code>flask_framework.py</code></p>
+See <code>FlaskUnRest</code> in <code>flask_framework.py</code></li>
+</ul>
 <p><a name="unrest.UnRest.__call__"></a></p>
-<h2 id="call"><strong>call</strong></h2>
+<h3 id="call"><strong>call</strong></h3>
 <pre><code class="python">UnRest.__call__()
 </code></pre>
 
 <p>Returns a <code>unrest.Rest</code> instance. See rest entry points.
 <a name="unrest.UnRest.RestError"></a></p>
-<h1 id="resterror">RestError</h1>
+<h3 id="resterror">RestError</h3>
 <pre><code class="python">UnRest.RestError(status, message)
 </code></pre>
 
 <p>Exception raised by rest methods. It's catched by the REST method
 wrapper and will return a <code>status</code> http error with the specified
 <code>message</code>.</p>
-<p><a name="unrest.UnRest.all"></a></p>
-<h1 id="all">all</h1>
-<p>Return all supported methods. Useful for the rest
-<code>method</code> keyword argument.</p>
 <p><a name="unrest.UnRest.init_app"></a></p>
-<h1 id="init_app">init_app</h1>
+<h3 id="init_app">init_app</h3>
 <pre><code class="python">UnRest.init_app(app)
 </code></pre>
 
 <p>Sets the app on UnRest if it was missing during instantiation.
 <a name="unrest.UnRest.init_session"></a></p>
-<h1 id="init_session">init_session</h1>
+<h3 id="init_session">init_session</h3>
 <pre><code class="python">UnRest.init_session(session)
 </code></pre>
 
 <p>Sets the sqlalchemy session on UnRest
 if it was missing during instantiation.</p>
+<p><a name="unrest.UnRest.all"></a></p>
+<h3 id="all">all</h3>
+<p>Return all supported methods. Useful for the rest
+<code>method</code> keyword argument.</p>
 <p><a name="unrest.UnRest.raise_error"></a></p>
-<h1 id="raise_error">raise_error</h1>
+<h3 id="raise_error">raise_error</h3>
 <pre><code class="python">UnRest.raise_error(status, message)
 </code></pre>
 
