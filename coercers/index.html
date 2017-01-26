@@ -177,7 +177,13 @@ rest = UnRest(app, session, SerializeClass=BetterSerialize)
 <li><strong>model</strong>: The sqlachemy item to serialize.</li>
 <li><strong>columns</strong>: The list of columns to serialize.</li>
 </ul>
-<p><a name="unrest.coercers.Deserialize"></a></p>
+<p><a name="unrest.coercers.Serialize.dict"></a></p>
+<h3 id="dict">dict</h3>
+<pre><code class="python">Serialize.dict()
+</code></pre>
+
+<p>Serialize the given model to a JSON compatible dict
+<a name="unrest.coercers.Deserialize"></a></p>
 <h2 id="deserialize">Deserialize</h2>
 <pre><code class="python">Deserialize(payload, columns)
 </code></pre>
@@ -204,13 +210,7 @@ rest = UnRest(app, session, DeserializeClass=BetterDeserialize)
 <li><strong>payload</strong>: The JSON payload to deserialize</li>
 <li><strong>columns</strong>: The list of columns to deserialize</li>
 </ul>
-<p><a name="unrest.coercers.Serialize.dict"></a></p>
-<h3 id="dict">dict</h3>
-<pre><code class="python">Serialize.dict()
-</code></pre>
-
-<p>Serialize the given model to a JSON compatible dict
-<a name="unrest.coercers.Deserialize.merge"></a></p>
+<p><a name="unrest.coercers.Deserialize.merge"></a></p>
 <h3 id="merge">merge</h3>
 <pre><code class="python">Deserialize.merge(item, payload=None)
 </code></pre>

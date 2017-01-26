@@ -183,7 +183,7 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 </ul>
 <p><a name="unrest.rest.Rest.get"></a></p>
 <h3 id="get">get</h3>
-<pre><code class="python">Rest.get(payload)
+<pre><code class="python">Rest.get(payload, **pks)
 </code></pre>
 
 <p>The GET method</p>
@@ -197,7 +197,7 @@ Primary keys: Returns the element in query with the primary keys or
 </ul>
 <p><a name="unrest.rest.Rest.put"></a></p>
 <h3 id="put">put</h3>
-<pre><code class="python">Rest.put(payload)
+<pre><code class="python">Rest.put(payload, **pks)
 </code></pre>
 
 <p>The PUT method</p>
@@ -212,7 +212,7 @@ Primary keys: Create or replace the element associated
 </ul>
 <p><a name="unrest.rest.Rest.post"></a></p>
 <h3 id="post">post</h3>
-<pre><code class="python">Rest.post(payload)
+<pre><code class="python">Rest.post(payload, **pks)
 </code></pre>
 
 <p>The POST method</p>
@@ -225,7 +225,7 @@ Primary keys: Correspond to new collection creation. Unused.</p>
 </ul>
 <p><a name="unrest.rest.Rest.delete"></a></p>
 <h3 id="delete">delete</h3>
-<pre><code class="python">Rest.delete(payload)
+<pre><code class="python">Rest.delete(payload, **pks)
 </code></pre>
 
 <p>The DELETE method</p>

@@ -180,13 +180,7 @@ It currently works with Flask out of the box, for another web framework
 you will have to implement your own Framework class.
 See <code>FlaskUnRest</code> in <code>flask_framework.py</code></li>
 </ul>
-<p><a name="unrest.UnRest.__call__"></a></p>
-<h3 id="call"><strong>call</strong></h3>
-<pre><code class="python">UnRest.__call__()
-</code></pre>
-
-<p>Returns a <code>unrest.Rest</code> instance. See rest entry points.
-<a name="unrest.UnRest.RestError"></a></p>
+<p><a name="unrest.UnRest.RestError"></a></p>
 <h3 id="resterror">RestError</h3>
 <pre><code class="python">UnRest.RestError(status, message)
 </code></pre>
@@ -225,6 +219,12 @@ and message as content.</p>
         (404 for instance)</li>
 <li><strong>message</strong>: The message that will be returned in the json response</li>
 </ul>
+<p><a name="unrest.UnRest.__call__"></a></p>
+<h3 id="call"><strong>call</strong></h3>
+<pre><code class="python">UnRest.__call__(*args, **kwargs)
+</code></pre>
+
+<p>Returns a <code>unrest.Rest</code> instance. See rest entry points.</p>
               
             </div>
           </div>
