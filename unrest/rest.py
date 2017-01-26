@@ -18,24 +18,30 @@ class Rest(object):
     """
     This is the entry point for generating a REST endpoint for a specific model
     The final uri if the path is '/api' and version 'v2' would be:
-    `/api/v2/model` and `/api/v2/model/pk1/pk2` if model is not in public schema
-    `/api/v2/schema/model` and `/api/v2/schema/model/pk1/pk2`
+    `/api/v2/model` and `/api/v2/model/pk1/pk2` and if model is not in the
+    public schema `/api/v2/schema/model` and `/api/v2/schema/model/pk1/pk2`.
 
+    Usage:
+    ```python
+        rest = UnRest(app)
+        rest(Person, only=['name', 'sex', 'age'], methods=rest.all,
+             query=lambda q: q.filter(Person.age > 16))
+    ```
     # Arguments
         unrest: The unrest instance given automatically on UnRest call.
         Model: The sqlalchemy orm model class.
         methods: The allowed method list on this endpoint. Possible values are
             GET, PUT, POST, DELETE and rest.all
-        name: If specified replaces the model name in url
-            (and the schema if any).
+        name: If specified replaces the model name in url.
         only: If specified restricts the json fields to this list.
         exclude: If specified removes the json fields in this list.
         query: A function that takes the Model query and returns your specific
             query. Can be useful to filter data for all the methods.
-        allow_batch: Allow batch operations: PUT and DELETE without primary key
-        auth: A decorator that will always be called
-        read_auth: A decorator that will be called on GET
-        write_auth: A decorator that will be called on PUT, POST and DELETE
+        allow_batch: Allow batch operations (PUT and DELETE)
+            without primary key.
+        auth: A decorator that will always be called.
+        read_auth: A decorator that will be called on GET.
+        write_auth: A decorator that will be called on PUT, POST and DELETE.
         SerializeClass: An alternative #Serialize class.
         DeserializeClass: An alternative #Deserialize class.
     """
@@ -65,7 +71,17 @@ class Rest(object):
             self.register_method(method)
 
     def get(self, payload, **pks):
-        """The GET method"""
+        """
+        The GET method
+
+        No arguments: Returns all query elements. (/api/model/)
+        Primary keys: Returns the element in query with the primary keys or
+            404. (/api/model/pk)
+
+        # Arguments
+            payload: The json request content ignored for GET.
+            pks: The primary keys in url if any.
+        """
         if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item is None:
@@ -77,7 +93,18 @@ class Rest(object):
         return self.serialize(items, self.query.count())
 
     def put(self, payload, **pks):
-        """The PUT method"""
+        """
+        The PUT method
+
+        No arguments: If allow_batch set to true replace all the query elements
+            with the ones in the request payload.
+        Primary keys: Create or replace the element associated
+            with the primary keys from the one in the request payload.
+
+        # Arguments
+            payload: The json request content containing new elements.
+            pks: The primary keys in url if any.
+        """
         if self.has(pks):
             for pk, val in pks.items():
                 if pk in payload:
@@ -105,7 +132,16 @@ class Rest(object):
         return self.serialize(items, self.query.count())
 
     def post(self, payload, **pks):
-        """The POST method"""
+        """
+        The POST method
+
+        No arguments: Add element from request payload.
+        Primary keys: Correspond to new collection creation. Unused.
+
+        # Arguments
+            payload: The json request content containing the new element.
+            pks: The primary keys in url if any.
+        """
         if self.has(pks):
             # Create a collection?
             raise NotImplementedError(
@@ -118,7 +154,16 @@ class Rest(object):
         return self.serialize([item])
 
     def delete(self, payload, **pks):
-        """The DELETE method"""
+        """
+        The DELETE method
+
+        No arguments: If allow_batch set to true delete all query elements.
+        Primary keys: Delete the element associated with the primary keys.
+
+        # Arguments
+            payload: The json request content ignored in DELETE.
+            pks: The primary keys of the element to delete.
+        """
         if self.has(pks):
             item = self.query.filter_by(**pks).first()
             if item is None:
@@ -142,7 +187,21 @@ class Rest(object):
     def declare(self, method):
         """
         A decorator to register an alternative method.
-        The origial is still callable with rest.{method}
+        The original is still callable with rest.{method}
+
+        ```python
+        fruit = rest(Fruit)
+
+        @fruit.declare('GET')
+        def get(payload, fruit_id=None):
+            rv = fruit.get(payload, fruit_id=fruit_id)
+            return {
+                'occurences': rv['occurences'],
+                'objects': [
+                    {'id': obj['fruit_id']} for obj in rv['objects']
+                ]
+            }
+        ```
 
         # Arguments
             method: The method to override ('GET' for exemple)
@@ -235,7 +294,7 @@ class Rest(object):
 
     @property
     def name_parts(self):
-        if self.name == self.table.name and self.table.schema:
+        if self.table.schema:
             return (self.table.schema, self.name)
         return (self.name,)
 

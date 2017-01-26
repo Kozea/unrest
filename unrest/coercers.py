@@ -8,11 +8,40 @@ log = logging.getLogger('unrest.coercers')
 
 
 class Serialize(object):
+    """
+    Base serializer class
+
+    Casts python sqlalchemy data into a JSON compliant type according to
+    the sqlalchemy column type.
+
+    Not all types are implemented as of now and it's fairly easy to add:
+    Just add a `serialize_type` method for `type` and it shall work.
+
+    The serialize class can be configured with the rest function and
+    on the UnRest declaration.
+
+    For example:
+    ```python
+    from unrest.coercers import Serialize
+
+    class BetterSerialize(Serialize):
+        def serialize_matrix(self, type, data):
+            return data.matrix_to_string()
+
+    rest = UnRest(app, session, SerializeClass=BetterSerialize)
+    ...
+    ```
+
+    # Arguments
+        model: The sqlachemy item to serialize.
+        columns: The list of columns to serialize.
+    """
     def __init__(self, model, columns):
         self.model = model
         self.columns = columns
 
     def dict(self):
+        """Serialize the given model to a JSON compatible dict"""
         if self.model is None:
             return {}
         return {
@@ -52,16 +81,48 @@ class Serialize(object):
 
 
 class Deserialize(object):
+    """
+    Base deserializer class
+
+    Casts JSON data back to compatible python sqlalchemy type.
+
+    Not all types are implemented as of now and it's fairly easy to add:
+    Just add a `deserialize_type` method for `type` and it shall work.
+
+    The deserialize class can be configured with the rest function and
+    on the UnRest declaration.
+
+    For example:
+    ```python
+    from unrest.coercers import Deserialize
+
+    class BetterDeserialize(Deserialize):
+        def deserialize_matrix(self, type, data):
+            return Matrix.from_string(data)
+
+    rest = UnRest(app, session, DeserializeClass=BetterDeserialize)
+    ...
+    ```
+
+    # Arguments
+        payload: The JSON payload to deserialize
+        columns: The list of columns to deserialize
+    """
     def __init__(self, payload, columns):
         self.payload = payload
         self.columns = columns
 
     def merge(self, item, payload=None):
+        """Deserialize the given payload into the existing sqlachemy `item`"""
         for column in self.columns:
             setattr(item, column.name, self.deserialize(column, payload))
         return item
 
     def create(self, factory):
+        """
+        Deserialize objects in the given payload into a list of new items
+        created with the `factory` function.
+        """
         return [
             self.merge(factory(), item) for item in self.payload['objects']]
 

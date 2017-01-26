@@ -30,7 +30,8 @@ class UnRest(object):
         version: Adds a version to the root url path if specified
             (i.e. /api/v2)
         framework: Your specific framework class, defaults to auto detect.
-
+        SerializeClass: A global alternative for #Serialize class.
+        DeserializeClass: A global alternative for #Deserialize class.
     Unrest aims to be framework agnostic.
     It currently works with Flask out of the box, for another web framework
     you will have to implement your own Framework class.
@@ -49,10 +50,15 @@ class UnRest(object):
 
     def __init__(self,
                  app=None, session=None,
-                 path='/api', version='', framework=None):
+                 path='/api', version='', framework=None,
+                 SerializeClass=None, DeserializeClass=None):
         self.path = path
         self.version = version
         self._framework = framework
+
+        self.SerializeClass = SerializeClass
+        self.DeserializeClass = DeserializeClass
+
         if app is not None:
             self.init_app(app)
         if session is not None:
@@ -113,5 +119,11 @@ class UnRest(object):
 
     def __call__(self, *args, **kwargs):
         """Returns a #unrest.Rest instance. See rest entry points."""
+
+        if self.SerializeClass is not None:
+            kwargs.setdefault('SerializeClass', self.SerializeClass)
+        if self.DeserializeClass is not None:
+            kwargs.setdefault('DeserializeClass', self.DeserializeClass)
+
         rest = Rest(self, *args, **kwargs)
         return rest

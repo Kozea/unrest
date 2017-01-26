@@ -2,8 +2,9 @@ site_name: unrest Documentation
 repo_url: https://github.com/Kozea/unrest
 generate:
 - unrest.md:
-  - unrest.UnRest+:
-    - unrest.UnRest.__call__
+  - unrest:
+    - unrest.UnRest+:
+      - unrest.UnRest.__call__
 - rest.md:
   - unrest.rest:
     - unrest.rest.Rest+
@@ -12,7 +13,8 @@ generate:
     - unrest.coercers.Serialize+
     - unrest.coercers.Deserialize+
 - flask_framework.md:
-  - unrest.flask_framework.FlaskUnRest+
+  - unrest.flask_framework:
+    - unrest.flask_framework.FlaskUnRest+
 
 pages:
 - Home: index.md << ../README.md
