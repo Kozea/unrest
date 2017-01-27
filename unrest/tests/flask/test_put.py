@@ -1,14 +1,11 @@
+from . import idsorted
 from ..model import Tree
-
-
-def idsorted(it, key='id'):
-    return sorted(it, key=lambda x: x[key])
 
 
 def test_put_tree_implicitly_unallowed(rest, http):
     rest(Tree, methods=['GET', 'PUT'])
-    code, json = http.put('/api/tree')
-    assert code == 500
+    code, json = http.put('/api/tree', json={'id': 1, 'name': 'cedar'})
+    assert code == 406
 
 
 def test_put_tree(rest, http):

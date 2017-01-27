@@ -1,14 +1,11 @@
+from . import idsorted
 from ..model import Tree
-
-
-def idsorted(it, key='id'):
-    return sorted(it, key=lambda x: x[key])
 
 
 def test_delete_tree_implicitly_unallowed(rest, http):
     rest(Tree, methods=['GET', 'DELETE'])
     code, json = http.delete('/api/tree')
-    assert code == 500
+    assert code == 406
 
 
 def test_delete_tree(rest, http):

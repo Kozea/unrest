@@ -3,6 +3,7 @@ import decimal
 import logging
 
 import dateutil
+from sqlalchemy.types import String
 
 log = logging.getLogger('unrest.coercers')
 
@@ -36,18 +37,23 @@ class Serialize(object):
         model: The sqlachemy item to serialize.
         columns: The list of columns to serialize.
     """
-    def __init__(self, model, columns):
+    def __init__(self, model, columns, properties):
         self.model = model
         self.columns = columns
+        self.properties = properties
 
     def dict(self):
         """Serialize the given model to a JSON compatible dict"""
         if self.model is None:
             return {}
-        return {
+        return dict({
             column.name: self.serialize(column)
             for column in self.columns
-        }
+        }, **{
+            property: self._serialize(String(), getattr(
+                self.model, property))
+            for property in self.properties
+        })
 
     def serialize(self, column):
         return self._serialize(column.type, getattr(self.model, column.name))

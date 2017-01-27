@@ -1,8 +1,5 @@
+from . import idsorted
 from ..model import Tree
-
-
-def idsorted(it, key='id'):
-    return sorted(it, key=lambda x: x[key])
 
 
 def test_delete_tree(rest, http):

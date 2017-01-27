@@ -34,6 +34,7 @@ class Rest(object):
         exclude: If specified removes the json fields in this list.
         query: A function that takes the Model query and returns your specific
             query. Can be useful to filter data for all the methods.
+        properties: A list of additional properties to retrieve on the model.
         allow_batch: Allow batch operations (PUT and DELETE)
             without primary key.
         auth: A decorator that will always be called.
@@ -44,7 +45,7 @@ class Rest(object):
     """
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
-                 query=None, allow_batch=False,
+                 query=None, properties=None, allow_batch=False,
                  auth=None, read_auth=None, write_auth=None,
                  SerializeClass=Serialize, DeserializeClass=Deserialize):
         self.unrest = unrest
@@ -55,6 +56,7 @@ class Rest(object):
         self.only = only
         self.exclude = exclude
         self.query_factory = query or (lambda q: q)
+        self.properties = properties or []
         self.allow_batch = allow_batch
 
         self.auth = auth
@@ -227,7 +229,7 @@ class Rest(object):
         return self.DeserializeClass(payload, self.columns).create(self.Model)
 
     def serialize_object(self, item):
-        return self.SerializeClass(item, self.columns).dict()
+        return self.SerializeClass(item, self.columns, self.properties).dict()
 
     def serialize(self, items, count=None):
         if count is None:

@@ -1,14 +1,11 @@
+from . import idsorted
 from ..model import Tree
-
-
-def idsorted(it, key='id'):
-    return sorted(it, key=lambda x: x[key])
 
 
 def test_post_tree_with_pk(rest, http):
     rest(Tree, methods=['GET', 'POST'])
     code, json = http.post('/api/tree/6', json={'name': 'mango'})
-    assert code == 500
+    assert code == 501
 
 
 def test_post_tree_with_pk_custom(rest, http):

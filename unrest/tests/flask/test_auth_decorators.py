@@ -17,7 +17,7 @@ def test_auth_decorator(rest, http):
     assert http.get('/api/tree/2')[0] == 403
     assert http.put('/api/tree/1', json={'id': 1, 'name': 'cedar'})[0] == 200
     assert http.put('/api/tree/2', json={'id': 1, 'name': 'cedar'})[0] == 403
-    assert http.post('/api/tree/1', json={'name': 'cedar'})[0] == 500
+    assert http.post('/api/tree/1', json={'name': 'cedar'})[0] == 501
     assert http.post('/api/tree/2', json={'name': 'cedar'})[0] == 403
     assert http.delete('/api/tree/1')[0] == 200
     assert http.delete('/api/tree/2')[0] == 403
@@ -46,7 +46,7 @@ def test_read_write_decorator(rest, http):
     assert http.get('/api/tree/2')[0] == 200
     assert http.put('/api/tree/1', json={'id': 1, 'name': 'cedar'})[0] == 200
     assert http.put('/api/tree/2', json={'id': 1, 'name': 'cedar'})[0] == 403
-    assert http.post('/api/tree/1', json={'name': 'cedar'})[0] == 500
+    assert http.post('/api/tree/1', json={'name': 'cedar'})[0] == 501
     assert http.post('/api/tree/2', json={'name': 'cedar'})[0] == 403
     assert http.delete('/api/tree/1')[0] == 200
     assert http.delete('/api/tree/2')[0] == 403
@@ -86,7 +86,7 @@ def test_all_decorator(rest, http):
     assert http.put('/api/tree/1', json={'id': 1, 'name': 'cedar'})[0] == 200
     assert http.put('/api/tree/2', json={'id': 1, 'name': 'cedar'})[0] == 403
     assert http.put('/api/tree/3', json={'id': 1, 'name': 'cedar'})[0] == 403
-    assert http.post('/api/tree/1', json={'name': 'cedar'})[0] == 500
+    assert http.post('/api/tree/1', json={'name': 'cedar'})[0] == 501
     assert http.post('/api/tree/2', json={'name': 'cedar'})[0] == 403
     assert http.post('/api/tree/3', json={'name': 'cedar'})[0] == 403
     assert http.delete('/api/tree/1')[0] == 200
