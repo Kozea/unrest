@@ -149,7 +149,7 @@
 <h1 id="unrestrest">unrest.rest</h1>
 <p><a name="unrest.rest.Rest"></a></p>
 <h2 id="rest">Rest</h2>
-<pre><code class="python">Rest(unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
+<pre><code class="python">Rest(unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, properties=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
 </code></pre>
 
 <p>This is the entry point for generating a REST endpoint for a specific model
@@ -173,6 +173,7 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 <li><strong>exclude</strong>: If specified removes the json fields in this list.</li>
 <li><strong>query</strong>: A function that takes the Model query and returns your specific
         query. Can be useful to filter data for all the methods.</li>
+<li><strong>properties</strong>: A list of additional properties to retrieve on the model.</li>
 <li><strong>allow_batch</strong>: Allow batch operations (PUT and DELETE)
         without primary key.</li>
 <li><strong>auth</strong>: A decorator that will always be called.</li>
