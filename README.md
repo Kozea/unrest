@@ -108,9 +108,9 @@ db.session.remove()
 rest = UnRest(app, db.session)
 
 # Authorize every methods
-rest(Tree, methods=rest.all)
-# Authorize batch for fruit
-rest(Fruit, methods=rest.all, allow_batch=True)
+rest(Tree, methods=rest.all, allow_batch=True)
+# Don't authorize batch for fruits
+rest(Fruit, methods=rest.all)
 
 # Run the app
 app.run(debug=True)
@@ -118,9 +118,42 @@ app.run(debug=True)
 
 You will now have:
 
-#### Get all
+#### Get with primary keys arguments
+`$ curl -s http://localhost:5000/api/tree/1`
+200
+```json
+{
+    "occurences": 1,
+    "objects": [
+        {
+            "id": 1,
+            "name": "pine"
+        }
+    ]
+}
+```
+
+`$ curl -s http://localhost:5000/api/fruit/1`
+200
+```json
+{
+    "occurences": 1,
+    "objects": [
+        {
+            "fruit_id": 1,
+            "color": "grey",
+            "size": 12.0,
+            "age": 1041300.0,
+            "tree_id": 1
+        }
+    ]
+}
+```
+
+#### Get
 
 `$ curl -s http://localhost:5000/api/tree`
+200
 ```json
 {
     "occurences": 3,
@@ -141,16 +174,314 @@ You will now have:
 }
 ```
 
-#### Get one
-`$ curl -s http://localhost:5000/api/tree/1`
+`$ curl -s http://localhost:5000/api/fruit`
+200
+```json
+{
+    "occurences": 5,
+    "objects": [
+        {
+            "fruit_id": 1,
+            "color": "grey",
+            "size": 12.0,
+            "age": 1041300.0,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 2,
+            "color": "darkgrey",
+            "size": 23.0,
+            "age": 4233830.213,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 3,
+            "color": "brown",
+            "size": 2.12,
+            "age": 0.0,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 4,
+            "color": "red",
+            "size": 0.5,
+            "age": 2400.0,
+            "tree_id": 2
+        },
+        {
+            "fruit_id": 5,
+            "color": "orangered",
+            "size": 100.0,
+            "age": 7200.000012,
+            "tree_id": 2
+        }
+    ]
+}
+```
+
+#### Put with primary keys arguments
+
+`$ curl -s http://localhost:5000/api/tree/1 -X PUT -H "Content-Type: application/json" -d '{"name": "cedar"}'`
+200
 ```json
 {
     "occurences": 1,
     "objects": [
         {
             "id": 1,
-            "name": "pine"
+            "name": "cedar"
         }
     ]
+}
+```
+Get it again to be sure:
+
+`$ curl -s http://localhost:5000/api/tree/1`
+200
+```json
+{
+    "occurences": 1,
+    "objects": [
+        {
+            "id": 1,
+            "name": "cedar"
+        }
+    ]
+}
+```
+
+#### Put
+
+`$ curl -s http://localhost:5000/api/tree -X PUT -H "Content-Type: application/json" -d '{ "objects": [{"id": 2, "name": "cedar"}, {"id": 22, "name": "mango"}] }'`
+200
+```json
+{
+    "occurences": 2,
+    "objects": [
+        {
+            "id": 2,
+            "name": "cedar"
+        },
+        {
+            "id": 22,
+            "name": "mango"
+        }
+    ]
+}
+```
+
+Get it again to be sure:
+
+`$ curl -s http://localhost:5000/api/tree`
+200
+```json
+{
+    "occurences": 2,
+    "objects": [
+        {
+            "id": 2,
+            "name": "cedar"
+        },
+        {
+            "id": 22,
+            "name": "mango"
+        }
+    ]
+}
+```
+
+Check that when allow_batch is not set we can't put all:
+`$ curl -s http://localhost:5000/api/fruit -X PUT -H "Content-Type: application/json" -d '{ "objects": [{"id": 2, "color": "red"}, {"id": 22, "color": "blue"}] }'`
+406
+```json
+{
+  "message": "You must set allow_batch to True if you want to use batch methods."
+}
+```
+
+#### Post with primary keys arguments
+`$ curl -s http://localhost:5000/api/tree/1 -X POST -H "Content-Type: application/json" -d`
+501
+```json
+{
+  "message": "POST on id corresponds to collection creation. It's not implemented by default. If you want to update an item use the PUT method instead"
+}
+```
+
+#### Post
+`$ curl -s http://localhost:5000/api/fruit -X POST -H "Content-Type: application/json" -d '{ "color": "forestgreen", "size": 3.14, "age": 1.5926, "tree_id": 3 }'`
+200
+```json
+{
+    "occurences": 1,
+    "objects": [
+        {
+            "fruit_id": 6,
+            "color": "forestgreen",
+            "size": 3.14,
+            "age": 1.5926,
+            "tree_id": 3
+        }
+    ]
+}
+```
+
+Now we should have a total of 6 fruits:
+`$ curl -s http://localhost:5000/api/fruit`
+200
+```json
+{
+    "occurences": 6,
+    "objects": [
+        {
+            "fruit_id": 1,
+            "color": "grey",
+            "size": 12.0,
+            "age": 1041300.0,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 2,
+            "color": "darkgrey",
+            "size": 23.0,
+            "age": 4233830.213,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 3,
+            "color": "brown",
+            "size": 2.12,
+            "age": 0.0,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 4,
+            "color": "red",
+            "size": 0.5,
+            "age": 2400.0,
+            "tree_id": 2
+        },
+        {
+            "fruit_id": 5,
+            "color": "orangered",
+            "size": 100.0,
+            "age": 7200.000012,
+            "tree_id": 2
+        },
+        {
+            "fruit_id": 6,
+            "color": "forestgreen",
+            "size": 3.14,
+            "age": 1.5926,
+            "tree_id": 3
+        }
+    ]
+}
+```
+
+#### Delete with primary keys arguments
+
+`$ curl -s http://localhost:5000/api/fruit/3 -X DELETE`
+200
+```json
+{
+    "occurences": 1,
+    "objects": [
+        {
+            "fruit_id": 3,
+            "color": "brown",
+            "size": 2.12,
+            "age": 0.0,
+            "tree_id": 1
+        }
+    ]
+}
+```
+
+Now we should have only 5 fruits remaining:
+`$ curl -s http://localhost:5000/api/fruit`
+200
+```json
+{
+    "occurences": 5,
+    "objects": [
+        {
+            "fruit_id": 1,
+            "color": "grey",
+            "size": 12.0,
+            "age": 1041300.0,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 2,
+            "color": "darkgrey",
+            "size": 23.0,
+            "age": 4233830.213,
+            "tree_id": 1
+        },
+        {
+            "fruit_id": 4,
+            "color": "red",
+            "size": 0.5,
+            "age": 2400.0,
+            "tree_id": 2
+        },
+        {
+            "fruit_id": 5,
+            "color": "orangered",
+            "size": 100.0,
+            "age": 7200.000012,
+            "tree_id": 2
+        },
+        {
+            "fruit_id": 6,
+            "color": "forestgreen",
+            "size": 3.14,
+            "age": 1.5926,
+            "tree_id": 3
+        }
+    ]
+}
+```
+
+# Delete
+
+Batch delete is not allowed on fruit:
+`$ curl -s http://localhost:5000/api/fruit -X DELETE`
+501
+```json
+{
+  "message": "You must set allow_batch to True if you want to use batch methods."
+}
+```
+But is on tree:
+`$ curl -s http://localhost:5000/api/tree -X DELETE`
+200
+```json
+{
+    "occurences": 3,
+    "objects": [
+        {
+            "id": 1,
+            "name": "pine"
+        },
+        {
+            "id": 2,
+            "name": "maple"
+        },
+        {
+            "id": 3,
+            "name": "oak"
+        }
+    ]
+}
+```
+
+`$ curl -s http://localhost:5000/api/tree`
+200
+```json
+{
+    "occurences": 0,
+    "objects": []
 }
 ```

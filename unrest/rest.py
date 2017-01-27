@@ -1,6 +1,7 @@
 import json
 import logging
 from functools import wraps
+from json import JSONDecodeError
 
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
@@ -8,10 +9,6 @@ from sqlalchemy.schema import Column
 from .coercers import Deserialize, Serialize
 
 log = logging.getLogger('unrest.rest')
-
-
-class BatchNotAllowed(Exception):
-    pass
 
 
 class Rest(object):
@@ -105,6 +102,9 @@ class Rest(object):
             payload: The json request content containing new elements.
             pks: The primary keys in url if any.
         """
+        if not payload:
+            self.raise_error(400, 'You must provide a payload')
+
         if self.has(pks):
             for pk, val in pks.items():
                 if pk in payload:
@@ -121,8 +121,8 @@ class Rest(object):
             return self.serialize([item])
 
         if not self.allow_batch:
-            raise BatchNotAllowed(
-                'You must set allow_batch to True '
+            raise self.unrest.RestError(
+                406, 'You must set allow_batch to True '
                 'if you want to use batch methods.')
 
         self.query.delete()
@@ -144,10 +144,13 @@ class Rest(object):
         """
         if self.has(pks):
             # Create a collection?
-            raise NotImplementedError(
-                "You can't create a new collection here. "
-                "If you want to update an item use the PUT method")
+            raise self.unrest.RestError(
+                501, "POST with primary keys corresponds to collection "
+                "creation. It's not implemented by default. "
+                "If you want to update an item use the PUT method instead")
 
+        if not payload:
+            self.raise_error(400, 'You must provide a payload')
         item = self.deserialize(payload, self.Model())
         self.session.add(item)
         self.session.commit()
@@ -174,8 +177,8 @@ class Rest(object):
             return self.serialize([item])
 
         if not self.allow_batch:
-            raise BatchNotAllowed(
-                'You must set allow_batch to True '
+            raise self.unrest.RestError(
+                406, 'You must set allow_batch to True '
                 'if you want to use batch methods.')
 
         items = self.query.all()
@@ -244,8 +247,11 @@ class Rest(object):
         def wrapped(**kwargs):
             pks = self.kwargs_to_pks(kwargs)
             json = self.unrest.framework.request_json()
-            payload = self.unjson(json)
             try:
+                try:
+                    payload = self.unjson(json)
+                except JSONDecodeError as e:
+                    self.raise_error(400, 'JSON Error in payload: %s' % e)
                 decorated = method_fun
                 if method == 'GET' and self.read_auth:
                     decorated = self.read_auth(decorated)
