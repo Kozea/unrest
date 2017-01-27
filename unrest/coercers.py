@@ -51,23 +51,30 @@ class Serialize(object):
     # Arguments
         model: The sqlachemy item to serialize.
         columns: The list of columns to serialize.
+        properties: The list of properties to serialize.
+        relationships: The list of relationships to serialize.
     """
-    def __init__(self, model, columns, properties):
+    def __init__(self, model, columns, properties, relationships):
         self.model = model
         self.columns = columns
         self.properties = properties
+        self.relationships = relationships
 
     def dict(self):
         """Serialize the given model to a JSON compatible dict"""
         if self.model is None:
             return {}
         return dict({
-            column.name: self.serialize(column)
-            for column in self.columns
-        }, **{
+            column.name: self.serialize(column) for column in self.columns
+        }, **dict({
             property.name: property.get(self, self.model)
             for property in self.properties
-        })
+        }, **{
+            key: [
+                relationship_rest.serialize_object(item)
+                for item in getattr(self.model, key)
+            ] for key, relationship_rest in self.relationships.items()
+        }))
 
     def serialize(self, column):
         return self._serialize(column.type, getattr(self.model, column.name))

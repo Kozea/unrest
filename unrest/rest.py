@@ -35,6 +35,8 @@ class Rest(object):
         query: A function that takes the Model query and returns your specific
             query. Can be useful to filter data for all the methods.
         properties: A list of additional properties to retrieve on the model.
+        relationships: A mapping of relationships and rest endpoints to fetch
+            with the model.
         allow_batch: Allow batch operations (PUT and DELETE)
             without primary key.
         auth: A decorator that will always be called.
@@ -45,8 +47,8 @@ class Rest(object):
     """
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
-                 query=None, properties=None, allow_batch=False,
-                 auth=None, read_auth=None, write_auth=None,
+                 query=None, properties=None, relationships=None,
+                 allow_batch=False, auth=None, read_auth=None, write_auth=None,
                  SerializeClass=Serialize, DeserializeClass=Deserialize):
         self.unrest = unrest
         self.Model = Model
@@ -61,6 +63,7 @@ class Rest(object):
             if not isinstance(property, self.unrest.Property) else property
             for property in (properties or [])
         ]
+        self.relationships = relationships or {}
 
         self.allow_batch = allow_batch
 
@@ -234,7 +237,8 @@ class Rest(object):
         return self.DeserializeClass(payload, self.columns).create(self.Model)
 
     def serialize_object(self, item):
-        return self.SerializeClass(item, self.columns, self.properties).dict()
+        return self.SerializeClass(
+            item, self.columns, self.properties, self.relationships).dict()
 
     def serialize(self, items, count=None):
         if count is None:
@@ -277,15 +281,15 @@ class Rest(object):
         return wrapped
 
     def register_method(self, method, method_fun=None):
-            assert method in self.unrest.all, 'Unknown method %s' % method
-            method_fun = method_fun or getattr(self, method.lower())
-            method_fun = self.wrap_native(method, method_fun)
-            # str() for python 2 compat
-            method_fun.__name__ = str('_'.join(
-                ('unrest', method) + self.name_parts))
-            self.unrest.framework.register_route(
-                self.path, method, self.primary_keys,
-                method_fun)
+        assert method in self.unrest.all, 'Unknown method %s' % method
+        method_fun = method_fun or getattr(self, method.lower())
+        method_fun = self.wrap_native(method, method_fun)
+        # str() for python 2 compat
+        method_fun.__name__ = str('_'.join(
+            ('unrest', method) + self.name_parts))
+        self.unrest.framework.register_route(
+            self.path, method, self.primary_keys,
+            method_fun)
 
     def json(self, data):
         return json.dumps(data)

@@ -34,7 +34,6 @@ setup(
     description="A troubling rest api library for sqlalchemy models "
     "(pre-release)",
     author="Kozea",
-    url="http://pygal.org/",
     author_email="florian.mounier@kozea.fr",
     license="GNU LGPL v3+",
     platforms="Any",
