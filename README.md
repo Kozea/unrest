@@ -119,9 +119,10 @@ app.run(debug=True)
 You will now have:
 
 #### Get with primary keys arguments
-`$ curl -s http://localhost:5000/api/tree/1`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree/1
+
+200 OK
 {
     "occurences": 1,
     "objects": [
@@ -133,9 +134,10 @@ You will now have:
 }
 ```
 
-`$ curl -s http://localhost:5000/api/fruit/1`
-200
 ```json
+$ curl -s http://localhost:5000/api/fruit/1
+
+200 OK
 {
     "occurences": 1,
     "objects": [
@@ -152,9 +154,10 @@ You will now have:
 
 #### Get
 
-`$ curl -s http://localhost:5000/api/tree`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree
+
+200 OK
 {
     "occurences": 3,
     "objects": [
@@ -174,9 +177,10 @@ You will now have:
 }
 ```
 
-`$ curl -s http://localhost:5000/api/fruit`
-200
 ```json
+$ curl -s http://localhost:5000/api/fruit
+
+200 OK
 {
     "occurences": 5,
     "objects": [
@@ -221,9 +225,12 @@ You will now have:
 
 #### Put with primary keys arguments
 
-`$ curl -s http://localhost:5000/api/tree/1 -X PUT -H "Content-Type: application/json" -d '{"name": "cedar"}'`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree/1 -X PUT -H "Content-Type: application/json" -d '{\
+  "name": "cedar"\
+}'
+
+200 OK
 {
     "occurences": 1,
     "objects": [
@@ -236,9 +243,10 @@ You will now have:
 ```
 Get it again to be sure:
 
-`$ curl -s http://localhost:5000/api/tree/1`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree/1
+
+200 OK
 {
     "occurences": 1,
     "objects": [
@@ -252,9 +260,12 @@ Get it again to be sure:
 
 #### Put
 
-`$ curl -s http://localhost:5000/api/tree -X PUT -H "Content-Type: application/json" -d '{ "objects": [{"id": 2, "name": "cedar"}, {"id": 22, "name": "mango"}] }'`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree -X PUT -H "Content-Type: application/json" -d '{\
+  "objects": [{"id": 2, "name": "cedar"}, {"id": 22, "name": "mango"}]\
+}'
+
+200 OK
 {
     "occurences": 2,
     "objects": [
@@ -272,9 +283,10 @@ Get it again to be sure:
 
 Get it again to be sure:
 
-`$ curl -s http://localhost:5000/api/tree`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree
+
+200 OK
 {
     "occurences": 2,
     "objects": [
@@ -291,27 +303,34 @@ Get it again to be sure:
 ```
 
 Check that when allow_batch is not set we can't put all:
-`$ curl -s http://localhost:5000/api/fruit -X PUT -H "Content-Type: application/json" -d '{ "objects": [{"id": 2, "color": "red"}, {"id": 22, "color": "blue"}] }'`
-406
 ```json
+$ curl -s http://localhost:5000/api/fruit -X PUT -H "Content-Type: application/json" -d '{\
+  "objects": [{"id": 2, "color": "red"}, {"id": 22, "color": "blue"}]\
+}'
+
+406 Not Acceptable
 {
   "message": "You must set allow_batch to True if you want to use batch methods."
 }
 ```
 
 #### Post with primary keys arguments
-`$ curl -s http://localhost:5000/api/tree/1 -X POST -H "Content-Type: application/json" -d`
-501
 ```json
+$ curl -s http://localhost:5000/api/tree/1 -X POST -H "Content-Type: application/json"
+
+501 Not Implemented
 {
   "message": "POST on id corresponds to collection creation. It's not implemented by default. If you want to update an item use the PUT method instead"
 }
 ```
 
 #### Post
-`$ curl -s http://localhost:5000/api/fruit -X POST -H "Content-Type: application/json" -d '{ "color": "forestgreen", "size": 3.14, "age": 1.5926, "tree_id": 3 }'`
-200
 ```json
+$ curl -s http://localhost:5000/api/fruit -X POST -H "Content-Type: application/json" -d '{\
+  "color": "forestgreen", "size": 3.14, "age": 1.5926, "tree_id": 3\
+}'
+
+200 OK
 {
     "occurences": 1,
     "objects": [
@@ -327,9 +346,10 @@ Check that when allow_batch is not set we can't put all:
 ```
 
 Now we should have a total of 6 fruits:
-`$ curl -s http://localhost:5000/api/fruit`
-200
 ```json
+$ curl -s http://localhost:5000/api/fruit
+
+200 OK
 {
     "occurences": 6,
     "objects": [
@@ -381,9 +401,10 @@ Now we should have a total of 6 fruits:
 
 #### Delete with primary keys arguments
 
-`$ curl -s http://localhost:5000/api/fruit/3 -X DELETE`
-200
 ```json
+$ curl -s http://localhost:5000/api/fruit/3 -X DELETE
+
+200 OK
 {
     "occurences": 1,
     "objects": [
@@ -399,9 +420,10 @@ Now we should have a total of 6 fruits:
 ```
 
 Now we should have only 5 fruits remaining:
-`$ curl -s http://localhost:5000/api/fruit`
-200
 ```json
+$ curl -s http://localhost:5000/api/fruit
+
+200 OK
 {
     "occurences": 5,
     "objects": [
@@ -447,17 +469,19 @@ Now we should have only 5 fruits remaining:
 # Delete
 
 Batch delete is not allowed on fruit:
-`$ curl -s http://localhost:5000/api/fruit -X DELETE`
-501
 ```json
+$ curl -s http://localhost:5000/api/fruit -X DELETE
+
+501 Not Implemented
 {
   "message": "You must set allow_batch to True if you want to use batch methods."
 }
 ```
 But is on tree:
-`$ curl -s http://localhost:5000/api/tree -X DELETE`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree -X DELETE
+
+200 OK
 {
     "occurences": 3,
     "objects": [
@@ -477,9 +501,10 @@ But is on tree:
 }
 ```
 
-`$ curl -s http://localhost:5000/api/tree`
-200
 ```json
+$ curl -s http://localhost:5000/api/tree
+
+200 OK
 {
     "occurences": 0,
     "objects": []
