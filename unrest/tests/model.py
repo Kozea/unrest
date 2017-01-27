@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Interval, Numeric, String
@@ -26,6 +27,10 @@ class Fruit(Base):
     age = Column(Interval)
     tree_id = Column(Integer, ForeignKey('tree.id'))
     tree = relationship(Tree, backref='fruits')
+
+    @hybrid_property
+    def square_size(self):
+        return self.size * self.size
 
 
 def fill_data(session):

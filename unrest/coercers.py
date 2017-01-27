@@ -8,6 +8,17 @@ from sqlalchemy.types import String
 log = logging.getLogger('unrest.coercers')
 
 
+class Property(object):
+    def __init__(self, name, sqlalchemy_type=None):
+        self.name = name
+        self.sqlalchemy_type = sqlalchemy_type or String()
+
+    def get(self, serializer, model):
+        prop = getattr(model, self.name)
+        prop = serializer._serialize(self.sqlalchemy_type, prop)
+        return prop
+
+
 class Serialize(object):
     """
     Base serializer class
@@ -50,8 +61,7 @@ class Serialize(object):
             column.name: self.serialize(column)
             for column in self.columns
         }, **{
-            property: self._serialize(String(), getattr(
-                self.model, property))
+            property.name: property.get(self, self.model)
             for property in self.properties
         })
 

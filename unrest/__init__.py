@@ -1,6 +1,7 @@
 import logging
 
 from .rest import Rest
+from .coercers import Property
 
 log = logging.getLogger('unrest')
 
@@ -127,3 +128,5 @@ class UnRest(object):
 
         rest = Rest(self, *args, **kwargs)
         return rest
+
+    Property = Property

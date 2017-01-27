@@ -56,7 +56,12 @@ class Rest(object):
         self.only = only
         self.exclude = exclude
         self.query_factory = query or (lambda q: q)
-        self.properties = properties or []
+        self.properties = [
+            self.unrest.Property(property)
+            if not isinstance(property, self.unrest.Property) else property
+            for property in (properties or [])
+        ]
+
         self.allow_batch = allow_batch
 
         self.auth = auth
