@@ -1,12 +1,17 @@
 import json
 import logging
 from functools import wraps
-from json import JSONDecodeError
 
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
 
 from .coercers import Deserialize, Serialize
+
+try:
+    from json import JSONDecodeError
+except ImportError:
+    JSONDecodeError = Exception
+
 
 log = logging.getLogger('unrest.rest')
 

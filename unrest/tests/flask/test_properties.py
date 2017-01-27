@@ -1,6 +1,7 @@
-from . import idsorted
-from ..model import Tree, Fruit
 from sqlalchemy.types import DECIMAL
+
+from . import idsorted
+from ..model import Fruit, Tree
 
 
 def test_get_tree_with_property(rest, http):

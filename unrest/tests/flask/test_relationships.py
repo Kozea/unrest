@@ -1,5 +1,5 @@
 from . import idsorted
-from ..model import Tree, Fruit
+from ..model import Fruit, Tree
 
 
 def test_get_tree_with_relationship(rest, http):
