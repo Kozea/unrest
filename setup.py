@@ -20,7 +20,7 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 
 tests_requirements = [
