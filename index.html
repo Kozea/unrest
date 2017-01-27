@@ -52,9 +52,17 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#unrest">unrest</a></li>
+                <li class="toctree-l3"><a href="#unrest-simple-sqlalchemy-rest-api-generation">unrest - Simple sqlalchemy rest api generation.</a></li>
                 
-                    <li><a class="toctree-l4" href="#a-troubling-rest-api-library-for-sqlalchemy-models">A troubling rest api library for sqlalchemy models</a></li>
+                    <li><a class="toctree-l4" href="#example">Example</a></li>
+                
+                    <li><a class="toctree-l4" href="#get">GET</a></li>
+                
+                    <li><a class="toctree-l4" href="#put">PUT</a></li>
+                
+                    <li><a class="toctree-l4" href="#post">POST</a></li>
+                
+                    <li><a class="toctree-l4" href="#delete">DELETE</a></li>
                 
             
             </ul>
@@ -141,20 +149,18 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest">unrest</h1>
-<h2 id="a-troubling-rest-api-library-for-sqlalchemy-models">A troubling rest api library for sqlalchemy models</h2>
-<p><em>Simple sqlalchemy rest api generation.</em></p>
+                <h1 id="unrest-simple-sqlalchemy-rest-api-generation">unrest - <small>Simple sqlalchemy rest api generation.</small></h1>
 <pre><code class="python">from unrest import UnRest
-rest = UnRest(app)  # Flask app or a tornado application (coming soon) or anything else (you will have to implement the framework class)
+# First, initialize UnRest with your web application
+rest = UnRest(app)
 
-from .model import Person
-
-rest(Person, only=['name', 'sex', 'age'])
+# Then declare your endpoint
+rest(Person)
 </code></pre>
 
 <p>This should provides you a <code>/api/person</code> and a <code>/api/person/&lt;login&gt;</code> route accessible in GET only.</p>
 <p>To activate data modification, set the methods array like this:</p>
-<pre><code class="python">rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE'])
+<pre><code class="python">rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE']) # or simply methods=rest.all
 </code></pre>
 
 <p>You will get both routes on the four methods. Please see <a href="https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URL_and_HTTP_methods">the wikipedia page</a> for their signification.</p>
@@ -174,6 +180,453 @@ def get(payload, login=None):
             {'login': person['login'].lower()} for person in rv['objects']
         ]
     }
+</code></pre>
+
+<h2 id="example">Example</h2>
+<p>Consider this simple web application:</p>
+<pre><code class="python">from datetime import timedelta
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.schema import Column, ForeignKey
+from sqlalchemy.types import Integer, Interval, Numeric, String
+
+from unrest import UnRest
+
+# Flask application
+app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/unrest.db'
+
+# Model definition
+db = SQLAlchemy(app)
+
+class Tree(db.Model):
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+    @property
+    def fruit_colors(self):
+        return ', '.join([fruit.color for fruit in self.fruits])
+
+class Fruit(db.Model):
+    fruit_id = Column(Integer, primary_key=True)
+    color = Column(String(50))
+    size = Column(Numeric)
+    age = Column(Interval)
+    tree_id = Column(Integer, ForeignKey('tree.id'))
+    tree = relationship(Tree, backref='fruits')
+
+# Drop everything just in case
+db.drop_all()
+
+# Create model
+db.create_all()
+
+# Data insertion
+pine = Tree(name='pine')
+maple = Tree(name='maple')
+oak = Tree(name='oak')
+db.session.add(pine)
+db.session.add(maple)
+db.session.add(oak)
+
+db.session.add(Fruit(color='grey', size=12, age=timedelta(days=12, hours=1, minutes=15), tree=pine))
+db.session.add(Fruit(color='darkgrey', size=23, age=timedelta(days=49, seconds=230, milliseconds=213), tree=pine))
+db.session.add(Fruit(color='brown', size=2.12, age=timedelta(0), tree=pine))
+db.session.add(Fruit(color='red', size=.5, age=timedelta(minutes=40), tree=maple))
+db.session.add(Fruit(color='orangered', size=100, age=timedelta(hours=2, microseconds=12), tree=maple))
+
+db.session.commit()
+db.session.remove()
+
+# Declare rest endpoints
+rest = UnRest(app, db.session)
+
+# Authorize every methods
+rest(Tree, methods=rest.all, allow_batch=True)
+# Don't authorize batch for fruits
+rest(Fruit, methods=rest.all)
+
+# Run the app
+app.run(debug=True)
+</code></pre>
+
+<p>You will now have:</p>
+<h2 id="get">GET</h2>
+<h3 id="with-primary-keys-arguments">With primary keys arguments</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1
+
+200 OK
+{
+    &quot;occurences&quot;: 1,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;pine&quot;
+        }
+    ]
+}
+</code></pre>
+
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit/1
+
+200 OK
+{
+    &quot;occurences&quot;: 1,
+    &quot;objects&quot;: [
+        {
+            &quot;fruit_id&quot;: 1,
+            &quot;color&quot;: &quot;grey&quot;,
+            &quot;size&quot;: 12.0,
+            &quot;age&quot;: 1041300.0,
+            &quot;tree_id&quot;: 1
+        }
+    ]
+}
+</code></pre>
+
+<h3 id="without-argument">Without argument</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree
+
+200 OK
+{
+    &quot;occurences&quot;: 3,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;pine&quot;
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;name&quot;: &quot;maple&quot;
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;name&quot;: &quot;oak&quot;
+        }
+    ]
+}
+</code></pre>
+
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit
+
+200 OK
+{
+    &quot;occurences&quot;: 5,
+    &quot;objects&quot;: [
+        {
+            &quot;fruit_id&quot;: 1,
+            &quot;color&quot;: &quot;grey&quot;,
+            &quot;size&quot;: 12.0,
+            &quot;age&quot;: 1041300.0,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 2,
+            &quot;color&quot;: &quot;darkgrey&quot;,
+            &quot;size&quot;: 23.0,
+            &quot;age&quot;: 4233830.213,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 3,
+            &quot;color&quot;: &quot;brown&quot;,
+            &quot;size&quot;: 2.12,
+            &quot;age&quot;: 0.0,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 4,
+            &quot;color&quot;: &quot;red&quot;,
+            &quot;size&quot;: 0.5,
+            &quot;age&quot;: 2400.0,
+            &quot;tree_id&quot;: 2
+        },
+        {
+            &quot;fruit_id&quot;: 5,
+            &quot;color&quot;: &quot;orangered&quot;,
+            &quot;size&quot;: 100.0,
+            &quot;age&quot;: 7200.000012,
+            &quot;tree_id&quot;: 2
+        }
+    ]
+}
+</code></pre>
+
+<h2 id="put">PUT</h2>
+<h3 id="with-primary-keys-arguments_1">With primary keys arguments</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X PUT -H &quot;Content-Type: application/json&quot; -d '{\
+  &quot;name&quot;: &quot;cedar&quot;\
+}'
+
+200 OK
+{
+    &quot;occurences&quot;: 1,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;cedar&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>Get it again to be sure:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1
+
+200 OK
+{
+    &quot;occurences&quot;: 1,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;cedar&quot;
+        }
+    ]
+}
+</code></pre>
+
+<h3 id="without-argument_1">Without argument</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PUT -H &quot;Content-Type: application/json&quot; -d '{\
+  &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 22, &quot;name&quot;: &quot;mango&quot;}]\
+}'
+
+200 OK
+{
+    &quot;occurences&quot;: 2,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 2,
+            &quot;name&quot;: &quot;cedar&quot;
+        },
+        {
+            &quot;id&quot;: 22,
+            &quot;name&quot;: &quot;mango&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>Get it again to be sure:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree
+
+200 OK
+{
+    &quot;occurences&quot;: 2,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 2,
+            &quot;name&quot;: &quot;cedar&quot;
+        },
+        {
+            &quot;id&quot;: 22,
+            &quot;name&quot;: &quot;mango&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>Check that when allow_batch is not set we can't put all:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X PUT -H &quot;Content-Type: application/json&quot; -d '{\
+  &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;color&quot;: &quot;red&quot;}, {&quot;id&quot;: 22, &quot;color&quot;: &quot;blue&quot;}]\
+}'
+
+406 Not Acceptable
+{
+  &quot;message&quot;: &quot;You must set allow_batch to True if you want to use batch methods.&quot;
+}
+</code></pre>
+
+<h2 id="post">POST</h2>
+<h3 id="with-primary-keys-arguments_2">With primary keys arguments</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X POST -H &quot;Content-Type: application/json&quot;
+
+501 Not Implemented
+{
+  &quot;message&quot;: &quot;POST on id corresponds to collection creation. It's not implemented by default. If you want to update an item use the PUT method instead&quot;
+}
+</code></pre>
+
+<h3 id="without-argument_2">Without argument</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X POST -H &quot;Content-Type: application/json&quot; -d '{\
+  &quot;color&quot;: &quot;forestgreen&quot;, &quot;size&quot;: 3.14, &quot;age&quot;: 1.5926, &quot;tree_id&quot;: 3\
+}'
+
+200 OK
+{
+    &quot;occurences&quot;: 1,
+    &quot;objects&quot;: [
+        {
+            &quot;fruit_id&quot;: 6,
+            &quot;color&quot;: &quot;forestgreen&quot;,
+            &quot;size&quot;: 3.14,
+            &quot;age&quot;: 1.5926,
+            &quot;tree_id&quot;: 3
+        }
+    ]
+}
+</code></pre>
+
+<p>Now we should have a total of 6 fruits:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit
+
+200 OK
+{
+    &quot;occurences&quot;: 6,
+    &quot;objects&quot;: [
+        {
+            &quot;fruit_id&quot;: 1,
+            &quot;color&quot;: &quot;grey&quot;,
+            &quot;size&quot;: 12.0,
+            &quot;age&quot;: 1041300.0,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 2,
+            &quot;color&quot;: &quot;darkgrey&quot;,
+            &quot;size&quot;: 23.0,
+            &quot;age&quot;: 4233830.213,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 3,
+            &quot;color&quot;: &quot;brown&quot;,
+            &quot;size&quot;: 2.12,
+            &quot;age&quot;: 0.0,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 4,
+            &quot;color&quot;: &quot;red&quot;,
+            &quot;size&quot;: 0.5,
+            &quot;age&quot;: 2400.0,
+            &quot;tree_id&quot;: 2
+        },
+        {
+            &quot;fruit_id&quot;: 5,
+            &quot;color&quot;: &quot;orangered&quot;,
+            &quot;size&quot;: 100.0,
+            &quot;age&quot;: 7200.000012,
+            &quot;tree_id&quot;: 2
+        },
+        {
+            &quot;fruit_id&quot;: 6,
+            &quot;color&quot;: &quot;forestgreen&quot;,
+            &quot;size&quot;: 3.14,
+            &quot;age&quot;: 1.5926,
+            &quot;tree_id&quot;: 3
+        }
+    ]
+}
+</code></pre>
+
+<h2 id="delete">DELETE</h2>
+<h3 id="with-primary-keys-arguments_3">With primary keys arguments</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit/3 -X DELETE
+
+200 OK
+{
+    &quot;occurences&quot;: 1,
+    &quot;objects&quot;: [
+        {
+            &quot;fruit_id&quot;: 3,
+            &quot;color&quot;: &quot;brown&quot;,
+            &quot;size&quot;: 2.12,
+            &quot;age&quot;: 0.0,
+            &quot;tree_id&quot;: 1
+        }
+    ]
+}
+</code></pre>
+
+<p>Now we should have only 5 fruits remaining:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit
+
+200 OK
+{
+    &quot;occurences&quot;: 5,
+    &quot;objects&quot;: [
+        {
+            &quot;fruit_id&quot;: 1,
+            &quot;color&quot;: &quot;grey&quot;,
+            &quot;size&quot;: 12.0,
+            &quot;age&quot;: 1041300.0,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 2,
+            &quot;color&quot;: &quot;darkgrey&quot;,
+            &quot;size&quot;: 23.0,
+            &quot;age&quot;: 4233830.213,
+            &quot;tree_id&quot;: 1
+        },
+        {
+            &quot;fruit_id&quot;: 4,
+            &quot;color&quot;: &quot;red&quot;,
+            &quot;size&quot;: 0.5,
+            &quot;age&quot;: 2400.0,
+            &quot;tree_id&quot;: 2
+        },
+        {
+            &quot;fruit_id&quot;: 5,
+            &quot;color&quot;: &quot;orangered&quot;,
+            &quot;size&quot;: 100.0,
+            &quot;age&quot;: 7200.000012,
+            &quot;tree_id&quot;: 2
+        },
+        {
+            &quot;fruit_id&quot;: 6,
+            &quot;color&quot;: &quot;forestgreen&quot;,
+            &quot;size&quot;: 3.14,
+            &quot;age&quot;: 1.5926,
+            &quot;tree_id&quot;: 3
+        }
+    ]
+}
+</code></pre>
+
+<h3 id="without-argument_3">Without argument</h3>
+<p>Batch delete is not allowed on fruit:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X DELETE
+
+501 Not Implemented
+{
+  &quot;message&quot;: &quot;You must set allow_batch to True if you want to use batch methods.&quot;
+}
+</code></pre>
+
+<p>But is on tree:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X DELETE
+
+200 OK
+{
+    &quot;occurences&quot;: 3,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;name&quot;: &quot;pine&quot;
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;name&quot;: &quot;maple&quot;
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;name&quot;: &quot;oak&quot;
+        }
+    ]
+}
+</code></pre>
+
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree
+
+200 OK
+{
+    &quot;occurences&quot;: 0,
+    &quot;objects&quot;: []
+}
 </code></pre>
               
             </div>
@@ -223,5 +676,5 @@ def get(payload, login=None):
 
 <!--
 MkDocs version : 0.16.1
-Build Date UTC : 2017-01-26 15:06:03
+Build Date UTC : 2017-01-27 10:14:40
 -->
