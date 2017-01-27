@@ -466,7 +466,7 @@ $ curl -s http://localhost:5000/api/fruit
 }
 ```
 
-# Delete
+#### Delete
 
 Batch delete is not allowed on fruit:
 ```json
