@@ -1,6 +1,4 @@
-# unrest
-
-### Simple sqlalchemy rest api generation.
+# unrest - <small>Simple sqlalchemy rest api generation.</small>
 
 
 ```python
@@ -42,7 +40,7 @@ def get(payload, login=None):
     }
 ```
 
-### Example
+## Example
 
 Consider this simple web application:
 
@@ -118,7 +116,9 @@ app.run(debug=True)
 
 You will now have:
 
-#### Get with primary keys arguments
+## GET
+
+### With primary keys arguments
 ```json
 $ curl -s http://localhost:5000/api/tree/1
 
@@ -152,7 +152,7 @@ $ curl -s http://localhost:5000/api/fruit/1
 }
 ```
 
-#### Get
+### Without argument
 
 ```json
 $ curl -s http://localhost:5000/api/tree
@@ -223,7 +223,9 @@ $ curl -s http://localhost:5000/api/fruit
 }
 ```
 
-#### Put with primary keys arguments
+## PUT
+
+### With primary keys arguments
 
 ```json
 $ curl -s http://localhost:5000/api/tree/1 -X PUT -H "Content-Type: application/json" -d '{\
@@ -258,7 +260,7 @@ $ curl -s http://localhost:5000/api/tree/1
 }
 ```
 
-#### Put
+### Without argument
 
 ```json
 $ curl -s http://localhost:5000/api/tree -X PUT -H "Content-Type: application/json" -d '{\
@@ -314,7 +316,9 @@ $ curl -s http://localhost:5000/api/fruit -X PUT -H "Content-Type: application/j
 }
 ```
 
-#### Post with primary keys arguments
+## POST
+
+### With primary keys arguments
 ```json
 $ curl -s http://localhost:5000/api/tree/1 -X POST -H "Content-Type: application/json"
 
@@ -324,7 +328,7 @@ $ curl -s http://localhost:5000/api/tree/1 -X POST -H "Content-Type: application
 }
 ```
 
-#### Post
+### Without argument
 ```json
 $ curl -s http://localhost:5000/api/fruit -X POST -H "Content-Type: application/json" -d '{\
   "color": "forestgreen", "size": 3.14, "age": 1.5926, "tree_id": 3\
@@ -399,7 +403,9 @@ $ curl -s http://localhost:5000/api/fruit
 }
 ```
 
-#### Delete with primary keys arguments
+## DELETE
+
+### With primary keys arguments
 
 ```json
 $ curl -s http://localhost:5000/api/fruit/3 -X DELETE
@@ -466,7 +472,7 @@ $ curl -s http://localhost:5000/api/fruit
 }
 ```
 
-#### Delete
+### Without argument
 
 Batch delete is not allowed on fruit:
 ```json
