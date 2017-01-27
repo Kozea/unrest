@@ -151,7 +151,7 @@
 <h1 id="unrestcoercers">unrest.coercers</h1>
 <p><a name="unrest.coercers.Serialize"></a></p>
 <h2 id="serialize">Serialize</h2>
-<pre><code class="python">Serialize(model, columns, properties)
+<pre><code class="python">Serialize(model, columns, properties, relationships)
 </code></pre>
 
 <p>Base serializer class</p>
@@ -176,6 +176,8 @@ rest = UnRest(app, session, SerializeClass=BetterSerialize)
 <ul>
 <li><strong>model</strong>: The sqlachemy item to serialize.</li>
 <li><strong>columns</strong>: The list of columns to serialize.</li>
+<li><strong>properties</strong>: The list of properties to serialize.</li>
+<li><strong>relationships</strong>: The list of relationships to serialize.</li>
 </ul>
 <p><a name="unrest.coercers.Serialize.dict"></a></p>
 <h3 id="dict">dict</h3>
