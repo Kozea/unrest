@@ -9,13 +9,17 @@ log = logging.getLogger('unrest.coercers')
 
 
 class Property(object):
-    def __init__(self, name, sqlalchemy_type=None):
+    def __init__(self, name, sqlalchemy_type=None, formatter=None):
         self.name = name
         self.sqlalchemy_type = sqlalchemy_type or String()
+        self.formatter = formatter
 
     def get(self, serializer, model):
         prop = getattr(model, self.name)
-        prop = serializer._serialize(self.sqlalchemy_type, prop)
+        if self.formatter:
+            return self.formatter(prop)
+        else:
+            prop = serializer._serialize(self.sqlalchemy_type, prop)
         return prop
 
 
