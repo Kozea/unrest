@@ -6,15 +6,11 @@ generate:
     - unrest.UnRest+:
       - unrest.UnRest.__call__
 - rest.md:
-  - unrest.rest:
-    - unrest.rest.Rest+
+  - unrest.rest++
 - coercers.md:
-  - unrest.coercers:
-    - unrest.coercers.Serialize+
-    - unrest.coercers.Deserialize+
+  - unrest.coercers++
 - flask_framework.md:
-  - unrest.flask_framework:
-    - unrest.flask_framework.FlaskUnRest+
+  - unrest.flask_framework++
 
 pages:
 - Home: index.md << ../README.md
