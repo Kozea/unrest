@@ -295,6 +295,7 @@ class Rest(object):
         self.unrest.framework.register_route(
             self.path, method, self.primary_keys,
             method_fun)
+        self.unrest.set_info(self.path, method, self.columns)
 
     def json(self, data):
         return json.dumps(data)

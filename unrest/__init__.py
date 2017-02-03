@@ -1,4 +1,6 @@
+import json
 import logging
+from collections import defaultdict
 
 from .rest import Rest
 from .coercers import Property
@@ -33,6 +35,7 @@ class UnRest(object):
         framework: Your specific framework class, defaults to auto detect.
         SerializeClass: A global alternative for #Serialize class.
         DeserializeClass: A global alternative for #Deserialize class.
+        allow_options: Set it to False to disable OPTIONS requests
     Unrest aims to be framework agnostic.
     It currently works with Flask out of the box, for another web framework
     you will have to implement your own Framework class.
@@ -52,13 +55,16 @@ class UnRest(object):
     def __init__(self,
                  app=None, session=None,
                  path='/api', version='', framework=None,
-                 SerializeClass=None, DeserializeClass=None):
+                 SerializeClass=None, DeserializeClass=None,
+                 allow_options=True):
         self.path = path
         self.version = version
         self._framework = framework
-
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
+        self.allow_options = allow_options
+
+        self.infos = defaultdict(dict)
 
         if app is not None:
             self.init_app(app)
@@ -83,6 +89,7 @@ class UnRest(object):
             raise NotImplementedError(
                 'Your framework %s is not recognized. '
                 'Please provide a framework argument to UnRest' % type(app))
+        self.allow_options and self.register_options()
 
     def init_session(self, session):
         """
@@ -128,5 +135,18 @@ class UnRest(object):
 
         rest = Rest(self, *args, **kwargs)
         return rest
+
+    def register_options(self):
+        self.framework.register_route(
+            self.root_path, 'OPTIONS', None, self.api)
+
+    def set_info(self, path, method, fields):
+        self.infos[path]['fields'] = {
+            field.name: str(field.type) for field in fields}
+        self.infos[path].setdefault('methods', [])
+        self.infos[path]['methods'].append(method)
+
+    def api(self):
+        return self.framework.send_json(json.dumps(self.infos))
 
     Property = Property

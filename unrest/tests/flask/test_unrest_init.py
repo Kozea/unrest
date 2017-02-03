@@ -1,7 +1,7 @@
 from unrest import UnRest
 from unrest.flask_framework import FlaskUnRest
 
-from ..model import Tree
+from ..model import Tree, Fruit
 
 
 def test_normal(app, db, http):
@@ -60,3 +60,26 @@ def test_empty_explicit_framework(app, db, http):
     rest(Tree)
     code, _ = http.get('/api/tree')
     assert code == 404
+
+
+def test_api(app, db, http):
+    rest = UnRest(app, db.session, framework=FlaskUnRest)
+    rest(Tree, methods=rest.all)
+    rest(Fruit)
+    code, json = http.options('/api')
+    assert code == 200
+    assert json == {
+        '/api/fruit': {
+            'fields': {
+                'age': 'DATETIME',
+                'color': 'VARCHAR(50)',
+                'fruit_id': 'INTEGER',
+                'size': 'NUMERIC',
+                'tree_id': 'INTEGER'
+            },
+            'methods': ['GET']
+        },
+        '/api/tree': {
+            'fields': {'id': 'INTEGER', 'name': 'VARCHAR'},
+            'methods': ['GET', 'PUT', 'POST', 'DELETE']
+    }}
