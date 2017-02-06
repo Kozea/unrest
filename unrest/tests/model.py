@@ -10,16 +10,19 @@ Base = declarative_base()
 
 
 class Tree(Base):
+    """Where money doesn't grow"""
     __tablename__ = 'tree'
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
     @property
     def fruit_colors(self):
+        """The color of fruits"""
         return ', '.join([fruit.color for fruit in self.fruits])
 
 
 class Fruit(Base):
+    """A bag of fruit"""
     __tablename__ = 'fruit'
     fruit_id = Column(Integer, primary_key=True)
     color = Column(String(50))

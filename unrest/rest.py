@@ -58,7 +58,7 @@ class Rest(object):
         self.unrest = unrest
         self.Model = Model
 
-        self.methods = methods
+        self.methods = methods[:]
         self.name = name or self.table.name
         self.only = only
         self.exclude = exclude
@@ -79,7 +79,13 @@ class Rest(object):
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
 
-        for method in methods:
+        self.infos = self.unrest.infos[self.path]
+
+        self.set_infos()
+        if self.unrest.allow_options and self.methods:
+            self.methods.append('OPTIONS')
+
+        for method in self.methods:
             self.register_method(method)
 
     def get(self, payload, **pks):
@@ -202,6 +208,14 @@ class Rest(object):
         self.session.commit()
         return self.serialize(items, count)
 
+    def options(self, payload):
+        """
+        The OPTIONS method
+
+        Returns a description of this rest endpoint.
+        """
+        return self.infos
+
     def declare(self, method):
         """
         A decorator to register an alternative method.
@@ -225,6 +239,8 @@ class Rest(object):
             method: The method to override ('GET' for exemple)
         """
         def register_fun(fun):
+            if self.unrest.allow_options and not self.methods:
+                self.register_method('OPTIONS')
             self.register_method(method, fun)
         return register_fun
 
@@ -286,16 +302,18 @@ class Rest(object):
         return wrapped
 
     def register_method(self, method, method_fun=None):
-        assert method in self.unrest.all, 'Unknown method %s' % method
+        if method != 'OPTIONS':
+            assert method in self.unrest.all, 'Unknown method %s' % method
         method_fun = method_fun or getattr(self, method.lower())
         method_fun = self.wrap_native(method, method_fun)
         # str() for python 2 compat
         method_fun.__name__ = str('_'.join(
             ('unrest', method) + self.name_parts))
         self.unrest.framework.register_route(
-            self.path, method, self.primary_keys,
-            method_fun)
-        self.unrest.set_info(self.path, method, self.columns)
+            self.path, method,
+            self.primary_keys if method != 'OPTIONS' else None, method_fun)
+
+        self.infos['methods'].append(method)
 
     def json(self, data):
         return json.dumps(data)
@@ -306,6 +324,34 @@ class Rest(object):
 
     def has(self, pks):
         return pks and all(val is not None for val in pks.values())
+
+    def set_infos(self):
+        self.infos['model'] = self.Model.__name__
+        if getattr(self.Model, '__doc__', None):
+            self.infos['description'] = self.Model.__doc__
+
+        self.infos['columns'] = {
+            column.name: column.type.python_type.__name__
+            for column in self.columns
+        }
+
+        if self.properties:
+            self.infos['properties'] = {
+                prop.name: getattr(
+                    getattr(self.Model, prop.name), '__doc__', 'Undocumented')
+                for prop in self.properties
+            }
+
+        if self.relationships:
+            self.infos['relationships'] = {
+                rel: {k: v for k, v in rest.infos.items() if k != 'methods'}
+                for rel, rest in self.relationships.items()
+            }
+
+        if self.allow_batch:
+            self.infos['batch'] = self.allow_batch
+
+        self.infos['methods'] = []
 
     @property
     def session(self):

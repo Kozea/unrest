@@ -138,15 +138,9 @@ class UnRest(object):
 
     def register_options(self):
         self.framework.register_route(
-            self.root_path, 'OPTIONS', None, self.api)
+            self.root_path, 'OPTIONS', None, self.unrest_api)
 
-    def set_info(self, path, method, fields):
-        self.infos[path]['fields'] = {
-            field.name: str(field.type) for field in fields}
-        self.infos[path].setdefault('methods', [])
-        self.infos[path]['methods'].append(method)
-
-    def api(self):
+    def unrest_api(self):
         return self.framework.send_json(json.dumps(self.infos))
 
     Property = Property

@@ -24,7 +24,7 @@ class HTTPClient(FlaskClient):
         if response.content_type == 'application/json':
             rv = json.loads(response.data.decode('utf-8'))
         else:
-            rv = {}
+            rv = {'html': response.data.decode('utf-8')}
         return response.status_code, rv
 
 

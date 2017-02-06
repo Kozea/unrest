@@ -29,8 +29,9 @@ class FlaskUnRest(object):
         """
         if self.app.view_functions.pop(fun.__name__, None):
             log.info('Overriding route %s' % fun.__name__)
-
-        route = self.app.route(path, methods=[method])(fun)
+        getattr(fun, '__func__', fun).provide_automatic_options = False
+        self.app.add_url_rule(
+            path, fun.__name__, fun, methods=[method])
         if parameters:
             log.info('Registering route for %s for %s' % (path, method))
             path_with_params = path + '/' + '/'.join(
@@ -38,7 +39,8 @@ class FlaskUnRest(object):
 
             log.info('Registering route for %s for %s' % (
                 path_with_params, method))
-            self.app.route(path_with_params, methods=[method])(route)
+            self.app.add_url_rule(
+                path_with_params, fun.__name__, fun, methods=[method])
 
     def request_json(self):
         """

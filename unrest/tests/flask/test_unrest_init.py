@@ -62,24 +62,75 @@ def test_empty_explicit_framework(app, db, http):
     assert code == 404
 
 
-def test_api(app, db, http):
+def test_api_options(app, db, http):
     rest = UnRest(app, db.session, framework=FlaskUnRest)
-    rest(Tree, methods=rest.all)
-    rest(Fruit)
+    fruit = rest(Fruit)
+    rest(Tree, methods=rest.all,
+         relationships={'fruits': fruit},
+         properties=['fruit_colors'],
+         allow_batch=True)
     code, json = http.options('/api')
     assert code == 200
     assert json == {
         '/api/fruit': {
-            'fields': {
-                'age': 'DATETIME',
-                'color': 'VARCHAR(50)',
-                'fruit_id': 'INTEGER',
-                'size': 'NUMERIC',
-                'tree_id': 'INTEGER'
+            'model': 'Fruit',
+            'description': 'A bag of fruit',
+            'columns': {
+                'age': 'timedelta',
+                'color': 'str',
+                'fruit_id': 'int',
+                'size': 'Decimal',
+                'tree_id': 'int'
             },
-            'methods': ['GET']
+            'methods': ['GET', 'OPTIONS']
         },
         '/api/tree': {
-            'fields': {'id': 'INTEGER', 'name': 'VARCHAR'},
-            'methods': ['GET', 'PUT', 'POST', 'DELETE']
-    }}
+            'model': 'Tree',
+            'description': "Where money doesn't grow",
+            'columns': {
+                'id': 'int',
+                'name': 'str'
+            },
+            'properties': {
+                'fruit_colors': 'The color of fruits'
+            },
+            'relationships': {
+                'fruits': {
+                    'model': 'Fruit',
+                    'description': 'A bag of fruit',
+                    'columns': {
+                        'age': 'timedelta',
+                        'color': 'str',
+                        'fruit_id': 'int',
+                        'size': 'Decimal',
+                        'tree_id': 'int'
+                    }
+                }
+            },
+            'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+            'batch': True
+        }
+    }
+
+
+def test_endpoint_options(app, db, http):
+    rest = UnRest(app, db.session, framework=FlaskUnRest)
+    fruit = rest(Fruit)
+    rest(Tree, methods=rest.all,
+         relationships={'fruits': fruit},
+         properties=['fruit_colors'],
+         allow_batch=True)
+    code, json = http.options('/api/fruit')
+    assert code == 200
+    assert json == {
+        'model': 'Fruit',
+        'description': 'A bag of fruit',
+        'columns': {
+            'age': 'timedelta',
+            'color': 'str',
+            'fruit_id': 'int',
+            'size': 'Decimal',
+            'tree_id': 'int'
+        },
+        'methods': ['GET', 'OPTIONS']
+    }
