@@ -1,7 +1,7 @@
 from unrest import UnRest
 from unrest.flask_framework import FlaskUnRest
 
-from ..model import Tree, Fruit
+from ..model import Fruit, Tree
 
 
 def test_normal(app, db, http):
