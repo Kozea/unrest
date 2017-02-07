@@ -330,8 +330,14 @@ class Rest(object):
         if getattr(self.Model, '__doc__', None):
             self.infos['description'] = self.Model.__doc__
 
+        def sqlatype(type):
+            try:
+                return type.python_type.__name__
+            except NotImplementedError:
+                return type.__class__.__name__
+
         self.infos['columns'] = {
-            column.name: column.type.python_type.__name__
+            column.name: sqlatype(column.type)
             for column in self.columns
         }
 

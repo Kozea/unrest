@@ -20,7 +20,7 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 
 tests_requirements = [
@@ -47,7 +47,7 @@ setup(
         'test': tests_requirements
     },
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: "
