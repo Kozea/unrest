@@ -64,6 +64,13 @@ class Serialize(object):
         """Serialize the given model to a JSON compatible dict"""
         if self.model is None:
             return {}
+
+        def enforce_iterable(it):
+            try:
+                return iter(it)
+            except TypeError:
+                return (it,)
+
         return dict({
             column.name: self.serialize(column) for column in self.columns
         }, **dict({
@@ -72,7 +79,7 @@ class Serialize(object):
         }, **{
             key: [
                 relationship_rest.serialize_object(item)
-                for item in getattr(self.model, key)
+                for item in enforce_iterable(getattr(self.model, key))
             ] for key, relationship_rest in self.relationships.items()
         }))
 
