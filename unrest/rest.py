@@ -108,7 +108,7 @@ class Rest(object):
             return self.serialize([item])
 
         items = self.query
-        return self.serialize(items, self.query.count())
+        return self.serialize(items)
 
     def put(self, payload, **pks):
         """
@@ -150,7 +150,7 @@ class Rest(object):
         items = self.deserialize_all(payload)
         self.session.add_all(items)
         self.session.commit()
-        return self.serialize(items, self.query.count())
+        return self.serialize(items)
 
     def post(self, payload, **pks):
         """
@@ -203,10 +203,9 @@ class Rest(object):
                 'if you want to use batch methods.')
 
         items = self.query.all()
-        count = self.query.count()
         self.query.delete()
         self.session.commit()
-        return self.serialize(items, count)
+        return self.serialize(items)
 
     def options(self, payload):
         """
@@ -261,14 +260,14 @@ class Rest(object):
         return self.SerializeClass(
             item, self.columns, self.properties, self.relationships).dict()
 
-    def serialize(self, items, count=None):
-        if count is None:
-            count = len(items)
+    def serialize(self, items):
+        objects = [
+            self.serialize_object(item) for item in items  # Pagination?
+        ]
+
         return {
-            'occurences': count,
-            'objects': [
-                self.serialize_object(item) for item in items  # Pagination?
-            ]
+            'occurences': len(objects),
+            'objects': objects
         }
 
     def raise_error(self, status, message):
