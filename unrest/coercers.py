@@ -66,6 +66,8 @@ class Serialize(object):
             return {}
 
         def enforce_iterable(it):
+            if it is None:
+                return ()
             try:
                 return iter(it)
             except TypeError:
