@@ -101,7 +101,7 @@ class Rest(object):
             pks: The primary keys in url if any.
         """
         if self.has(pks):
-            item = self.query.filter_by(**pks).first()
+            item = self.get_from_pk(self.query, **pks)
             if item is None:
                 self.raise_error(404, '%s(%r) not found' % (self.name, pks))
 
@@ -134,7 +134,7 @@ class Rest(object):
                         'and url (%r) for PUT' % (pk, payload[pk], val))
                 else:
                     payload[pk] = val
-            existingItem = self.query.filter_by(**pks).first()
+            existingItem = self.get_from_pk(self.query, **pks)
             item = self.deserialize(payload, existingItem or self.Model())
             if existingItem is None:
                 self.session.add(item)
@@ -189,7 +189,7 @@ class Rest(object):
             pks: The primary keys of the element to delete.
         """
         if self.has(pks):
-            item = self.query.filter_by(**pks).first()
+            item = self.get_from_pk(self.query, **pks)
             if item is None:
                 self.raise_error(404, '%s(%r) not found' % (self.name, pks))
 
@@ -357,6 +357,11 @@ class Rest(object):
             self.infos['batch'] = self.allow_batch
 
         self.infos['methods'] = []
+
+    def get_from_pk(self, query, **pks):
+        for key, val in pks.items():
+            query = query.filter(getattr(self.Model, key) == val)
+        return query.first()
 
     @property
     def session(self):
