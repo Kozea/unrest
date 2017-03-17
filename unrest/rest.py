@@ -400,7 +400,7 @@ class Rest(object):
         def gen():
             for column in self.model_columns:
                 if column.name not in [pk.name for pk in self.primary_keys]:
-                    if self.only and column.name not in self.only:
+                    if self.only is not None and column.name not in self.only:
                         continue
                     if self.exclude and column.name in self.exclude:
                         continue
