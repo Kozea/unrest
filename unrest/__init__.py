@@ -7,6 +7,16 @@ from .coercers import Property
 
 log = logging.getLogger('unrest')
 
+try:
+    import pkg_resources
+except ImportError:
+    __version__ = "pkg_resources not found on PYTHON_PATH"
+else:
+    try:
+        __version__ = pkg_resources.require('unrest')[0].version
+    except pkg_resources.DistributionNotFound:
+        __version__ = "unrest is not installed"
+
 
 class UnRest(object):
     """
