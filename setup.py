@@ -18,10 +18,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pygal. If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from setuptools import find_packages, setup
 
-__version__ = '0.1.7'
-
+about = {}
+with open(os.path.join(
+        os.path.dirname(__file__), "unrest", "__about__.py")) as f:
+    exec(f.read(), about)
 
 tests_requirements = [
     'pytest-runner', 'pytest-cov', 'pytest-flake8', 'pytest-isort',
@@ -29,13 +33,13 @@ tests_requirements = [
 ]
 
 setup(
-    name="unrest",
-    version=__version__,
-    description="A troubling rest api library for sqlalchemy models "
-    "(pre-release)",
-    author="Kozea",
-    author_email="florian.mounier@kozea.fr",
-    license="GNU LGPL v3+",
+    name=about['__title__'],
+    version=about['__version__'],
+    description=about['__summary__'],
+    url=about['__uri__'],
+    author=about['__author__'],
+    author_email=about['__email__'],
+    license=about['__license__'],
     platforms="Any",
     packages=find_packages(),
     provides=['unrest'],
@@ -43,9 +47,7 @@ setup(
     install_requires=['sqlalchemy', 'python-dateutil'],
     setup_requires=['pytest-runner'],
     test_requires=tests_requirements,
-    extras_require={
-        'test': tests_requirements
-    },
+    extras_require={'test': tests_requirements},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
