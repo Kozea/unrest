@@ -18,6 +18,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with pygal. If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from setuptools import find_packages, setup
 
 __version__ = '0.1.6'
@@ -27,6 +29,9 @@ tests_requirements = [
     'pytest-runner', 'pytest-cov', 'pytest-flake8', 'pytest-isort',
     'pytest', 'flask', 'flask-sqlalchemy'
 ]
+
+needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
+pytest_runner = ['pytest-runner'] if needs_pytest else []
 
 setup(
     name="unrest",
@@ -41,7 +46,7 @@ setup(
     provides=['unrest'],
     keywords=['rest', 'flask', 'api', 'sqlalchemy'],
     install_requires=['sqlalchemy', 'python-dateutil'],
-    setup_requires=['pytest-runner'],
+    setup_requires=pytest_runner,
     test_requires=tests_requirements,
     extras_require={
         'test': tests_requirements
