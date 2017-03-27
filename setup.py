@@ -19,6 +19,7 @@
 # along with pygal. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 
 from setuptools import find_packages, setup
 
