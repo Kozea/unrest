@@ -40,6 +40,10 @@ def get(payload, login=None):
     }
 ```
 
+## Documentation
+
+Full documentation can be found at [kozea.github.io/unrest](https://kozea.github.io/unrest/)
+
 ## Example
 
 Consider this simple web application:
