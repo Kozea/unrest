@@ -1,6 +1,7 @@
 import datetime
 import decimal
 import logging
+from base64 import b64decode, b64encode
 
 import dateutil
 from sqlalchemy.types import String
@@ -116,6 +117,9 @@ class Serialize(object):
         return float(data)
     serialize_numeric = serialize_decimal
 
+    def serialize_largebinary(self, type, data):
+        return b64encode(data).decode('utf-8')
+
 
 class Deserialize(object):
     """
@@ -199,3 +203,6 @@ class Deserialize(object):
     def deserialize_decimal(self, type, data):
         return decimal.Decimal(data)
     deserialize_numeric = deserialize_decimal
+
+    def deserialize_largebinary(self, type, data):
+        return b64decode(data)
