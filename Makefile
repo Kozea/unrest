@@ -20,3 +20,14 @@ check-outdated:
 
 check:
 	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS)
+
+release:
+ifndef VERSION
+  $(error VERSION is undefined)
+endif
+	sed -i -e "s/__version__ = \"[0-9.]*\"/__version__ = \"$(VERSION)\"/" unrest/__about__.py
+	git commit -am "Bump $(VERSION)"
+	git tag $(VERSION)
+	$(PYTHON) setup.py sdist bdist_wheel upload
+	git push
+	git push --tags

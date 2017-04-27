@@ -387,7 +387,9 @@ class Rest(object):
 
     @property
     def primary_keys(self):
-        return {pk.name: pk for pk in inspect(self.Model).primary_key}
+        ins = inspect(self.Model)
+        return {ins.get_property_by_column(pk).key: pk
+                for pk in ins.primary_key}
 
     @property
     def model_columns(self):
@@ -399,7 +401,7 @@ class Rest(object):
     def columns(self):
         def gen():
             for name, column in self.model_columns:
-                if column.name not in self.primary_keys:
+                if name not in self.primary_keys:
                     if self.only is not None and name not in self.only:
                         continue
                     if self.exclude and name in self.exclude:
