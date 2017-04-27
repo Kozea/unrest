@@ -1,11 +1,11 @@
 include Makefile.config
 -include Makefile.custom.config
 
-all: install check
+all: install lint check-outdated check
 
 install:
 	test -d $(VENV) || virtualenv $(VENV)
-	$(PIP) install --upgrade --no-cache pip setuptools -e .[test]
+	$(PIP) install --upgrade --no-cache pip setuptools -e .[test] devcore
 
 clean:
 	rm -fr $(VENV)
@@ -18,5 +18,5 @@ lint:
 check-outdated:
 	$(PIP) list --outdated --format=columns
 
-check: check-outdated
+check:
 	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS)

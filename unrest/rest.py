@@ -248,7 +248,7 @@ class Rest(object):
             return {}
         item = self.Model()
         self.DeserializeClass(kwargs, self.primary_keys).merge(item)
-        return {pk.name: getattr(item, pk.name) for pk in self.primary_keys}
+        return {name: getattr(item, name) for name in self.primary_keys}
 
     def deserialize(self, payload, item):
         return self.DeserializeClass(payload, self.columns).merge(item)
@@ -336,8 +336,8 @@ class Rest(object):
                 return type.__class__.__name__
 
         self.infos['columns'] = {
-            column.name: sqlatype(column.type)
-            for column in self.columns
+            name: sqlatype(column.type)
+            for name, column in self.columns.items()
         }
 
         if self.properties:
@@ -387,22 +387,22 @@ class Rest(object):
 
     @property
     def primary_keys(self):
-        return inspect(self.Model).primary_key
+        return {pk.name: pk for pk in inspect(self.Model).primary_key}
 
     @property
     def model_columns(self):
-        for column in inspect(self.Model).columns:
+        for name, column in inspect(self.Model).columns.items():
             if isinstance(column, Column):
-                yield column
+                yield name, column
 
     @property
     def columns(self):
         def gen():
-            for column in self.model_columns:
-                if column.name not in [pk.name for pk in self.primary_keys]:
-                    if self.only is not None and column.name not in self.only:
+            for name, column in self.model_columns:
+                if column.name not in self.primary_keys:
+                    if self.only is not None and name not in self.only:
                         continue
-                    if self.exclude and column.name in self.exclude:
+                    if self.exclude and name in self.exclude:
                         continue
-                yield column
-        return list(gen())
+                yield name, column
+        return dict(gen())

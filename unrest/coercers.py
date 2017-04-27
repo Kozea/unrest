@@ -74,7 +74,8 @@ class Serialize(object):
                 return (it,)
 
         return dict({
-            column.name: self.serialize(column) for column in self.columns
+            name: self.serialize(name, column)
+            for name, column in self.columns.items()
         }, **dict({
             property.name: property.get(self, self.model)
             for property in self.properties
@@ -85,8 +86,8 @@ class Serialize(object):
             ] for key, relationship_rest in self.relationships.items()
         }))
 
-    def serialize(self, column):
-        return self._serialize(column.type, getattr(self.model, column.name))
+    def serialize(self, name, column):
+        return self._serialize(column.type, getattr(self.model, name))
 
     def _serialize(self, type, data):
         if data is None:
@@ -150,8 +151,8 @@ class Deserialize(object):
 
     def merge(self, item, payload=None):
         """Deserialize the given payload into the existing sqlachemy `item`"""
-        for column in self.columns:
-            setattr(item, column.name, self.deserialize(column, payload))
+        for name, column in self.columns.items():
+            setattr(item, name, self.deserialize(name, column, payload))
         return item
 
     def create(self, factory):
@@ -162,11 +163,11 @@ class Deserialize(object):
         return [
             self.merge(factory(), item) for item in self.payload['objects']]
 
-    def deserialize(self, column, payload=None):
+    def deserialize(self, name, column, payload=None):
         payload = payload or self.payload
-        if column.name not in payload:
+        if name not in payload:
             return None
-        return self._deserialize(column.type, payload[column.name])
+        return self._deserialize(column.type, payload[name])
 
     def _deserialize(self, type, data):
         if data is None:

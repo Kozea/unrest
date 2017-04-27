@@ -25,7 +25,7 @@ class Fruit(Base):
     """A bag of fruit"""
     __tablename__ = 'fruit'
     fruit_id = Column(Integer, primary_key=True)
-    color = Column(String(50))
+    color = Column('hue', String(50))
     size = Column(Numeric)
     age = Column(Interval)
     tree_id = Column(Integer, ForeignKey('tree.id'))

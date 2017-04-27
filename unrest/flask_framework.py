@@ -35,7 +35,7 @@ class FlaskUnRest(object):
         if parameters:
             log.info('Registering route for %s for %s' % (path, method))
             path_with_params = path + '/' + '/'.join(
-                '<%s>' % param.name for param in parameters)
+                '<%s>' % param for param in parameters)
 
             log.info('Registering route for %s for %s' % (
                 path_with_params, method))
