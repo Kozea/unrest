@@ -293,9 +293,8 @@ class Rest(object):
 
                 data = decorated(payload, **pks)
             except self.unrest.RestError as e:
-                json = {'message': e.message}
                 return self.unrest.framework.send_error(
-                    {'message': e.message}, e.status)
+                    dict(message=e.message, **e.extra), e.status)
             json = self.json(data)
             return self.unrest.framework.send_json(json)
         return wrapped

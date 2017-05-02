@@ -26,7 +26,7 @@ ifndef VERSION
   $(error VERSION is undefined)
 endif
 	git pull
-	sed -i -e "s/__version__ = \"[0-9.]*\"/__version__ = \"$(VERSION)\"/" unrest/__about__.py
+	sed -i -e "s/__version__ = \"[0-9.]*\"/__version__ = \"$(VERSION)\"/" $(PROJECT_NAME)/__about__.py
 	git commit -am "Bump $(VERSION)"
 	git tag $(VERSION)
 	$(PYTHON) setup.py sdist bdist_wheel upload

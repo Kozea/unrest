@@ -49,9 +49,10 @@ class UnRest(object):
         wrapper and will return a `status` http error with the specified
         `message`.
         """
-        def __init__(self, status, message):
+        def __init__(self, status, message, extra=None):
             self.status = status
             self.message = message
+            self.extra = extra or {}
 
     def __init__(self,
                  app=None, session=None,
