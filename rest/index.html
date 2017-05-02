@@ -45,66 +45,54 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="..">Home</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">API Documentation</span>
     <ul class="subnav">
-    <li><span>API Documentation</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../unrest/">UnRest</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Rest entry points</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#unrestrest">unrest.rest</a></li>
-                
-                    <li><a class="toctree-l4" href="#rest">Rest</a></li>
-                
-            
-            </ul>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../coercers/">Serialization/Deserialization</a>
-        
-    </li>
-
-        
-    </ul>
-<li>
-          
-            <li>
+                <li class="">
+                    
+    <a class="" href="../unrest/">UnRest</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Rest entry points</a>
     <ul class="subnav">
-    <li><span>Frameworks</span></li>
-
-        
             
-    <li class="toctree-l1 ">
-        <a class="" href="../flask_framework/">Flask</a>
+    <li class="toctree-l3"><a href="#unrestrest">unrest.rest</a></li>
+    
+        <ul>
         
-    </li>
+            <li><a class="toctree-l4" href="#rest">Rest</a></li>
+        
+        </ul>
+    
 
-        
     </ul>
-<li>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../coercers/">Serialization/Deserialization</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Frameworks</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../flask_framework/">Flask</a>
+                </li>
+    </ul>
+	    </li>
           
         </ul>
       </div>
@@ -239,6 +227,13 @@ Primary keys: Delete the element associated with the primary keys.</p>
 <li><strong>payload</strong>: The json request content ignored in DELETE.</li>
 <li><strong>pks</strong>: The primary keys of the element to delete.</li>
 </ul>
+<p><a name="unrest.rest.Rest.options"></a></p>
+<h3 id="options">options</h3>
+<pre><code class="python">Rest.options(payload)
+</code></pre>
+
+<p>The OPTIONS method</p>
+<p>Returns a description of this rest endpoint.</p>
 <p><a name="unrest.rest.Rest.declare"></a></p>
 <h3 id="declare">declare</h3>
 <pre><code class="python">Rest.declare(method)
@@ -298,7 +293,7 @@ def get(payload, fruit_id=None):
   <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
-          <a href="https://github.com/Kozea/unrest" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+          <a href="https://github.com/Kozea/unrest" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
         <span><a href="../unrest/" style="color: #fcfcfc;">&laquo; Previous</a></span>
