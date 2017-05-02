@@ -51,7 +51,7 @@ setup(
     install_requires=['sqlalchemy', 'python-dateutil'],
     setup_requires=pytest_runner,
     test_requires=tests_requirements,
-    extras_require={'test': tests_requirements},
+    extras_require={'test': tests_requirements, 'docs': ['pydoc-markdown']},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",

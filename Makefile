@@ -5,7 +5,7 @@ all: install lint check-outdated check
 
 install:
 	test -d $(VENV) || virtualenv $(VENV)
-	$(PIP) install --upgrade --no-cache pip setuptools -e .[test] devcore
+	$(PIP) install --upgrade --no-cache pip setuptools -e .[test,docs] devcore
 
 clean:
 	rm -fr $(VENV)
@@ -21,12 +21,13 @@ check-outdated:
 check:
 	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS)
 
-release:
-ifndef VERSION
-  $(error VERSION is undefined)
-endif
+.PHONY: docs
+docs:
+	cd docs && PATH=$(PATH):$(VENV)/bin/ $(VENV)/bin/pydocmd gh-deploy
+
+release: docs
 	git pull
-	sed -i -e "s/__version__ = \"[0-9.]*\"/__version__ = \"$(VERSION)\"/" $(PROJECT_NAME)/__about__.py
+	$(eval VERSION := $(shell PROJECT_NAME=$(PROJECT_NAME) $(VENV)/bin/devcore bump $(LEVEL)))
 	git commit -am "Bump $(VERSION)"
 	git tag $(VERSION)
 	$(PYTHON) setup.py sdist bdist_wheel upload

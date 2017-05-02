@@ -1,3 +1,8 @@
+0.2.3
+=====
+
+* Add extra data on errors
+
 0.2.2
 =====
 
