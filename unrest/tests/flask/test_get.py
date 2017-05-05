@@ -45,6 +45,7 @@ def test_get_tree_query_factory(rest, http, db):
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 1
+    assert json['primary_keys'] == ['id']
     assert idsorted(json['objects']) == [
         {'id': 1, 'name': 'pine'}
     ]
@@ -56,6 +57,7 @@ def test_get_fruits(rest, http):
     code, json = http.get('/api/fruit')
     assert code == 200
     assert json['occurences'] == 5
+    assert json['primary_keys'] == ['fruit_id']
     assert idsorted(json['objects'], 'fruit_id') == [
         {
             'fruit_id': 1,

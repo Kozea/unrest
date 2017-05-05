@@ -267,6 +267,7 @@ class Rest(object):
 
         return {
             'occurences': len(objects),
+            'primary_keys': list(self.primary_keys.keys()),
             'objects': objects
         }
 

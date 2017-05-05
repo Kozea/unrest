@@ -1,3 +1,8 @@
+0.2.4
+=====
+
+* Add primary_keys in json response
+
 0.2.3
 =====
 
