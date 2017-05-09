@@ -68,6 +68,8 @@
         
             <li><a class="toctree-l3" href="#delete">DELETE</a></li>
         
+            <li><a class="toctree-l3" href="#patch">PATCH</a></li>
+        
         </ul>
     
 
@@ -150,7 +152,7 @@ rest(Person)
 
 <p>This should provides you a <code>/api/person</code> and a <code>/api/person/&lt;login&gt;</code> route accessible in GET only.</p>
 <p>To activate data modification, set the methods array like this:</p>
-<pre><code class="python">rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE']) # or simply methods=rest.all
+<pre><code class="python">rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH']) # or simply methods=rest.all
 </code></pre>
 
 <p>You will get both routes on the four methods. Please see <a href="https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URL_and_HTTP_methods">the wikipedia page</a> for their signification.</p>
@@ -349,8 +351,8 @@ app.run(debug=True)
 
 <h2 id="put">PUT</h2>
 <h3 id="with-primary-keys-arguments_1">With primary keys arguments</h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X PUT -H &quot;Content-Type: application/json&quot; -d '{\
-  &quot;name&quot;: &quot;cedar&quot;\
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X PUT -H &quot;Content-Type: application/json&quot; -d '{
+  &quot;name&quot;: &quot;cedar&quot;
 }'
 
 200 OK
@@ -381,8 +383,8 @@ app.run(debug=True)
 </code></pre>
 
 <h3 id="without-argument_1">Without argument</h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PUT -H &quot;Content-Type: application/json&quot; -d '{\
-  &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 22, &quot;name&quot;: &quot;mango&quot;}]\
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PUT -H &quot;Content-Type: application/json&quot; -d '{
+  &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 22, &quot;name&quot;: &quot;mango&quot;}]
 }'
 
 200 OK
@@ -421,8 +423,11 @@ app.run(debug=True)
 </code></pre>
 
 <p>Check that when allow_batch is not set we can't put all:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X PUT -H &quot;Content-Type: application/json&quot; -d '{\
-  &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;color&quot;: &quot;red&quot;}, {&quot;id&quot;: 22, &quot;color&quot;: &quot;blue&quot;}]\
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X PUT -H &quot;Content-Type: application/json&quot; -d '{
+  &quot;objects&quot;: [
+    {&quot;fruit_id&quot;: 2, &quot;color&quot;: &quot;red&quot;},
+    {&quot;fruit_id&quot;: 22, &quot;color&quot;: &quot;blue&quot;}
+  ]
 }'
 
 406 Not Acceptable
@@ -442,8 +447,8 @@ app.run(debug=True)
 </code></pre>
 
 <h3 id="without-argument_2">Without argument</h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X POST -H &quot;Content-Type: application/json&quot; -d '{\
-  &quot;color&quot;: &quot;forestgreen&quot;, &quot;size&quot;: 3.14, &quot;age&quot;: 1.5926, &quot;tree_id&quot;: 3\
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X POST -H &quot;Content-Type: application/json&quot; -d '{
+  &quot;color&quot;: &quot;forestgreen&quot;, &quot;size&quot;: 3.14, &quot;age&quot;: 1.5926, &quot;tree_id&quot;: 3
 }'
 
 200 OK
@@ -620,6 +625,66 @@ app.run(debug=True)
     &quot;objects&quot;: []
 }
 </code></pre>
+
+<h2 id="patch">PATCH</h2>
+<h3 id="with-primary-keys-arguments_4">With primary keys arguments</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit/1 -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
+  &quot;color&quot;: &quot;blue&quot;
+}'
+
+200 OK
+{
+    &quot;occurences&quot;: 1,
+    &quot;objects&quot;: [
+        {
+          &quot;fruit_id&quot;: 1,
+          &quot;color&quot;: &quot;blue&quot;,
+          &quot;size&quot;: 12.0,
+          &quot;age&quot;: 1041300.0,
+          &quot;tree_id&quot;: 1
+        }
+    ]
+}
+</code></pre>
+
+<h3 id="without-argument_4">Without argument</h3>
+<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
+  &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 3, &quot;name&quot;: &quot;mango&quot;}]
+}'
+
+200 OK
+{
+    &quot;occurences&quot;: 2,
+    &quot;objects&quot;: [
+        {
+            &quot;id&quot;: 2,
+            &quot;name&quot;: &quot;cedar&quot;
+        },
+        {
+            &quot;id&quot;: 3,
+            &quot;name&quot;: &quot;mango&quot;
+        }
+    ]
+}
+</code></pre>
+
+<p>Check that when allow_batch is not set we can't put all:</p>
+<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
+  &quot;objects&quot;: [
+    {&quot;fruit_id&quot;: 1, &quot;color&quot;: &quot;blue&quot;},
+    {&quot;fruit_id&quot;: 3, &quot;age&quot;: 1038540.0},
+    {&quot;fruit_id&quot;: 4, &quot;color&quot;: &quot;rainbow&quot;, &quot;size&quot;: 8},
+    {&quot;fruit_id&quot;: 5, &quot;size&quot;: 10, &quot;tree_id&quot;: 1}
+  ]
+}'
+
+406 Not Acceptable
+{
+  &quot;message&quot;: &quot;You must set allow_batch to True if you want to use batch methods.&quot;
+}
+</code></pre>
+
+<p>otherwise all the specified attributes would have been patched.</p>
               
             </div>
           </div>
@@ -668,5 +733,5 @@ app.run(debug=True)
 
 <!--
 MkDocs version : 0.16.3
-Build Date UTC : 2017-05-05 13:52:19
+Build Date UTC : 2017-05-09 13:41:38
 -->

@@ -155,7 +155,7 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 <li><strong>unrest</strong>: The unrest instance given automatically on UnRest call.</li>
 <li><strong>Model</strong>: The sqlalchemy orm model class.</li>
 <li><strong>methods</strong>: The allowed method list on this endpoint. Possible values are
-        GET, PUT, POST, DELETE and rest.all</li>
+        GET, PUT, POST, DELETE, PATCH and rest.all</li>
 <li><strong>name</strong>: If specified replaces the model name in url.</li>
 <li><strong>only</strong>: If specified restricts the json fields to this list.</li>
 <li><strong>exclude</strong>: If specified removes the json fields in this list.</li>
@@ -164,11 +164,12 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 <li><strong>properties</strong>: A list of additional properties to retrieve on the model.</li>
 <li><strong>relationships</strong>: A mapping of relationships and rest endpoints to fetch
         with the model.</li>
-<li><strong>allow_batch</strong>: Allow batch operations (PUT and DELETE)
+<li><strong>allow_batch</strong>: Allow batch operations (PUT, DELETE and PATCH)
         without primary key.</li>
 <li><strong>auth</strong>: A decorator that will always be called.</li>
 <li><strong>read_auth</strong>: A decorator that will be called on GET.</li>
-<li><strong>write_auth</strong>: A decorator that will be called on PUT, POST and DELETE.</li>
+<li><strong>write_auth</strong>: A decorator that will be called on PUT, POST, DELETE
+        and PATCH.</li>
 <li><strong>SerializeClass</strong>: An alternative <code>Serialize</code> class.</li>
 <li><strong>DeserializeClass</strong>: An alternative <code>Deserialize</code> class.</li>
 </ul>
@@ -226,6 +227,21 @@ Primary keys: Delete the element associated with the primary keys.</p>
 <ul>
 <li><strong>payload</strong>: The json request content ignored in DELETE.</li>
 <li><strong>pks</strong>: The primary keys of the element to delete.</li>
+</ul>
+<p><a name="unrest.rest.Rest.patch"></a></p>
+<h3 id="patch">patch</h3>
+<pre><code class="python">Rest.patch(payload, **pks)
+</code></pre>
+
+<p>The PATCH method</p>
+<p>No arguments: If allow_batch set to true patch existing elements
+    with element attributes specified in the request payload.
+Primary keys: Patch only one</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The json request content containing
+        a list of attributes to be patched.</li>
+<li><strong>pks</strong>: The primary keys of the element to patch.</li>
 </ul>
 <p><a name="unrest.rest.Rest.options"></a></p>
 <h3 id="options">options</h3>
