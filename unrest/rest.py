@@ -2,6 +2,7 @@ import json
 import logging
 from functools import wraps
 
+from sqlalchemy import and_, or_
 from sqlalchemy.inspection import inspect
 from sqlalchemy.schema import Column
 
@@ -33,7 +34,7 @@ class Rest(object):
         unrest: The unrest instance given automatically on UnRest call.
         Model: The sqlalchemy orm model class.
         methods: The allowed method list on this endpoint. Possible values are
-            GET, PUT, POST, DELETE and rest.all
+            GET, PUT, POST, DELETE, PATCH and rest.all
         name: If specified replaces the model name in url.
         only: If specified restricts the json fields to this list.
         exclude: If specified removes the json fields in this list.
@@ -42,11 +43,12 @@ class Rest(object):
         properties: A list of additional properties to retrieve on the model.
         relationships: A mapping of relationships and rest endpoints to fetch
             with the model.
-        allow_batch: Allow batch operations (PUT and DELETE)
+        allow_batch: Allow batch operations (PUT, DELETE and PATCH)
             without primary key.
         auth: A decorator that will always be called.
         read_auth: A decorator that will be called on GET.
-        write_auth: A decorator that will be called on PUT, POST and DELETE.
+        write_auth: A decorator that will be called on PUT, POST, DELETE
+            and PATCH.
         SerializeClass: An alternative #Serialize class.
         DeserializeClass: An alternative #Deserialize class.
     """
@@ -207,6 +209,70 @@ class Rest(object):
         self.session.commit()
         return self.serialize(items)
 
+    def patch(self, payload, **pks):
+        """
+        The PATCH method
+
+        No arguments: If allow_batch set to true patch existing elements
+            with element attributes specified in the request payload.
+        Primary keys: Patch only one
+
+        # Arguments
+            payload: The json request content containing
+                a list of attributes to be patched.
+            pks: The primary keys of the element to patch.
+        """
+        if not payload:
+            self.raise_error(400, 'You must provide a payload')
+
+        if self.has(pks):
+            for pk, val in pks.items():
+                if pk in payload:
+                    assert payload[pk] == val, (
+                        'Incoherent primary_key (%s) in payload (%r) '
+                        'and url (%r) for PATCH' % (pk, payload[pk], val))
+                else:
+                    payload[pk] = val
+            item = self.get_from_pk(self.query, **pks)
+            if item is None:
+                self.raise_error(404, '%s(%r) not found' % (self.name, pks))
+            self.deserialize(payload, item, blank_missing=False)
+            self.session.commit()
+            return self.serialize([item])
+
+        if self.has(pks):
+            raise self.unrest.RestError(
+                501, "PATCH with primary keys corresponds to nothing. "
+                "It's not implemented by default. ")
+
+        if not self.allow_batch:
+            raise self.unrest.RestError(
+                406, 'You must set allow_batch to True '
+                'if you want to use batch methods.')
+
+        patches = payload['objects']
+        # Get all concerned items
+        items = self.get_all_from_pks(self.query, [{
+            pk: patch[pk] for pk in self.primary_keys}
+            for patch in patches])
+        if len(items) < len(patches):
+            for patch in patches:
+                if len([item for pk in self.primary_keys for item in items
+                        if getattr(item, pk) == patch[pk]]) == 0:
+                    self.raise_error(404, '%s(%r) not found' % (
+                        self.name, {key: val for key, val in patch.items()
+                                    if key in self.primary_keys}))
+        for patch in patches:
+            # Get the patch item
+            item = [item
+                    for pk in self.primary_keys
+                    for item in items if getattr(item, pk) == patch[pk]][0]
+            # Merge only patched colmuns
+            self.deserialize(patch, item, blank_missing=False)
+
+        self.session.commit()
+        return self.serialize(items)
+
     def options(self, payload):
         """
         The OPTIONS method
@@ -250,8 +316,15 @@ class Rest(object):
         self.DeserializeClass(kwargs, self.primary_keys).merge(item)
         return {name: getattr(item, name) for name in self.primary_keys}
 
-    def deserialize(self, payload, item):
-        return self.DeserializeClass(payload, self.columns).merge(item)
+    def deserialize(self, payload, item, blank_missing=True):
+        if blank_missing:
+            columns = self.columns
+        else:
+            # Mind only provided columns
+            columns = {
+                name: column for name, column in self.columns.items()
+                if name in payload}
+        return self.DeserializeClass(payload, columns).merge(item)
 
     def deserialize_all(self, payload):
         return self.DeserializeClass(payload, self.columns).create(self.Model)
@@ -287,7 +360,8 @@ class Rest(object):
                 decorated = method_fun
                 if method == 'GET' and self.read_auth:
                     decorated = self.read_auth(decorated)
-                if method in ['PUT', 'POST', 'DELETE'] and self.write_auth:
+                if (method in ['PUT', 'POST', 'DELETE', 'PATCH'] and
+                        self.write_auth):
                     decorated = self.write_auth(decorated)
                 if self.auth:
                     decorated = self.auth(decorated)
@@ -362,6 +436,13 @@ class Rest(object):
         for key, val in pks.items():
             query = query.filter(getattr(self.Model, key) == val)
         return query.first()
+
+    def get_all_from_pks(self, query, items_pks):
+        return query.filter(
+            or_(*[and_(*[
+                getattr(self.Model, key) == val
+                for key, val in pks.items()
+            ]) for pks in items_pks])).all()
 
     @property
     def session(self):

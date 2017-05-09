@@ -112,7 +112,7 @@ class UnRest(object):
         Return all supported methods. Useful for the rest
         `method` keyword argument.
         """
-        return ['GET', 'PUT', 'POST', 'DELETE']
+        return ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
 
     def raise_error(self, status, message):
         """

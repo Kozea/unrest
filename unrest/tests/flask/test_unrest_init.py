@@ -107,7 +107,7 @@ def test_api_options(app, db, http):
                     }
                 }
             },
-            'methods': ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+            'methods': ['GET', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
             'batch': True
         }
     }

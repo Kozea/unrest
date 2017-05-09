@@ -15,7 +15,7 @@ This should provides you a `/api/person` and a `/api/person/<login>` route acces
 To activate data modification, set the methods array like this:
 
 ```python
-rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE']) # or simply methods=rest.all
+rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH']) # or simply methods=rest.all
 ```
 
 You will get both routes on the four methods. Please see [the wikipedia page](https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URL_and_HTTP_methods) for their signification.
