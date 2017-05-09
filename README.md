@@ -232,8 +232,8 @@ $ curl -s http://localhost:5000/api/fruit
 ### With primary keys arguments
 
 ```json
-$ curl -s http://localhost:5000/api/tree/1 -X PUT -H "Content-Type: application/json" -d '{\
-  "name": "cedar"\
+$ curl -s http://localhost:5000/api/tree/1 -X PUT -H "Content-Type: application/json" -d '{
+  "name": "cedar"
 }'
 
 200 OK
@@ -267,8 +267,8 @@ $ curl -s http://localhost:5000/api/tree/1
 ### Without argument
 
 ```json
-$ curl -s http://localhost:5000/api/tree -X PUT -H "Content-Type: application/json" -d '{\
-  "objects": [{"id": 2, "name": "cedar"}, {"id": 22, "name": "mango"}]\
+$ curl -s http://localhost:5000/api/tree -X PUT -H "Content-Type: application/json" -d '{
+  "objects": [{"id": 2, "name": "cedar"}, {"id": 22, "name": "mango"}]
 }'
 
 200 OK
@@ -310,8 +310,11 @@ $ curl -s http://localhost:5000/api/tree
 
 Check that when allow_batch is not set we can't put all:
 ```json
-$ curl -s http://localhost:5000/api/fruit -X PUT -H "Content-Type: application/json" -d '{\
-  "objects": [{"id": 2, "color": "red"}, {"id": 22, "color": "blue"}]\
+$ curl -s http://localhost:5000/api/fruit -X PUT -H "Content-Type: application/json" -d '{
+  "objects": [
+    {"fruit_id": 2, "color": "red"},
+    {"fruit_id": 22, "color": "blue"}
+  ]
 }'
 
 406 Not Acceptable
@@ -334,8 +337,8 @@ $ curl -s http://localhost:5000/api/tree/1 -X POST -H "Content-Type: application
 
 ### Without argument
 ```json
-$ curl -s http://localhost:5000/api/fruit -X POST -H "Content-Type: application/json" -d '{\
-  "color": "forestgreen", "size": 3.14, "age": 1.5926, "tree_id": 3\
+$ curl -s http://localhost:5000/api/fruit -X POST -H "Content-Type: application/json" -d '{
+  "color": "forestgreen", "size": 3.14, "age": 1.5926, "tree_id": 3
 }'
 
 200 OK
@@ -520,3 +523,69 @@ $ curl -s http://localhost:5000/api/tree
     "objects": []
 }
 ```
+
+## PATCH
+
+### With primary keys arguments
+
+```json
+$ curl -s http://localhost:5000/api/fruit/1 -X PATCH -H "Content-Type: application/json" -d '{
+  "color": "blue"
+}'
+
+200 OK
+{
+    "occurences": 1,
+    "objects": [
+        {
+          "fruit_id": 1,
+          "color": "blue",
+          "size": 12.0,
+          "age": 1041300.0,
+          "tree_id": 1
+        }
+    ]
+}
+```
+
+### Without argument
+
+```json
+$ curl -s http://localhost:5000/api/tree -X PATCH -H "Content-Type: application/json" -d '{
+  "objects": [{"id": 2, "name": "cedar"}, {"id": 3, "name": "mango"}]
+}'
+
+200 OK
+{
+    "occurences": 2,
+    "objects": [
+        {
+            "id": 2,
+            "name": "cedar"
+        },
+        {
+            "id": 3,
+            "name": "mango"
+        }
+    ]
+}
+```
+
+
+Check that when allow_batch is not set we can't put all:
+```json
+$ curl -s http://localhost:5000/api/fruit -X PATCH -H "Content-Type: application/json" -d '{
+  "objects": [
+    {"fruit_id": 1, "color": "blue"},
+    {"fruit_id": 3, "age": 1038540.0},
+    {"fruit_id": 4, "color": "rainbow", "size": 8},
+    {"fruit_id": 5, "size": 10, "tree_id": 1}
+  ]
+}'
+
+406 Not Acceptable
+{
+  "message": "You must set allow_batch to True if you want to use batch methods."
+}
+```
+otherwise all the specified attributes would have been patched.
