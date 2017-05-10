@@ -258,8 +258,8 @@ class Rest(object):
             for patch in patches])
         if len(items) < len(patches):
             for patch in patches:
-                if len([item for pk in self.primary_keys for item in items
-                        if getattr(item, pk) == patch[pk]]) == 0:
+                if len([it for pk in self.primary_keys for it in items
+                        if getattr(it, pk) == patch[pk]]) == 0:
                     self.raise_error(404, '%s(%r) not found' % (
                         self.name, {key: val for key, val in patch.items()
                                     if key in self.primary_keys}))
