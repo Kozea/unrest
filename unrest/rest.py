@@ -4,6 +4,7 @@ from functools import wraps
 
 from sqlalchemy import and_, or_
 from sqlalchemy.inspection import inspect
+from sqlalchemy.orm.query import Query
 from sqlalchemy.schema import Column
 
 from .coercers import Deserialize, Serialize
@@ -450,7 +451,12 @@ class Rest(object):
 
     @property
     def query(self):
-        return self.query_factory(self.session.query(self.Model))
+        if hasattr(self.Model, 'query') and isinstance(
+                self.Model.query, Query):
+            query = self.Model.query
+        else:
+            query = self.session.query(self.Model)
+        return self.query_factory(query)
 
     @property
     def name_parts(self):

@@ -1,3 +1,8 @@
+0.3.1
+=====
+
+* Handle prioritarly Model.query queries if exist.
+
 0.3.0
 =====
 
