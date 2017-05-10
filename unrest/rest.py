@@ -265,9 +265,9 @@ class Rest(object):
                                     if key in self.primary_keys}))
         for patch in patches:
             # Get the patch item
-            item = [item
+            item = [it
                     for pk in self.primary_keys
-                    for item in items if getattr(item, pk) == patch[pk]][0]
+                    for it in items if getattr(it, pk) == patch[pk]][0]
             # Merge only patched colmuns
             self.deserialize(patch, item, blank_missing=False)
 
