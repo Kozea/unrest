@@ -18,7 +18,7 @@ lint:
 check-outdated:
 	$(PIP) list --outdated --format=columns
 
-check:
+check: lint
 	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS)
 
 .PHONY: docs
