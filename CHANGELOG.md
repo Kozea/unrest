@@ -1,3 +1,9 @@
+0.4.0
+=====
+
+* Handle pagination by returning correct number of total occurences without any limit/offset. Returns limit and offset if any.
+
+
 0.3.1
 =====
 

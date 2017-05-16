@@ -335,15 +335,22 @@ class Rest(object):
             item, self.columns, self.properties, self.relationships).dict()
 
     def serialize(self, items):
-        objects = [
-            self.serialize_object(item) for item in items  # Pagination?
-        ]
+        rv = {}
+        rv['primary_keys'] = list(self.primary_keys.keys())
 
-        return {
-            'occurences': len(objects),
-            'primary_keys': list(self.primary_keys.keys()),
-            'objects': objects
-        }
+        if isinstance(items, Query):
+            rv['occurences'] = items.offset(None).limit(None).count()
+            if items._offset is not None:
+                rv['offset'] = items._offset
+            if items._limit is not None:
+                rv['limit'] = items._limit
+
+        rv['objects'] = [
+            self.serialize_object(item) for item in items
+        ]
+        if 'occurences' not in rv:
+            rv['occurences'] = len(rv['objects'])
+        return rv
 
     def raise_error(self, status, message):
         self.unrest.raise_error(status, message)
