@@ -47,9 +47,64 @@ def test_put_tree_with_another_id(rest, http):
 
 
 def test_put_fruit(rest, http):
-    rest(Fruit, methods=['GET', 'PUT'], allow_batch=True)
+    rest(Fruit, methods=['GET', 'PUT'])
     code, json = http.put('/api/fruit/1', json={
-        'fruit_id': 1, 'color': 'blue'
+        'fruit_id': 1, 'color': 'blue', 'size': None
+    })
+    assert code == 200
+    assert json['occurences'] == 1
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'blue',
+            'size': None,
+            'age': 1041300.0,
+            'tree_id': 1
+        }
+    ]
+
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'blue',
+            'size': None,
+            'age': 1041300.0,
+            'tree_id': 1
+        }, {
+            'fruit_id': 2,
+            'color': 'darkgrey',
+            'size': 23.0,
+            'age': 4233830.213,
+            'tree_id': 1
+        }, {
+            'fruit_id': 3,
+            'color': 'brown',
+            'size': 2.12,
+            'age': 0.0,
+            'tree_id': 1
+        }, {
+            'fruit_id': 4,
+            'color': 'red',
+            'size': 0.5,
+            'age': 2400.0,
+            'tree_id': 2
+        }, {
+            'fruit_id': 5,
+            'color': 'orangered',
+            'size': 100.0,
+            'age': 7200.000012,
+            'tree_id': 2
+        }
+    ]
+
+
+def test_put_fruit_blank_missing(rest, http):
+    rest(Fruit, methods=['GET', 'PUT'], blank_missing=True)
+    code, json = http.put('/api/fruit/1', json={
+        'fruit_id': 1, 'color': 'blue', 'size': None
     })
     assert code == 200
     assert json['occurences'] == 1

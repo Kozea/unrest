@@ -44,6 +44,8 @@ class Rest(object):
         properties: A list of additional properties to retrieve on the model.
         relationships: A mapping of relationships and rest endpoints to fetch
             with the model.
+        blank_missing: If set to True, the PUT method will set to None all
+            columns that are not in the payload.
         allow_batch: Allow batch operations (PUT, DELETE and PATCH)
             without primary key.
         auth: A decorator that will always be called.
@@ -56,13 +58,15 @@ class Rest(object):
     def __init__(self, unrest, Model,
                  methods=['GET'], name=None, only=None, exclude=None,
                  query=None, properties=None, relationships=None,
-                 allow_batch=False, auth=None, read_auth=None, write_auth=None,
+                 allow_batch=False, blank_missing=False,
+                 auth=None, read_auth=None, write_auth=None,
                  SerializeClass=Serialize, DeserializeClass=Deserialize):
         self.unrest = unrest
         self.Model = Model
 
         self.methods = methods[:]
         self.name = name or self.table.name
+        self.blank_missing = blank_missing
         self.only = only
         self.exclude = exclude
         self.query_factory = query or (lambda q: q)
@@ -138,7 +142,8 @@ class Rest(object):
                 else:
                     payload[pk] = val
             existingItem = self.get_from_pk(self.query, **pks)
-            item = self.deserialize(payload, existingItem or self.Model())
+            item = self.deserialize(
+                payload, existingItem or self.Model(), self.blank_missing)
             if existingItem is None:
                 self.session.add(item)
             self.session.commit()
