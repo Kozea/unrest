@@ -374,12 +374,15 @@ class Rest(object):
                 if self.auth:
                     decorated = self.auth(decorated)
 
-                data = decorated(payload, **pks)
+                response = decorated(payload, **pks)
             except self.unrest.RestError as e:
                 return self.unrest.framework.send_error(
                     dict(message=e.message, **e.extra), e.status)
-            json = self.json(data)
-            return self.unrest.framework.send_json(json)
+            if not isinstance(response, self.unrest.Response):
+                response = self.unrest.Response(response)
+
+            json = self.json(response.data)
+            return response.wrapper(self.unrest.framework.send_json(json))
         return wrapped
 
     def register_method(self, method, method_fun=None):

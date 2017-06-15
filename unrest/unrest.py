@@ -146,3 +146,12 @@ class UnRest(object):
         return self.framework.send_json(json.dumps(self.infos))
 
     Property = Property
+
+    class Response(object):
+        def __init__(self, data, wrapper=lambda x: x):
+            if isinstance(data, self.__class__):
+                self.data = data.data
+                self.wrapper = lambda r: wrapper(data.wrapper(r))
+            else:
+                self.data = data
+                self.wrapper = wrapper

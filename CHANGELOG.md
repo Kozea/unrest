@@ -1,3 +1,8 @@
+0.4.1
+=====
+
+* Add the possibility of returning a response wrapper in auth decorators.
+
 0.4.0
 =====
 
