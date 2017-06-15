@@ -5,7 +5,6 @@ from collections import defaultdict
 from .coercers import Property
 from .rest import Rest
 
-
 log = logging.getLogger('unrest')
 
 

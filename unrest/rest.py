@@ -14,7 +14,6 @@ try:
 except ImportError:
     JSONDecodeError = Exception
 
-
 log = logging.getLogger('unrest.rest')
 
 
