@@ -53,6 +53,13 @@ class UnRest(object):
             self.message = message
             self.extra = extra or {}
 
+    class ValidationError(Exception):
+        """
+        Exception raised by rest validation methods.
+        """
+        def __init__(self, message):
+            self.message = message
+
     def __init__(self,
                  app=None, session=None,
                  path='/api', version='', framework=None,

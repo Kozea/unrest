@@ -47,7 +47,7 @@ def test_put_tree_with_another_id(rest, http):
 
 
 def test_put_fruit(rest, http):
-    rest(Fruit, methods=['GET', 'PUT'], allow_batch=True)
+    rest(Fruit, methods=['GET', 'PUT'])
     code, json = http.put('/api/fruit/1', json={
         'fruit_id': 1, 'color': 'blue'
     })
