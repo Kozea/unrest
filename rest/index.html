@@ -65,15 +65,6 @@
     <a class="current" href="./">Rest entry points</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#unrestrest">unrest.rest</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#rest">Rest</a></li>
-        
-        </ul>
-    
-
     </ul>
                 </li>
                 <li class="">
@@ -133,11 +124,11 @@
           <div role="main">
             <div class="section">
               
-                <p><a name="unrest.rest"></a></p>
-<h1 id="unrestrest">unrest.rest</h1>
-<p><a name="unrest.rest.Rest"></a></p>
-<h2 id="rest">Rest</h2>
-<pre><code class="python">Rest(unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, properties=None, relationships=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
+                <h1 id="unrest.rest">unrest.rest</h1>
+
+<h2 id="unrest.rest.Rest">Rest</h2>
+
+<pre><code class="python">Rest(self, unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, properties=None, relationships=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, validators=None, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
 </code></pre>
 
 <p>This is the entry point for generating a REST endpoint for a specific model
@@ -146,8 +137,16 @@ The final uri if the path is '/api' and version 'v2' would be:
 public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/pk1/pk2</code>.</p>
 <p>Usage:</p>
 <pre><code class="python">    rest = UnRest(app)
+
+    def name_validator(field):
+        if len(field.value) &gt; 12:
+            raise rest.ValidationError(
+                'Name is too long (max 12 characters).')
+        return field.value
+
     rest(Person, only=['name', 'sex', 'age'], methods=rest.all,
-         query=lambda q: q.filter(Person.age &gt; 16))
+         query=lambda q: q.filter(Person.age &gt; 16),
+         validators={'name': name_validator})
 </code></pre>
 
 <p><strong>Arguments</strong></p>
@@ -170,12 +169,16 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 <li><strong>read_auth</strong>: A decorator that will be called on GET.</li>
 <li><strong>write_auth</strong>: A decorator that will be called on PUT, POST, DELETE
         and PATCH.</li>
+<li><strong>validators</strong>: A mapping of field names and validation functions.
+        A validator function takes a <code>Rest.Validatable</code> object as parameter
+        and must return the final value for the field or raise a
+        <code>rest.ValidationError(reason)</code> (where <code>rest = Unrest()</code>)</li>
 <li><strong>SerializeClass</strong>: An alternative <code>Serialize</code> class.</li>
 <li><strong>DeserializeClass</strong>: An alternative <code>Deserialize</code> class.</li>
 </ul>
-<p><a name="unrest.rest.Rest.get"></a></p>
-<h3 id="get">get</h3>
-<pre><code class="python">Rest.get(payload, **pks)
+<h3 id="unrest.rest.Rest.get">get</h3>
+
+<pre><code class="python">Rest.get(self, payload, **pks)
 </code></pre>
 
 <p>The GET method</p>
@@ -187,9 +190,9 @@ Primary keys: Returns the element in query with the primary keys or
 <li><strong>payload</strong>: The json request content ignored for GET.</li>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
-<p><a name="unrest.rest.Rest.put"></a></p>
-<h3 id="put">put</h3>
-<pre><code class="python">Rest.put(payload, **pks)
+<h3 id="unrest.rest.Rest.put">put</h3>
+
+<pre><code class="python">Rest.put(self, payload, **pks)
 </code></pre>
 
 <p>The PUT method</p>
@@ -202,9 +205,9 @@ Primary keys: Create or replace the element associated
 <li><strong>payload</strong>: The json request content containing new elements.</li>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
-<p><a name="unrest.rest.Rest.post"></a></p>
-<h3 id="post">post</h3>
-<pre><code class="python">Rest.post(payload, **pks)
+<h3 id="unrest.rest.Rest.post">post</h3>
+
+<pre><code class="python">Rest.post(self, payload, **pks)
 </code></pre>
 
 <p>The POST method</p>
@@ -215,9 +218,9 @@ Primary keys: Correspond to new collection creation. Unused.</p>
 <li><strong>payload</strong>: The json request content containing the new element.</li>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
-<p><a name="unrest.rest.Rest.delete"></a></p>
-<h3 id="delete">delete</h3>
-<pre><code class="python">Rest.delete(payload, **pks)
+<h3 id="unrest.rest.Rest.delete">delete</h3>
+
+<pre><code class="python">Rest.delete(self, payload, **pks)
 </code></pre>
 
 <p>The DELETE method</p>
@@ -228,9 +231,9 @@ Primary keys: Delete the element associated with the primary keys.</p>
 <li><strong>payload</strong>: The json request content ignored in DELETE.</li>
 <li><strong>pks</strong>: The primary keys of the element to delete.</li>
 </ul>
-<p><a name="unrest.rest.Rest.patch"></a></p>
-<h3 id="patch">patch</h3>
-<pre><code class="python">Rest.patch(payload, **pks)
+<h3 id="unrest.rest.Rest.patch">patch</h3>
+
+<pre><code class="python">Rest.patch(self, payload, **pks)
 </code></pre>
 
 <p>The PATCH method</p>
@@ -243,16 +246,16 @@ Primary keys: Patch only one</p>
         a list of attributes to be patched.</li>
 <li><strong>pks</strong>: The primary keys of the element to patch.</li>
 </ul>
-<p><a name="unrest.rest.Rest.options"></a></p>
-<h3 id="options">options</h3>
-<pre><code class="python">Rest.options(payload)
+<h3 id="unrest.rest.Rest.options">options</h3>
+
+<pre><code class="python">Rest.options(self, payload)
 </code></pre>
 
 <p>The OPTIONS method</p>
 <p>Returns a description of this rest endpoint.</p>
-<p><a name="unrest.rest.Rest.declare"></a></p>
-<h3 id="declare">declare</h3>
-<pre><code class="python">Rest.declare(method)
+<h3 id="unrest.rest.Rest.declare">declare</h3>
+
+<pre><code class="python">Rest.declare(self, method)
 </code></pre>
 
 <p>A decorator to register an alternative method.
@@ -274,6 +277,13 @@ def get(payload, fruit_id=None):
 <ul>
 <li><strong>method</strong>: The method to override ('GET' for exemple)</li>
 </ul>
+<h3 id="unrest.rest.Rest.validate">validate</h3>
+
+<pre><code class="python">Rest.validate(self, item, existing=None, errors=None)
+</code></pre>
+
+<p>Validates all validators colums against validators.
+Raise RestError if validation errors.</p>
               
             </div>
           </div>

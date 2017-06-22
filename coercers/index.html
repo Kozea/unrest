@@ -69,17 +69,6 @@
     <a class="current" href="./">Serialization/Deserialization</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#unrestcoercers">unrest.coercers</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#serialize">Serialize</a></li>
-        
-            <li><a class="toctree-l4" href="#deserialize">Deserialize</a></li>
-        
-        </ul>
-    
-
     </ul>
                 </li>
     </ul>
@@ -135,11 +124,11 @@
           <div role="main">
             <div class="section">
               
-                <p><a name="unrest.coercers"></a></p>
-<h1 id="unrestcoercers">unrest.coercers</h1>
-<p><a name="unrest.coercers.Serialize"></a></p>
-<h2 id="serialize">Serialize</h2>
-<pre><code class="python">Serialize(model, columns, properties, relationships)
+                <h1 id="unrest.coercers">unrest.coercers</h1>
+
+<h2 id="unrest.coercers.Serialize">Serialize</h2>
+
+<pre><code class="python">Serialize(self, model, columns, properties, relationships)
 </code></pre>
 
 <p>Base serializer class</p>
@@ -167,15 +156,14 @@ rest = UnRest(app, session, SerializeClass=BetterSerialize)
 <li><strong>properties</strong>: The list of properties to serialize.</li>
 <li><strong>relationships</strong>: The list of relationships to serialize.</li>
 </ul>
-<p><a name="unrest.coercers.Serialize.dict"></a></p>
-<h3 id="dict">dict</h3>
-<pre><code class="python">Serialize.dict()
+<h3 id="unrest.coercers.Serialize.dict">dict</h3>
+
+<pre><code class="python">Serialize.dict(self)
 </code></pre>
 
 <p>Serialize the given model to a JSON compatible dict
-<a name="unrest.coercers.Deserialize"></a></p>
-<h2 id="deserialize">Deserialize</h2>
-<pre><code class="python">Deserialize(payload, columns)
+<h2 id="unrest.coercers.Deserialize">Deserialize</h2></p>
+<pre><code class="python">Deserialize(self, payload, columns)
 </code></pre>
 
 <p>Base deserializer class</p>
@@ -200,15 +188,14 @@ rest = UnRest(app, session, DeserializeClass=BetterDeserialize)
 <li><strong>payload</strong>: The JSON payload to deserialize</li>
 <li><strong>columns</strong>: The list of columns to deserialize</li>
 </ul>
-<p><a name="unrest.coercers.Deserialize.merge"></a></p>
-<h3 id="merge">merge</h3>
-<pre><code class="python">Deserialize.merge(item, payload=None)
+<h3 id="unrest.coercers.Deserialize.merge">merge</h3>
+
+<pre><code class="python">Deserialize.merge(self, item, payload=None)
 </code></pre>
 
 <p>Deserialize the given payload into the existing sqlachemy <code>item</code>
-<a name="unrest.coercers.Deserialize.create"></a></p>
-<h3 id="create">create</h3>
-<pre><code class="python">Deserialize.create(factory)
+<h3 id="unrest.coercers.Deserialize.create">create</h3></p>
+<pre><code class="python">Deserialize.create(self, factory)
 </code></pre>
 
 <p>Deserialize objects in the given payload into a list of new items

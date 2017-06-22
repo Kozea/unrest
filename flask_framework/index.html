@@ -80,15 +80,6 @@
     <a class="current" href="./">Flask</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#unrestflask_framework">unrest.flask_framework</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#flaskunrest">FlaskUnRest</a></li>
-        
-        </ul>
-    
-
     </ul>
                 </li>
     </ul>
@@ -133,18 +124,18 @@
           <div role="main">
             <div class="section">
               
-                <p><a name="unrest.flask_framework"></a></p>
-<h1 id="unrestflask_framework">unrest.flask_framework</h1>
-<p><a name="unrest.flask_framework.FlaskUnRest"></a></p>
-<h2 id="flaskunrest">FlaskUnRest</h2>
-<pre><code class="python">FlaskUnRest(app)
+                <h1 id="unrest.flask_framework">unrest.flask_framework</h1>
+
+<h2 id="unrest.flask_framework.FlaskUnRest">FlaskUnRest</h2>
+
+<pre><code class="python">FlaskUnRest(self, app)
 </code></pre>
 
 <p>Unrest flask framework implementation.
 This is the framework abstraction you can implement for your own framework</p>
-<p><a name="unrest.flask_framework.FlaskUnRest.register_route"></a></p>
-<h3 id="register_route">register_route</h3>
-<pre><code class="python">FlaskUnRest.register_route(path, method, parameters, fun)
+<h3 id="unrest.flask_framework.FlaskUnRest.register_route">register_route</h3>
+
+<pre><code class="python">FlaskUnRest.register_route(self, path, method, parameters, fun)
 </code></pre>
 
 <p>Register the given function for <code>path</code> and <code>method</code> with and without
@@ -157,15 +148,15 @@ This is the framework abstraction you can implement for your own framework</p>
         after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
 <li><strong>fun</strong>: The route function</li>
 </ul>
-<p><a name="unrest.flask_framework.FlaskUnRest.request_json"></a></p>
-<h3 id="request_json">request_json</h3>
-<pre><code class="python">FlaskUnRest.request_json()
+<h3 id="unrest.flask_framework.FlaskUnRest.request_json">request_json</h3>
+
+<pre><code class="python">FlaskUnRest.request_json(self)
 </code></pre>
 
 <p>Must return the string of the current JSON request content or None</p>
-<p><a name="unrest.flask_framework.FlaskUnRest.send_json"></a></p>
-<h3 id="send_json">send_json</h3>
-<pre><code class="python">FlaskUnRest.send_json(json)
+<h3 id="unrest.flask_framework.FlaskUnRest.send_json">send_json</h3>
+
+<pre><code class="python">FlaskUnRest.send_json(self, json)
 </code></pre>
 
 <p>Send a 200 JSON response with <code>json</code> as content</p>
@@ -173,9 +164,9 @@ This is the framework abstraction you can implement for your own framework</p>
 <ul>
 <li><strong>json</strong>: The JSON string to send.</li>
 </ul>
-<p><a name="unrest.flask_framework.FlaskUnRest.send_error"></a></p>
-<h3 id="send_error">send_error</h3>
-<pre><code class="python">FlaskUnRest.send_error(message, status_code)
+<h3 id="unrest.flask_framework.FlaskUnRest.send_error">send_error</h3>
+
+<pre><code class="python">FlaskUnRest.send_error(self, message, status_code)
 </code></pre>
 
 <p>Send an error as a JSON response with the given status code.</p>
