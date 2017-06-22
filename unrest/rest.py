@@ -15,6 +15,7 @@ except ImportError:
     JSONDecodeError = Exception
 
 log = logging.getLogger('unrest.rest')
+notset = object()
 
 
 class Rest(object):
@@ -27,8 +28,16 @@ class Rest(object):
     Usage:
     ```python
         rest = UnRest(app)
+
+        def name_validator(field):
+            if len(field.value) > 12:
+                raise rest.ValidationError(
+                    'Name is too long (max 12 characters).')
+            return field.value
+
         rest(Person, only=['name', 'sex', 'age'], methods=rest.all,
-             query=lambda q: q.filter(Person.age > 16))
+             query=lambda q: q.filter(Person.age > 16),
+             validators={'name': name_validator})
     ```
     # Arguments
         unrest: The unrest instance given automatically on UnRest call.
@@ -49,6 +58,10 @@ class Rest(object):
         read_auth: A decorator that will be called on GET.
         write_auth: A decorator that will be called on PUT, POST, DELETE
             and PATCH.
+        validators: A mapping of field names and validation functions.
+            A validator function takes a `Rest.Validatable` object as parameter
+            and must return the final value for the field or raise a
+            `rest.ValidationError(reason)` (where `rest = Unrest()`)
         SerializeClass: An alternative #Serialize class.
         DeserializeClass: An alternative #Deserialize class.
     """
@@ -56,6 +69,7 @@ class Rest(object):
                  methods=['GET'], name=None, only=None, exclude=None,
                  query=None, properties=None, relationships=None,
                  allow_batch=False, auth=None, read_auth=None, write_auth=None,
+                 validators=None,
                  SerializeClass=Serialize, DeserializeClass=Deserialize):
         self.unrest = unrest
         self.Model = Model
@@ -77,6 +91,8 @@ class Rest(object):
         self.auth = auth
         self.read_auth = read_auth
         self.write_auth = write_auth
+
+        self.validators = validators or {}
 
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
@@ -137,7 +153,9 @@ class Rest(object):
                 else:
                     payload[pk] = val
             existingItem = self.get_from_pk(self.query, **pks)
+            previousValues = dict(existingItem.__dict__)
             item = self.deserialize(payload, existingItem or self.Model())
+            self.validate(item, previousValues)
             if existingItem is None:
                 self.session.add(item)
             self.session.commit()
@@ -150,6 +168,7 @@ class Rest(object):
 
         self.query.delete()
         items = self.deserialize_all(payload)
+        self.validate_all(items)
         self.session.add_all(items)
         self.session.commit()
         return self.serialize(items)
@@ -176,6 +195,8 @@ class Rest(object):
             self.raise_error(400, 'You must provide a payload')
         item = self.deserialize(payload, self.Model())
         self.session.add(item)
+        self.session.flush()
+        self.validate(item)
         self.session.commit()
         return self.serialize([item])
 
@@ -237,6 +258,7 @@ class Rest(object):
             if item is None:
                 self.raise_error(404, '%s(%r) not found' % (self.name, pks))
             self.deserialize(payload, item, blank_missing=False)
+            self.validate(item)
             self.session.commit()
             return self.serialize([item])
 
@@ -269,7 +291,7 @@ class Rest(object):
                     for it in items if getattr(it, pk) == patch[pk]][0]
             # Merge only patched colmuns
             self.deserialize(patch, item, blank_missing=False)
-
+        self.validate_all(items)
         self.session.commit()
         return self.serialize(items)
 
@@ -351,8 +373,54 @@ class Rest(object):
             rv['occurences'] = len(rv['objects'])
         return rv
 
-    def raise_error(self, status, message):
-        self.unrest.raise_error(status, message)
+    class Validatable(object):
+        def __init__(self, value, name, old_value=notset):
+            self.value = value
+            self.name = name
+            if old_value != notset:
+                self.old_value = old_value
+
+    def validate(self, item, existing=None, errors=None):
+        """
+        Validates all validators colums against validators.
+        Raise RestError if validation errors.
+        """
+
+        valid = True
+        error = {'fields': {}}
+        for pk in self.primary_keys:
+            error[pk] = getattr(item, pk)
+
+        for key, validator in self.validators.items():
+            try:
+                setattr(
+                    item, key,
+                    validator(self.Validatable(
+                        getattr(item, key),
+                        key,
+                        existing.get(key) if existing is not None
+                        else None
+                    ))
+                )
+            except self.unrest.ValidationError as e:
+                valid = False
+                error['fields'][key] = e.message
+        if errors is not None:
+            errors.append(error)
+        elif not valid:
+            self.raise_error(
+                500, 'Validation Error', extra={'errors': [error]})
+
+    def validate_all(self, items):
+        errors = []
+        for item in items:
+            self.validate(item, errors=errors)
+        if any(len(error['fields']) for error in errors):
+            self.raise_error(
+                500, 'Validation Error', extra={'errors': errors})
+
+    def raise_error(self, status, message, extra=None):
+        self.unrest.raise_error(status, message, extra)
 
     def wrap_native(self, method, method_fun):
         @wraps(method_fun)
