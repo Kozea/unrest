@@ -140,7 +140,7 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 
     def name_validator(field):
         if len(field.value) &gt; 12:
-            raise rest.ValidationError(
+            raise field.ValidationError(
                 'Name is too long (max 12 characters).')
         return field.value
 
