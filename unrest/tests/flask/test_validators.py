@@ -110,7 +110,7 @@ def test_post_tree_validation(rest, http):
 def test_put_fruit_dual_validation(rest, http):
     def color_validator(field):
         if field.old_value == 'brown':
-            raise rest.ValidationError(
+            raise field.ValidationError(
                 'A brown fruit cannot become %s' % field.value)
         return field.value
 
@@ -121,7 +121,7 @@ def test_put_fruit_dual_validation(rest, http):
 
     def age_validator(field):
         if field.value < timedelta(days=100):
-            raise rest.ValidationError('Fruit too old')
+            raise field.ValidationError('Fruit too old')
         return field.value
 
     def tree_id_validator(field):

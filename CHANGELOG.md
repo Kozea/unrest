@@ -1,3 +1,9 @@
+0.5.1
+=====
+
+* Add ValidationError on Validatable to avoid the need of having a unrest instance.
+
+
 0.5.0
 =====
 

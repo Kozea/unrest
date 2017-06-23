@@ -31,7 +31,7 @@ class Rest(object):
 
         def name_validator(field):
             if len(field.value) > 12:
-                raise rest.ValidationError(
+                raise field.ValidationError(
                     'Name is too long (max 12 characters).')
             return field.value
 
@@ -374,9 +374,10 @@ class Rest(object):
         return rv
 
     class Validatable(object):
-        def __init__(self, value, name, old_value=notset):
+        def __init__(self, value, name, ValidationError, old_value=notset):
             self.value = value
             self.name = name
+            self.ValidationError = ValidationError
             if old_value != notset:
                 self.old_value = old_value
 
@@ -398,6 +399,7 @@ class Rest(object):
                     validator(self.Validatable(
                         getattr(item, key),
                         key,
+                        self.unrest.ValidationError,
                         existing.get(key) if existing is not None
                         else None
                     ))
