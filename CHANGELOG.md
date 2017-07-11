@@ -1,3 +1,9 @@
+0.6.0
+=====
+
+* Fix a design flaw in route naming being the same with diferent unrest path.
+
+
 0.5.1
 =====
 

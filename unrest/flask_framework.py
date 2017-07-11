@@ -33,7 +33,8 @@ class FlaskUnRest(object):
         self.app.add_url_rule(
             path, fun.__name__, fun, methods=[method])
         if parameters:
-            log.info('Registering route for %s for %s' % (path, method))
+            log.info('Registering route %s for %s for %s' % (
+                fun.__name__, path, method))
             path_with_params = path + '/' + '/'.join(
                 '<%s>' % param for param in parameters)
 

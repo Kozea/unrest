@@ -459,9 +459,10 @@ class Rest(object):
             assert method in self.unrest.all, 'Unknown method %s' % method
         method_fun = method_fun or getattr(self, method.lower())
         method_fun = self.wrap_native(method, method_fun)
+        path = self.unrest.path.replace('/', '_')
         # str() for python 2 compat
-        method_fun.__name__ = str('_'.join(
-            ('unrest', method) + self.name_parts))
+        method_fun.__name__ = str('__'.join(
+            ('unrest', path, method) + self.name_parts))
         self.unrest.framework.register_route(
             self.path, method,
             self.primary_keys if method != 'OPTIONS' else None, method_fun)
