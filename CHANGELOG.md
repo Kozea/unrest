@@ -1,3 +1,9 @@
+0.6.1
+=====
+
+* Add a primary_keys argument to rest endpoints.
+* Fix bug when putting a element that didn't exist.
+
 0.6.0
 =====
 

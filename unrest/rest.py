@@ -62,6 +62,8 @@ class Rest(object):
             A validator function takes a `Rest.Validatable` object as parameter
             and must return the final value for the field or raise a
             `rest.ValidationError(reason)` (where `rest = Unrest()`)
+        primary_keys: A list of column names to use as primary_keys
+            (use real db primary keys by default)
         SerializeClass: An alternative #Serialize class.
         DeserializeClass: An alternative #Deserialize class.
     """
@@ -69,7 +71,7 @@ class Rest(object):
                  methods=['GET'], name=None, only=None, exclude=None,
                  query=None, properties=None, relationships=None,
                  allow_batch=False, auth=None, read_auth=None, write_auth=None,
-                 validators=None,
+                 validators=None, primary_keys=None,
                  SerializeClass=Serialize, DeserializeClass=Deserialize):
         self.unrest = unrest
         self.Model = Model
@@ -93,6 +95,7 @@ class Rest(object):
         self.write_auth = write_auth
 
         self.validators = validators or {}
+        self._primary_keys = primary_keys
 
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
@@ -153,9 +156,8 @@ class Rest(object):
                 else:
                     payload[pk] = val
             existingItem = self.get_from_pk(self.query, **pks)
-            previousValues = dict(existingItem.__dict__)
             item = self.deserialize(payload, existingItem or self.Model())
-            self.validate(item, previousValues)
+            self.validate(item, existingItem and dict(existingItem.__dict__))
             if existingItem is None:
                 self.session.add(item)
             self.session.commit()
@@ -554,6 +556,11 @@ class Rest(object):
 
     @property
     def primary_keys(self):
+        if self._primary_keys:
+            return {
+                name: column for name, column in self.model_columns
+                if name in self._primary_keys
+            }
         ins = inspect(self.Model)
         return {ins.get_property_by_column(pk).key: pk
                 for pk in ins.primary_key}
