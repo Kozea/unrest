@@ -1,3 +1,8 @@
+0.6.2
+=====
+
+* Run test before releasing (...) fix validation bug introduced in 0.6.1
+
 0.6.1
 =====
 

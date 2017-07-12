@@ -156,8 +156,9 @@ class Rest(object):
                 else:
                     payload[pk] = val
             existingItem = self.get_from_pk(self.query, **pks)
+            previousValues = existingItem and dict(existingItem.__dict__)
             item = self.deserialize(payload, existingItem or self.Model())
-            self.validate(item, existingItem and dict(existingItem.__dict__))
+            self.validate(item, previousValues)
             if existingItem is None:
                 self.session.add(item)
             self.session.commit()
