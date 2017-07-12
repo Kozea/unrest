@@ -128,7 +128,7 @@
 
 <h2 id="unrest.rest.Rest">Rest</h2>
 
-<pre><code class="python">Rest(self, unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, properties=None, relationships=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, validators=None, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
+<pre><code class="python">Rest(self, unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, properties=None, relationships=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, validators=None, primary_keys=None, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
 </code></pre>
 
 <p>This is the entry point for generating a REST endpoint for a specific model
@@ -173,6 +173,8 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
         A validator function takes a <code>Rest.Validatable</code> object as parameter
         and must return the final value for the field or raise a
         <code>rest.ValidationError(reason)</code> (where <code>rest = Unrest()</code>)</li>
+<li><strong>primary_keys</strong>: A list of column names to use as primary_keys
+        (use real db primary keys by default)</li>
 <li><strong>SerializeClass</strong>: An alternative <code>Serialize</code> class.</li>
 <li><strong>DeserializeClass</strong>: An alternative <code>Deserialize</code> class.</li>
 </ul>
