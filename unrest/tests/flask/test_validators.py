@@ -93,7 +93,7 @@ def test_post_tree_validation(rest, http):
     assert code == 500
     assert json['message'] == 'Validation Error'
     assert json['errors'] == [{
-        'id': 4,
+        'id': None,
         'fields': {'name': 'Name must be shorter than 4 characters.'},
     }]
 

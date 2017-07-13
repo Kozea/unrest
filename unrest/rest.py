@@ -199,7 +199,6 @@ class Rest(object):
             self.raise_error(400, 'You must provide a payload')
         item = self.deserialize(payload, self.Model())
         self.session.add(item)
-        self.session.flush()
         self.validate(item)
         self.session.commit()
         return self.serialize([item])
