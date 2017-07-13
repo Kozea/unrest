@@ -1,5 +1,6 @@
 import json
 import logging
+from copy import deepcopy
 from functools import wraps
 
 from sqlalchemy import and_, or_
@@ -156,9 +157,9 @@ class Rest(object):
                 else:
                     payload[pk] = val
             existingItem = self.get_from_pk(self.query, **pks)
-            previousValues = existingItem and dict(existingItem.__dict__)
+            previousItem = deepcopy(existingItem)
             item = self.deserialize(payload, existingItem or self.Model())
-            self.validate(item, previousValues)
+            self.validate(item, previousItem)
             if existingItem is None:
                 self.session.add(item)
             self.session.commit()
@@ -377,44 +378,44 @@ class Rest(object):
         return rv
 
     class Validatable(object):
-        def __init__(self, value, name, ValidationError, old_value=notset):
+        def __init__(self, value, name, previous, next, ValidationError):
             self.value = value
             self.name = name
+            self.previous = previous
+            self.next = next
             self.ValidationError = ValidationError
-            if old_value != notset:
-                self.old_value = old_value
 
     def validate(self, item, existing=None, errors=None):
         """
         Validates all validators colums against validators.
         Raise RestError if validation errors.
         """
+        with self.session.no_autoflush:
+            valid = True
+            error = {'fields': {}}
+            for pk in self.primary_keys:
+                error[pk] = getattr(item, pk)
 
-        valid = True
-        error = {'fields': {}}
-        for pk in self.primary_keys:
-            error[pk] = getattr(item, pk)
-
-        for key, validator in self.validators.items():
-            try:
-                setattr(
-                    item, key,
-                    validator(self.Validatable(
-                        getattr(item, key),
-                        key,
-                        self.unrest.ValidationError,
-                        existing.get(key) if existing is not None
-                        else None
-                    ))
-                )
-            except self.unrest.ValidationError as e:
-                valid = False
-                error['fields'][key] = e.message
-        if errors is not None:
-            errors.append(error)
-        elif not valid:
-            self.raise_error(
-                500, 'Validation Error', extra={'errors': [error]})
+            for key, validators in self.validators.items():
+                field_errors = []
+                if callable(validators):
+                    validators = (validators,)
+                try:
+                    for validator in validators:
+                        setattr(item, key, validator(self.Validatable(
+                            getattr(item, key), key, existing, item,
+                            self.unrest.ValidationError
+                        )))
+                except self.unrest.ValidationError as e:
+                    valid = False
+                    field_errors.append(e.message)
+                if field_errors:
+                    error['fields'][key] = '\n'.join(field_errors)
+            if errors is not None:
+                errors.append(error)
+            elif not valid:
+                self.raise_error(
+                    500, 'Validation Error', extra={'errors': [error]})
 
     def validate_all(self, items):
         errors = []
