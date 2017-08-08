@@ -265,11 +265,6 @@ class Rest(object):
             self.session.commit()
             return self.serialize([item])
 
-        if self.has(pks):
-            raise self.unrest.RestError(
-                501, "PATCH with primary keys corresponds to nothing. "
-                "It's not implemented by default. ")
-
         if not self.allow_batch:
             raise self.unrest.RestError(
                 406, 'You must set allow_batch to True '
