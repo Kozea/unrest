@@ -123,6 +123,7 @@ class Serialize(object):
         return float(data)
 
     serialize_numeric = serialize_decimal
+    serialize_float = serialize_decimal
 
     def serialize_largebinary(self, type, data):
         return b64encode(data).decode('utf-8')
@@ -213,6 +214,7 @@ class Deserialize(object):
         return decimal.Decimal(data)
 
     deserialize_numeric = deserialize_decimal
+    deserialize_float = deserialize_decimal
 
     def deserialize_largebinary(self, type, data):
         return b64decode(data)
