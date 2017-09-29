@@ -1,3 +1,9 @@
+0.6.3
+=====
+
+* Fix deferrable columns crash.
+* Add missing default float serializer/deserializer.
+
 0.6.2
 =====
 
