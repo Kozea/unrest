@@ -6,6 +6,7 @@ from functools import wraps
 from sqlalchemy import and_, or_
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.query import Query
+from sqlalchemy.orm.strategy_options import Load
 from sqlalchemy.schema import Column
 
 from .coercers import Deserialize, Serialize
@@ -233,7 +234,7 @@ class Rest(object):
             pks: The primary keys of the element to delete.
         """
         if self.has(pks):
-            item = self.get_from_pk(self.query, **pks)
+            item = self.get_from_pk(self.undefered_query, **pks)
             if item is None:
                 self.raise_error(404, '%s(%r) not found' % (self.name, pks))
 
@@ -247,7 +248,7 @@ class Rest(object):
                 'if you want to use batch methods.'
             )
 
-        items = self.query.all()
+        items = self.undefered_query.all()
         self.query.delete()
         self.session.commit()
         return self.serialize(items)
@@ -584,6 +585,10 @@ class Rest(object):
         else:
             query = self.session.query(self.Model)
         return self.query_factory(query)
+
+    @property
+    def undefered_query(self):
+        return self.query.options(Load(self.Model).undefer('*'))
 
     @property
     def name_parts(self):

@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Interval, Numeric, String
 
@@ -27,7 +27,7 @@ class Fruit(Base):
     fruit_id = Column('idf', Integer, primary_key=True)
     color = Column('hue', String(50))
     size = Column(Numeric)
-    age = Column(Interval)
+    age = deferred(Column(Interval))
     tree_id = Column(Integer, ForeignKey('tree.id'))
     tree = relationship(Tree, backref='fruits')
 
