@@ -24,13 +24,13 @@ import sys
 from setuptools import find_packages, setup
 
 about = {}
-with open(os.path.join(
-        os.path.dirname(__file__), "unrest", "__about__.py")) as f:
+with open(os.path.join(os.path.dirname(__file__), "unrest", "__about__.py")
+          ) as f:
     exec(f.read(), about)
 
 tests_requirements = [
-    'pytest-runner', 'pytest-cov', 'pytest-flake8', 'pytest-isort',
-    'pytest', 'flask', 'flask-sqlalchemy'
+    'pytest-runner', 'pytest-cov', 'pytest-flake8', 'pytest-isort', 'pytest',
+    'flask', 'flask-sqlalchemy'
 ]
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
@@ -51,12 +51,13 @@ setup(
     install_requires=['sqlalchemy', 'python-dateutil'],
     setup_requires=pytest_runner,
     test_requires=tests_requirements,
-    extras_require={'test': tests_requirements, 'docs': ['pydoc-markdown']},
+    extras_require={'test': tests_requirements,
+                    'docs': ['pydoc-markdown']},
     classifiers=[
-        "Development Status :: 4 - Beta",
-        "Environment :: Console",
-        "Intended Audience :: End Users/Desktop",
-        "License :: OSI Approved :: "
+        "Development Status :: 4 - Beta", "Environment :: Console",
+        "Intended Audience :: End Users/Desktop", "License :: OSI Approved :: "
         "GNU Lesser General Public License v3 or later (LGPLv3+)",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3"])
+        "Programming Language :: Python :: 3"
+    ]
+)

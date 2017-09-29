@@ -14,9 +14,18 @@ def test_delete_tree(rest, http):
     assert code == 200
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
-        {'id': 1, 'name': 'pine'},
-        {'id': 2, 'name': 'maple'},
-        {'id': 3, 'name': 'oak'},
+        {
+            'id': 1,
+            'name': 'pine'
+        },
+        {
+            'id': 2,
+            'name': 'maple'
+        },
+        {
+            'id': 3,
+            'name': 'oak'
+        },
     ]
 
     code, json = http.get('/api/tree')

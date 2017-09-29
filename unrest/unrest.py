@@ -48,6 +48,7 @@ class UnRest(object):
         wrapper and will return a `status` http error with the specified
         `message`.
         """
+
         def __init__(self, status, message, extra=None):
             self.status = status
             self.message = message
@@ -57,14 +58,21 @@ class UnRest(object):
         """
         Exception raised by rest validation methods.
         """
+
         def __init__(self, message):
             self.message = message
 
-    def __init__(self,
-                 app=None, session=None,
-                 path='/api', version='', framework=None,
-                 SerializeClass=None, DeserializeClass=None,
-                 allow_options=True):
+    def __init__(
+            self,
+            app=None,
+            session=None,
+            path='/api',
+            version='',
+            framework=None,
+            SerializeClass=None,
+            DeserializeClass=None,
+            allow_options=True
+    ):
         self.path = path
         self.version = version
         self._framework = framework
@@ -96,7 +104,8 @@ class UnRest(object):
         if not self.framework:
             raise NotImplementedError(
                 'Your framework %s is not recognized. '
-                'Please provide a framework argument to UnRest' % type(app))
+                'Please provide a framework argument to UnRest' % type(app)
+            )
         self.allow_options and self.register_options()
 
     def init_session(self, session):
@@ -147,7 +156,8 @@ class UnRest(object):
 
     def register_options(self):
         self.framework.register_route(
-            self.root_path, 'OPTIONS', None, self.unrest_api)
+            self.root_path, 'OPTIONS', None, self.unrest_api
+        )
 
     def unrest_api(self):
         return self.framework.send_json(json.dumps(self.infos))

@@ -68,12 +68,27 @@ class Rest(object):
         SerializeClass: An alternative #Serialize class.
         DeserializeClass: An alternative #Deserialize class.
     """
-    def __init__(self, unrest, Model,
-                 methods=['GET'], name=None, only=None, exclude=None,
-                 query=None, properties=None, relationships=None,
-                 allow_batch=False, auth=None, read_auth=None, write_auth=None,
-                 validators=None, primary_keys=None,
-                 SerializeClass=Serialize, DeserializeClass=Deserialize):
+
+    def __init__(
+            self,
+            unrest,
+            Model,
+            methods=['GET'],
+            name=None,
+            only=None,
+            exclude=None,
+            query=None,
+            properties=None,
+            relationships=None,
+            allow_batch=False,
+            auth=None,
+            read_auth=None,
+            write_auth=None,
+            validators=None,
+            primary_keys=None,
+            SerializeClass=Serialize,
+            DeserializeClass=Deserialize
+    ):
         self.unrest = unrest
         self.Model = Model
 
@@ -153,7 +168,8 @@ class Rest(object):
                 if pk in payload:
                     assert payload[pk] == val, (
                         'Incoherent primary_key (%s) in payload (%r) '
-                        'and url (%r) for PUT' % (pk, payload[pk], val))
+                        'and url (%r) for PUT' % (pk, payload[pk], val)
+                    )
                 else:
                     payload[pk] = val
             existingItem = self.get_from_pk(self.query, **pks)
@@ -168,7 +184,8 @@ class Rest(object):
         if not self.allow_batch:
             raise self.unrest.RestError(
                 406, 'You must set allow_batch to True '
-                'if you want to use batch methods.')
+                'if you want to use batch methods.'
+            )
 
         self.query.delete()
         items = self.deserialize_all(payload)
@@ -193,7 +210,8 @@ class Rest(object):
             raise self.unrest.RestError(
                 501, "POST with primary keys corresponds to collection "
                 "creation. It's not implemented by default. "
-                "If you want to update an item use the PUT method instead")
+                "If you want to update an item use the PUT method instead"
+            )
 
         if not payload:
             self.raise_error(400, 'You must provide a payload')
@@ -226,7 +244,8 @@ class Rest(object):
         if not self.allow_batch:
             raise self.unrest.RestError(
                 406, 'You must set allow_batch to True '
-                'if you want to use batch methods.')
+                'if you want to use batch methods.'
+            )
 
         items = self.query.all()
         self.query.delete()
@@ -254,7 +273,8 @@ class Rest(object):
                 if pk in payload:
                     assert payload[pk] == val, (
                         'Incoherent primary_key (%s) in payload (%r) '
-                        'and url (%r) for PATCH' % (pk, payload[pk], val))
+                        'and url (%r) for PATCH' % (pk, payload[pk], val)
+                    )
                 else:
                     payload[pk] = val
             item = self.get_from_pk(self.query, **pks)
@@ -268,25 +288,34 @@ class Rest(object):
         if not self.allow_batch:
             raise self.unrest.RestError(
                 406, 'You must set allow_batch to True '
-                'if you want to use batch methods.')
+                'if you want to use batch methods.'
+            )
 
         patches = payload['objects']
         # Get all concerned items
-        items = self.get_all_from_pks(self.query, [{
-            pk: patch[pk] for pk in self.primary_keys}
-            for patch in patches])
+        items = self.get_all_from_pks(
+            self.query, [{pk: patch[pk]
+                          for pk in self.primary_keys} for patch in patches]
+        )
         if len(items) < len(patches):
             for patch in patches:
                 if len([it for pk in self.primary_keys for it in items
                         if getattr(it, pk) == patch[pk]]) == 0:
-                    self.raise_error(404, '%s(%r) not found' % (
-                        self.name, {key: val for key, val in patch.items()
-                                    if key in self.primary_keys}))
+                    self.raise_error(
+                        404, '%s(%r) not found' % (
+                            self.name, {
+                                key: val
+                                for key, val in patch.items()
+                                if key in self.primary_keys
+                            }
+                        )
+                    )
         for patch in patches:
             # Get the patch item
-            item = [it
-                    for pk in self.primary_keys
-                    for it in items if getattr(it, pk) == patch[pk]][0]
+            item = [
+                it for pk in self.primary_keys for it in items
+                if getattr(it, pk) == patch[pk]
+            ][0]
             # Merge only patched colmuns
             self.deserialize(patch, item, blank_missing=False)
         self.validate_all(items)
@@ -323,10 +352,12 @@ class Rest(object):
         # Arguments
             method: The method to override ('GET' for exemple)
         """
+
         def register_fun(fun):
             if self.unrest.allow_options and not self.methods:
                 self.register_method('OPTIONS')
             self.register_method(method, fun)
+
         return register_fun
 
     def kwargs_to_pks(self, kwargs):
@@ -342,8 +373,9 @@ class Rest(object):
         else:
             # Mind only provided columns
             columns = {
-                name: column for name, column in self.columns.items()
-                if name in payload}
+                name: column
+                for name, column in self.columns.items() if name in payload
+            }
         return self.DeserializeClass(payload, columns).merge(item)
 
     def deserialize_all(self, payload):
@@ -351,7 +383,8 @@ class Rest(object):
 
     def serialize_object(self, item):
         return self.SerializeClass(
-            item, self.columns, self.properties, self.relationships).dict()
+            item, self.columns, self.properties, self.relationships
+        ).dict()
 
     def serialize(self, items):
         rv = {}
@@ -364,9 +397,7 @@ class Rest(object):
             if items._limit is not None:
                 rv['limit'] = items._limit
 
-        rv['objects'] = [
-            self.serialize_object(item) for item in items
-        ]
+        rv['objects'] = [self.serialize_object(item) for item in items]
         if 'occurences' not in rv:
             rv['occurences'] = len(rv['objects'])
         return rv
@@ -393,13 +424,18 @@ class Rest(object):
             for key, validators in self.validators.items():
                 field_errors = []
                 if callable(validators):
-                    validators = (validators,)
+                    validators = (validators, )
                 try:
                     for validator in validators:
-                        setattr(item, key, validator(self.Validatable(
-                            getattr(item, key), key, existing, item,
-                            self.unrest.ValidationError
-                        )))
+                        setattr(
+                            item, key,
+                            validator(
+                                self.Validatable(
+                                    getattr(item, key), key, existing, item,
+                                    self.unrest.ValidationError
+                                )
+                            )
+                        )
                 except self.unrest.ValidationError as e:
                     valid = False
                     field_errors.append(e.message)
@@ -409,15 +445,15 @@ class Rest(object):
                 errors.append(error)
             elif not valid:
                 self.raise_error(
-                    500, 'Validation Error', extra={'errors': [error]})
+                    500, 'Validation Error', extra={'errors': [error]}
+                )
 
     def validate_all(self, items):
         errors = []
         for item in items:
             self.validate(item, errors=errors)
         if any(len(error['fields']) for error in errors):
-            self.raise_error(
-                500, 'Validation Error', extra={'errors': errors})
+            self.raise_error(500, 'Validation Error', extra={'errors': errors})
 
     def raise_error(self, status, message, extra=None):
         self.unrest.raise_error(status, message, extra)
@@ -435,8 +471,8 @@ class Rest(object):
                 decorated = method_fun
                 if method == 'GET' and self.read_auth:
                     decorated = self.read_auth(decorated)
-                if (method in ['PUT', 'POST', 'DELETE', 'PATCH'] and
-                        self.write_auth):
+                if (method in ['PUT', 'POST', 'DELETE', 'PATCH']
+                        and self.write_auth):
                     decorated = self.write_auth(decorated)
                 if self.auth:
                     decorated = self.auth(decorated)
@@ -444,12 +480,14 @@ class Rest(object):
                 response = decorated(payload, **pks)
             except self.unrest.RestError as e:
                 return self.unrest.framework.send_error(
-                    dict(message=e.message, **e.extra), e.status)
+                    dict(message=e.message, **e.extra), e.status
+                )
             if not isinstance(response, self.unrest.Response):
                 response = self.unrest.Response(response)
 
             json = self.json(response.data)
             return response.wrapper(self.unrest.framework.send_json(json))
+
         return wrapped
 
     def register_method(self, method, method_fun=None):
@@ -459,11 +497,13 @@ class Rest(object):
         method_fun = self.wrap_native(method, method_fun)
         path = self.unrest.path.replace('/', '_')
         # str() for python 2 compat
-        method_fun.__name__ = str('__'.join(
-            ('unrest', path, method) + self.name_parts))
+        method_fun.__name__ = str(
+            '__'.join(('unrest', path, method) + self.name_parts)
+        )
         self.unrest.framework.register_route(
-            self.path, method,
-            self.primary_keys if method != 'OPTIONS' else None, method_fun)
+            self.path, method, self.primary_keys
+            if method != 'OPTIONS' else None, method_fun
+        )
 
         self.infos['methods'].append(method)
 
@@ -496,13 +536,15 @@ class Rest(object):
         if self.properties:
             self.infos['properties'] = {
                 prop.name: getattr(
-                    getattr(self.Model, prop.name), '__doc__', 'Undocumented')
+                    getattr(self.Model, prop.name), '__doc__', 'Undocumented'
+                )
                 for prop in self.properties
             }
 
         if self.relationships:
             self.infos['relationships'] = {
-                rel: {k: v for k, v in rest.infos.items() if k != 'methods'}
+                rel: {k: v
+                      for k, v in rest.infos.items() if k != 'methods'}
                 for rel, rest in self.relationships.items()
             }
 
@@ -518,10 +560,17 @@ class Rest(object):
 
     def get_all_from_pks(self, query, items_pks):
         return query.filter(
-            or_(*[and_(*[
-                getattr(self.Model, key) == val
-                for key, val in pks.items()
-            ]) for pks in items_pks])).all()
+            or_(
+                * [
+                    and_(
+                        * [
+                            getattr(self.Model, key) == val
+                            for key, val in pks.items()
+                        ]
+                    ) for pks in items_pks
+                ]
+            )
+        ).all()
 
     @property
     def session(self):
@@ -529,8 +578,8 @@ class Rest(object):
 
     @property
     def query(self):
-        if hasattr(self.Model, 'query') and isinstance(
-                self.Model.query, Query):
+        if hasattr(self.Model, 'query') and isinstance(self.Model.query, Query
+                                                       ):
             query = self.Model.query
         else:
             query = self.session.query(self.Model)
@@ -540,11 +589,11 @@ class Rest(object):
     def name_parts(self):
         if self.table.schema:
             return (self.table.schema, self.name)
-        return (self.name,)
+        return (self.name, )
 
     @property
     def path(self):
-        return '/'.join((self.unrest.root_path,) + self.name_parts)
+        return '/'.join((self.unrest.root_path, ) + self.name_parts)
 
     @property
     def table(self):
@@ -554,12 +603,15 @@ class Rest(object):
     def primary_keys(self):
         if self._primary_keys:
             return {
-                name: column for name, column in self.model_columns
+                name: column
+                for name, column in self.model_columns
                 if name in self._primary_keys
             }
         ins = inspect(self.Model)
-        return {ins.get_property_by_column(pk).key: pk
-                for pk in ins.primary_key}
+        return {
+            ins.get_property_by_column(pk).key: pk
+            for pk in ins.primary_key
+        }
 
     @property
     def model_columns(self):
@@ -577,4 +629,5 @@ class Rest(object):
                     if self.exclude and name in self.exclude:
                         continue
                 yield name, column
+
         return dict(gen())

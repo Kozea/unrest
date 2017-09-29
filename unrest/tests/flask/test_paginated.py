@@ -11,6 +11,7 @@ def test_paginated(rest, http):
                 query = query_factory(query)
             offset = int(request.values.get('offset', 0))
             return query.offset(offset).limit(step)
+
         return limited_query
 
     rest(Tree, query=paginated(lambda query: query))
@@ -21,8 +22,14 @@ def test_paginated(rest, http):
     assert json['offset'] == 0
     assert json['primary_keys'] == ['id']
     assert idsorted(json['objects']) == [
-        {'id': 1, 'name': 'pine'},
-        {'id': 2, 'name': 'maple'},
+        {
+            'id': 1,
+            'name': 'pine'
+        },
+        {
+            'id': 2,
+            'name': 'maple'
+        },
     ]
     code, json = http.get('/api/tree?offset=1')
     assert code == 200
@@ -31,8 +38,14 @@ def test_paginated(rest, http):
     assert json['offset'] == 1
     assert json['primary_keys'] == ['id']
     assert idsorted(json['objects']) == [
-        {'id': 2, 'name': 'maple'},
-        {'id': 3, 'name': 'oak'},
+        {
+            'id': 2,
+            'name': 'maple'
+        },
+        {
+            'id': 3,
+            'name': 'oak'
+        },
     ]
     code, json = http.get('/api/tree?offset=2')
     assert code == 200
@@ -41,7 +54,10 @@ def test_paginated(rest, http):
     assert json['offset'] == 2
     assert json['primary_keys'] == ['id']
     assert idsorted(json['objects']) == [
-        {'id': 3, 'name': 'oak'},
+        {
+            'id': 3,
+            'name': 'oak'
+        },
     ]
     code, json = http.get('/api/tree?offset=3')
     assert code == 200

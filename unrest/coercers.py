@@ -55,6 +55,7 @@ class Serialize(object):
         properties: The list of properties to serialize.
         relationships: The list of relationships to serialize.
     """
+
     def __init__(self, model, columns, properties, relationships):
         self.model = model
         self.columns = columns
@@ -72,20 +73,24 @@ class Serialize(object):
             try:
                 return iter(it)
             except TypeError:
-                return (it,)
+                return (it, )
 
-        return dict({
-            name: self.serialize(name, column)
-            for name, column in self.columns.items()
-        }, **dict({
-            property.name: property.get(self, self.model)
-            for property in self.properties
-        }, **{
-            key: [
-                relationship_rest.serialize_object(item)
-                for item in enforce_iterable(getattr(self.model, key))
-            ] for key, relationship_rest in self.relationships.items()
-        }))
+        return dict(
+            {
+                name: self.serialize(name, column)
+                for name, column in self.columns.items()
+            },
+            **dict({
+                property.name: property.get(self, self.model)
+                for property in self.properties
+            }, **{
+                key: [
+                    relationship_rest.serialize_object(item)
+                    for item in enforce_iterable(getattr(self.model, key))
+                ]
+                for key, relationship_rest in self.relationships.items()
+            })
+        )
 
     def serialize(self, name, column):
         return self._serialize(column.type, getattr(self.model, name))
@@ -107,6 +112,7 @@ class Serialize(object):
 
     def serialize_datetime(self, type, data):
         return data.isoformat()
+
     serialize_date = serialize_datetime
     serialize_time = serialize_datetime
 
@@ -115,6 +121,7 @@ class Serialize(object):
 
     def serialize_decimal(self, type, data):
         return float(data)
+
     serialize_numeric = serialize_decimal
 
     def serialize_largebinary(self, type, data):
@@ -149,6 +156,7 @@ class Deserialize(object):
         payload: The JSON payload to deserialize
         columns: The list of columns to deserialize
     """
+
     def __init__(self, payload, columns):
         self.payload = payload
         self.columns = columns
@@ -165,7 +173,8 @@ class Deserialize(object):
         created with the `factory` function.
         """
         return [
-            self.merge(factory(), item) for item in self.payload['objects']]
+            self.merge(factory(), item) for item in self.payload['objects']
+        ]
 
     def deserialize(self, name, column, payload=None):
         payload = payload or self.payload
@@ -202,6 +211,7 @@ class Deserialize(object):
 
     def deserialize_decimal(self, type, data):
         return decimal.Decimal(data)
+
     deserialize_numeric = deserialize_decimal
 
     def deserialize_largebinary(self, type, data):

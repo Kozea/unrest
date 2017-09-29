@@ -45,13 +45,13 @@ def test_explicit_framework(app, db, http):
 
 
 def test_empty_explicit_framework(app, db, http):
-
     class FakeUnRest(object):
         def __init__(self, app):
             pass
 
         def register_route(self, *args, **kwargs):
             pass
+
         request_json = register_route
         send_json = register_route
         send_error = register_route
@@ -65,10 +65,13 @@ def test_empty_explicit_framework(app, db, http):
 def test_api_options(app, db, http):
     rest = UnRest(app, db.session, framework=FlaskUnRest)
     fruit = rest(Fruit)
-    rest(Tree, methods=rest.all,
-         relationships={'fruits': fruit},
-         properties=['fruit_colors'],
-         allow_batch=True)
+    rest(
+        Tree,
+        methods=rest.all,
+        relationships={'fruits': fruit},
+        properties=['fruit_colors'],
+        allow_batch=True
+    )
     code, json = http.options('/api')
     assert code == 200
     assert json == {
@@ -116,10 +119,13 @@ def test_api_options(app, db, http):
 def test_endpoint_options(app, db, http):
     rest = UnRest(app, db.session, framework=FlaskUnRest)
     fruit = rest(Fruit)
-    rest(Tree, methods=rest.all,
-         relationships={'fruits': fruit},
-         properties=['fruit_colors'],
-         allow_batch=True)
+    rest(
+        Tree,
+        methods=rest.all,
+        relationships={'fruits': fruit},
+        properties=['fruit_colors'],
+        allow_batch=True
+    )
     code, json = http.options('/api/fruit')
     assert code == 200
     assert json == {

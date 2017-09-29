@@ -8,17 +8,32 @@ def test_post_tree(rest, http):
     assert code == 200
     assert json['occurences'] == 1
     assert idsorted(json['objects']) == [
-        {'id': 4, 'name': 'cedar'},
+        {
+            'id': 4,
+            'name': 'cedar'
+        },
     ]
 
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 4
     assert idsorted(json['objects']) == [
-        {'id': 1, 'name': 'pine'},
-        {'id': 2, 'name': 'maple'},
-        {'id': 3, 'name': 'oak'},
-        {'id': 4, 'name': 'cedar'},
+        {
+            'id': 1,
+            'name': 'pine'
+        },
+        {
+            'id': 2,
+            'name': 'maple'
+        },
+        {
+            'id': 3,
+            'name': 'oak'
+        },
+        {
+            'id': 4,
+            'name': 'cedar'
+        },
     ]
 
 
@@ -28,17 +43,32 @@ def test_post_tree_with_id(rest, http):
     assert code == 200
     assert json['occurences'] == 1
     assert idsorted(json['objects']) == [
-        {'id': 9, 'name': 'cedar'},
+        {
+            'id': 9,
+            'name': 'cedar'
+        },
     ]
 
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 4
     assert idsorted(json['objects']) == [
-        {'id': 1, 'name': 'pine'},
-        {'id': 2, 'name': 'maple'},
-        {'id': 3, 'name': 'oak'},
-        {'id': 9, 'name': 'cedar'},
+        {
+            'id': 1,
+            'name': 'pine'
+        },
+        {
+            'id': 2,
+            'name': 'maple'
+        },
+        {
+            'id': 3,
+            'name': 'oak'
+        },
+        {
+            'id': 9,
+            'name': 'cedar'
+        },
     ]
 
 
@@ -54,15 +84,30 @@ def test_post_tree_custom(rest, http):
     assert code == 200
     assert json['occurences'] == 1
     assert idsorted(json['objects']) == [
-        {'id': 4, 'name': 'I ALWAYS WANT THIS NAME'},
+        {
+            'id': 4,
+            'name': 'I ALWAYS WANT THIS NAME'
+        },
     ]
 
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 4
     assert idsorted(json['objects']) == [
-        {'id': 1, 'name': 'pine'},
-        {'id': 2, 'name': 'maple'},
-        {'id': 3, 'name': 'oak'},
-        {'id': 4, 'name': 'I ALWAYS WANT THIS NAME'},
+        {
+            'id': 1,
+            'name': 'pine'
+        },
+        {
+            'id': 2,
+            'name': 'maple'
+        },
+        {
+            'id': 3,
+            'name': 'oak'
+        },
+        {
+            'id': 4,
+            'name': 'I ALWAYS WANT THIS NAME'
+        },
     ]
