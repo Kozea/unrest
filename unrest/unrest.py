@@ -71,7 +71,8 @@ class UnRest(object):
             framework=None,
             SerializeClass=None,
             DeserializeClass=None,
-            allow_options=True
+            allow_options=True,
+            serve_open_api_file=True
     ):
         self.path = path
         self.version = version
@@ -79,6 +80,7 @@ class UnRest(object):
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
         self.allow_options = allow_options
+        self.serve_open_api_file = serve_open_api_file
 
         self.infos = defaultdict(dict)
 
@@ -107,6 +109,7 @@ class UnRest(object):
                 'Please provide a framework argument to UnRest' % type(app)
             )
         self.allow_options and self.register_options()
+        self.serve_open_api_file and self.register_swagger()
 
     def init_session(self, session):
         """
@@ -161,6 +164,39 @@ class UnRest(object):
 
     def unrest_api(self):
         return self.framework.send_json(json.dumps(self.infos))
+
+    def register_swagger(self):
+        self.framework.register_route(
+            self.root_path + '/swagger.json', 'GET', None, self.swagger_api
+        )
+
+    def swagger_api(self):
+        return self.framework.send_json(json.dumps(self.swagger))
+
+    @property
+    def swagger(self):
+        paths = {}
+        for path, infos in self.infos.items():
+            paths[path] = {}
+            for method in infos['methods']:
+                paths[path][method.lower()] = {
+                    "tags": [infos['model']],
+                    "summary": infos["description"],
+                    "responses": {
+                        "200": {
+                            "description": 'Success'
+                        }
+                    }
+                }
+
+        return {
+            "swagger": "2.0",
+            "info": {
+                "title": self.app.name + ' unrest api',
+                "version": self.version or '1.0'
+            },
+            "paths": paths
+        }
 
     Property = Property
 
