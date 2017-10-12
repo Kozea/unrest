@@ -63,7 +63,7 @@ def test_empty_explicit_framework(app, db, http):
 
 
 def test_api_options(app, db, http):
-    rest = UnRest(app, db.session, framework=FlaskUnRest)
+    rest = UnRest(app, db.session)
     fruit = rest(Fruit)
     rest(
         Tree,

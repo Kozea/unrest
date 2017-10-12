@@ -25,6 +25,9 @@ check: lint
 docs:
 	cd docs && PATH=$(PATH):$(VENV)/bin/ $(VENV)/bin/pydocmd gh-deploy
 
+run:
+	FLASK_DEBUG=1 FLASK_APP=unrest/tests/flask/demo.py $(VENV)/bin/flask run -h localhost -p 9996
+
 release: check docs
 	git pull
 	$(eval VERSION := $(shell PROJECT_NAME=$(PROJECT_NAME) $(VENV)/bin/devcore bump $(LEVEL)))
