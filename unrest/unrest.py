@@ -2,7 +2,9 @@ import json
 import logging
 from collections import defaultdict
 
+from .__about__ import __version__, __uri__
 from .coercers import Property
+from .openapi import openapi
 from .rest import Rest
 
 log = logging.getLogger('unrest')
@@ -72,15 +74,17 @@ class UnRest(object):
             SerializeClass=None,
             DeserializeClass=None,
             allow_options=True,
-            serve_open_api_file=True
+            serve_openapi_file=True,
+            info={},
     ):
         self.path = path
+        self.info = info
         self.version = version
         self._framework = framework
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
         self.allow_options = allow_options
-        self.serve_open_api_file = serve_open_api_file
+        self.serve_openapi_file = serve_openapi_file
 
         self.infos = defaultdict(dict)
 
@@ -108,8 +112,9 @@ class UnRest(object):
                 'Your framework %s is not recognized. '
                 'Please provide a framework argument to UnRest' % type(app)
             )
+        self.register_index()
         self.allow_options and self.register_options()
-        self.serve_open_api_file and self.register_swagger()
+        self.serve_openapi_file and self.register_openapi()
 
     def init_session(self, session):
         """
@@ -157,46 +162,41 @@ class UnRest(object):
         rest = Rest(self, *args, **kwargs)
         return rest
 
+    def register_index(self):
+        self.framework.register_route(
+            self.root_path, 'GET', None, self.unrest_api_index
+        )
+
+    def unrest_api_index(self):
+        return (
+            '<h1>unrest <small>api server</small></h1> version %s '
+            '<a href="%s">unrest</a>'
+        ) % (__version__, __uri__) + (
+            ' <a href="%s/openapi.json">openapi.json</a>' % self.root_path
+        ) if self.serve_openapi_file else ''
+
     def register_options(self):
         self.framework.register_route(
-            self.root_path, 'OPTIONS', None, self.unrest_api
+            self.root_path, 'OPTIONS', None, self.unrest_api_options
         )
 
-    def unrest_api(self):
+    def unrest_api_options(self):
         return self.framework.send_json(json.dumps(self.infos))
 
-    def register_swagger(self):
+    def register_openapi(self):
         self.framework.register_route(
-            self.root_path + '/swagger.json', 'GET', None, self.swagger_api
+            self.root_path + '/openapi.json', 'GET', None, self.openapi_api
         )
 
-    def swagger_api(self):
-        return self.framework.send_json(json.dumps(self.swagger))
+    def openapi_api(self):
+        return self.framework.send_json(json.dumps(self.openapi))
 
     @property
-    def swagger(self):
-        paths = {}
-        for path, infos in self.infos.items():
-            paths[path] = {}
-            for method in infos['methods']:
-                paths[path][method.lower()] = {
-                    "tags": [infos['model']],
-                    "summary": infos["description"],
-                    "responses": {
-                        "200": {
-                            "description": 'Success'
-                        }
-                    }
-                }
-
-        return {
-            "swagger": "2.0",
-            "info": {
-                "title": self.app.name + ' unrest api',
-                "version": self.version or '1.0'
-            },
-            "paths": paths
-        }
+    def openapi(self):
+        return openapi(
+            self.infos, self.framework.url, self.root_path, self.info,
+            self.app.name, self.version
+        )
 
     Property = Property
 

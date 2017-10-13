@@ -1,5 +1,6 @@
 import json
 import logging
+from collections import OrderedDict
 from copy import deepcopy
 from functools import wraps
 
@@ -323,7 +324,7 @@ class Rest(object):
         self.session.commit()
         return self.serialize(items)
 
-    def options(self, payload):
+    def options(self, payload, **pks):
         """
         The OPTIONS method
 
@@ -502,8 +503,7 @@ class Rest(object):
             '__'.join(('unrest', path, method) + self.name_parts)
         )
         self.unrest.framework.register_route(
-            self.path, method, self.primary_keys
-            if method != 'OPTIONS' else None, method_fun
+            self.path, method, self.primary_keys, method_fun
         )
 
         self.infos['methods'].append(method)
@@ -520,6 +520,7 @@ class Rest(object):
 
     def set_infos(self):
         self.infos['model'] = self.Model.__name__
+        self.infos['parameters'] = list(self.primary_keys.keys())
         if getattr(self.Model, '__doc__', None):
             self.infos['description'] = self.Model.__doc__
 
@@ -549,9 +550,7 @@ class Rest(object):
                 for rel, rest in self.relationships.items()
             }
 
-        if self.allow_batch:
-            self.infos['batch'] = self.allow_batch
-
+        self.infos['batch'] = self.allow_batch
         self.infos['methods'] = []
 
     def get_from_pk(self, query, **pks):
@@ -607,16 +606,12 @@ class Rest(object):
     @property
     def primary_keys(self):
         if self._primary_keys:
-            return {
-                name: column
-                for name, column in self.model_columns
-                if name in self._primary_keys
-            }
+            return OrderedDict((name, column)
+                               for name, column in self.model_columns
+                               if name in self._primary_keys)
         ins = inspect(self.Model)
-        return {
-            ins.get_property_by_column(pk).key: pk
-            for pk in ins.primary_key
-        }
+        return OrderedDict((ins.get_property_by_column(pk).key, pk)
+                           for pk in ins.primary_key)
 
     @property
     def model_columns(self):

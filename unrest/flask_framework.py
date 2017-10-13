@@ -1,6 +1,6 @@
 import logging
 
-from flask import current_app, jsonify, request
+from flask import current_app, jsonify, request, url_for
 
 log = logging.getLogger('unrest.flask')
 
@@ -77,3 +77,10 @@ class FlaskUnRest(object):
             status_code: The HTTP status code (i.e. 402)
         """
         return jsonify(message), status_code
+
+    @property
+    def url(self):
+        """
+        Return the api url root
+        """
+        return url_for('unrest_api_index', _external=True)
