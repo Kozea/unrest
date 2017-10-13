@@ -521,8 +521,7 @@ class Rest(object):
     def set_infos(self):
         self.infos['model'] = self.Model.__name__
         self.infos['parameters'] = list(self.primary_keys.keys())
-        if getattr(self.Model, '__doc__', None):
-            self.infos['description'] = self.Model.__doc__
+        self.infos['description'] = getattr(self.Model, '__doc__', '')
 
         def sqlatype(type):
             try:
