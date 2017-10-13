@@ -1,4 +1,3 @@
-import logging
 from tempfile import NamedTemporaryFile
 
 from flask import Flask

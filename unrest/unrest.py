@@ -2,7 +2,7 @@ import json
 import logging
 from collections import defaultdict
 
-from .__about__ import __version__, __uri__
+from .__about__ import __uri__, __version__
 from .coercers import Property
 from .openapi import openapi
 from .rest import Rest

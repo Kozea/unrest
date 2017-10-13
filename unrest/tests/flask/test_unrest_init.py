@@ -78,6 +78,7 @@ def test_api_options(app, db, http):
         '/api/fruit': {
             'model': 'Fruit',
             'description': 'A bag of fruit',
+            'parameters': ['fruit_id'],
             'columns': {
                 'age': 'timedelta',
                 'color': 'str',
@@ -85,11 +86,13 @@ def test_api_options(app, db, http):
                 'size': 'Decimal',
                 'tree_id': 'int'
             },
-            'methods': ['GET', 'OPTIONS']
+            'methods': ['GET', 'OPTIONS'],
+            'batch': False
         },
         '/api/tree': {
             'model': 'Tree',
             'description': "Where money doesn't grow",
+            'parameters': ['id'],
             'columns': {
                 'id': 'int',
                 'name': 'str'
@@ -101,13 +104,15 @@ def test_api_options(app, db, http):
                 'fruits': {
                     'model': 'Fruit',
                     'description': 'A bag of fruit',
+                    'parameters': ['fruit_id'],
                     'columns': {
                         'age': 'timedelta',
                         'color': 'str',
                         'fruit_id': 'int',
                         'size': 'Decimal',
                         'tree_id': 'int'
-                    }
+                    },
+                    'batch': False
                 }
             },
             'methods': ['GET', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -131,6 +136,8 @@ def test_endpoint_options(app, db, http):
     assert json == {
         'model': 'Fruit',
         'description': 'A bag of fruit',
+        'batch': False,
+        'parameters': ['fruit_id'],
         'columns': {
             'age': 'timedelta',
             'color': 'str',
