@@ -9,7 +9,8 @@ summaries = {
     'PUT_with_pk': 'Replace the corresponding %s object or create it',
     'PATCH_with_pk': 'Patch the corresponding %s object',
     'POST_with_pk': 'Create a subcollection of %s object',
-    'DELETE_with_pk': 'Delete the corresponding %s object'
+    'DELETE_with_pk': 'Delete the corresponding %s object',
+    'OPTIONS_with_pk': 'Get info about the %s collection'
 }
 responses = {
     'GET': 'All %s objects',
@@ -22,7 +23,15 @@ responses = {
     'PUT_with_pk': 'The added %s object',
     'PATCH_with_pk': 'The patched %s object',
     'POST_with_pk': 'The subcollection %s object',
-    'DELETE_with_pk': 'The deleted %s object'
+    'DELETE_with_pk': 'The deleted %s object',
+    'OPTIONS_with_pk': 'Info about the %s collection'
+}
+requests = {
+    'PUT': 'The new %s objects to replace the current collection with',
+    'PATCH': 'The %s objects patches',
+    'POST': 'The new %s object to create',
+    'PUT_with_pk': 'The %s object to create or replace',
+    'PATCH_with_pk': 'The %s object patches.'
 }
 
 
@@ -95,7 +104,7 @@ def openapi(infos, url, root_path, info, name, version):
             for method in infos['methods']:
                 if not withPk and not infos['batch'] and method in [
                         'PUT', 'DELETE', 'PATCH'
-                ] or withPk and method in ['POST', 'OPTIONS']:
+                ] or withPk and method == 'POST':
                     continue
                 method_key = method + ('_with_pk' if withPk else '')
                 paths[path][method.lower()] = {
@@ -114,6 +123,31 @@ def openapi(infos, url, root_path, info, name, version):
                         'in': 'path',
                         'required': True
                     } for pk in infos['parameters']]
+                if method in ['PUT', 'PATCH', 'POST']:
+                    paths[path][method.lower()]['requestBody'] = {
+                        'description': requests[method_key] % model,
+                        'content': {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/" + model
+                                } if withPk or method == 'POST' else {
+                                    "type": "object",
+                                    "properties": {
+                                        "objects": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref":
+                                                    "#/components/schemas/" +
+                                                    model
+                                            }
+                                        },
+                                    },
+                                }
+                            }
+                        },
+                        'required': True
+                    }
+
     info = {"title": name + ' unrest api', "version": version or '1.0'}
     info.update(**info)
 
