@@ -165,7 +165,7 @@ class UnRest(object):
 
     def register_index(self):
         self.framework.register_route(
-            self.root_path, 'GET', None, self.index
+            self.root_path + '/', 'GET', None, self.index
         )
 
     def index(self):
