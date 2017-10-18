@@ -498,7 +498,7 @@ class Rest(object):
         method_fun = method_fun or getattr(self, method.lower())
         method_fun = self.wrap_native(method, method_fun)
         # str() for python 2 compat
-        method_fun.__name__ = str('_'.join((method,) + self.name_parts))
+        method_fun.__name__ = str('_'.join((method, ) + self.name_parts))
         self.unrest.framework.register_route(
             self.path, method, self.primary_keys, method_fun
         )
@@ -517,7 +517,8 @@ class Rest(object):
 
     def set_infos(self):
         self.infos['model'] = self.Model.__name__
-        self.infos['schema'] = self.table.schema
+        if self.table.schema:
+            self.infos['schema'] = self.table.schema
         self.infos['parameters'] = list(self.primary_keys.keys())
         self.infos['description'] = getattr(self.Model, '__doc__', '')
 

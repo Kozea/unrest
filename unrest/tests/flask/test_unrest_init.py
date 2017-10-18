@@ -1,7 +1,10 @@
-from unrest import UnRest
+from sqlalchemy.types import Float
+
+from unrest import UnRest, __about__
 from unrest.flask_framework import FlaskUnRest
 
 from ..model import Fruit, Tree
+from .openapi_result import openapi
 
 
 def test_normal(app, db, http):
@@ -147,3 +150,41 @@ def test_endpoint_options(app, db, http):
         },
         'methods': ['GET', 'OPTIONS']
     }
+
+
+def test_openapi(app, db, http):
+    rest = UnRest(
+        app,
+        db.session,
+        info={
+            'description':
+                '''# Unrest demo
+This is the demo of unrest api.
+This api expose the `Tree` and `Fruit` entity Rest methods.
+''',
+            'contact': {
+                'name': __about__.__author__,
+                'url': __about__.__uri__,
+                'email': __about__.__email__
+            },
+            'license': {
+                'name': __about__.__license__
+            }
+        }
+    )
+    fruit = rest(
+        Fruit,
+        methods=rest.all,
+        properties=[rest.Property('square_size', Float())]
+    )
+    rest(
+        Tree,
+        methods=rest.all,
+        relationships={'fruits': fruit},
+        properties=['fruit_colors'],
+        allow_batch=True
+    )
+
+    code, json = http.get('/api/openapi.json')
+    assert code == 200
+    assert json == openapi

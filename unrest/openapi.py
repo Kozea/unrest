@@ -108,9 +108,13 @@ def openapi(infos, url, root_path, info, name, version):
                     continue
                 method_key = method + ('_with_pk' if withPk else '')
                 paths[path][method.lower()] = {
-                    "tags": [' -> '.join([
-                        v for v in (infos['schema'], model) if v])],
-                    "summary": summaries[method_key] % model,
+                    "tags": [
+                        ' -> '.join([
+                            v for v in (infos.get('schema', None), model) if v
+                        ])
+                    ],
+                    "summary":
+                        summaries[method_key] % model,
                     "responses": {
                         "200": {
                             "description": responses[method_key] % model,
