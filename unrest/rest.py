@@ -517,6 +517,7 @@ class Rest(object):
 
     def set_infos(self):
         self.infos['model'] = self.Model.__name__
+        self.infos['schema'] = self.table.schema
         self.infos['parameters'] = list(self.primary_keys.keys())
         self.infos['description'] = getattr(self.Model, '__doc__', '')
 
