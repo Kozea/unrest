@@ -46,7 +46,7 @@ def test_explicit_framework(app, db, http):
 
 def test_empty_explicit_framework(app, db, http):
     class FakeUnRest(object):
-        def __init__(self, app):
+        def __init__(self, app, prefix):
             pass
 
         def register_route(self, *args, **kwargs):

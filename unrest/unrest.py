@@ -96,8 +96,9 @@ class UnRest(object):
     def init_app(self, app):
         """Sets the app on UnRest if it was missing during instantiation."""
         self.app = app
+        prefix = self.root_path.lstrip('/').replace('/', '_')
         if self._framework:
-            self.framework = self._framework(app)
+            self.framework = self._framework(app, prefix=prefix)
         else:
             try:
                 from flask import Flask
@@ -106,7 +107,7 @@ class UnRest(object):
             else:
                 if isinstance(app, Flask):
                     from .flask_framework import FlaskUnRest
-                    self.framework = FlaskUnRest(app)
+                    self.framework = FlaskUnRest(app, prefix=prefix)
         if not self.framework:
             raise NotImplementedError(
                 'Your framework %s is not recognized. '
@@ -164,10 +165,10 @@ class UnRest(object):
 
     def register_index(self):
         self.framework.register_route(
-            self.root_path, 'GET', None, self.unrest_api_index
+            self.root_path, 'GET', None, self.index
         )
 
-    def unrest_api_index(self):
+    def index(self):
         return (
             '<h1>unrest <small>api server</small></h1> version %s '
             '<a href="%s">unrest</a>'
@@ -177,22 +178,22 @@ class UnRest(object):
 
     def register_options(self):
         self.framework.register_route(
-            self.root_path, 'OPTIONS', None, self.unrest_api_options
+            self.root_path, 'OPTIONS', None, self.options
         )
 
-    def unrest_api_options(self):
+    def options(self):
         return self.framework.send_json(json.dumps(self.infos))
 
     def register_openapi(self):
         self.framework.register_route(
-            self.root_path + '/openapi.json', 'GET', None, self.openapi_api
+            self.root_path + '/openapi.json', 'GET', None, self.openapi
         )
 
-    def openapi_api(self):
-        return self.framework.send_json(json.dumps(self.openapi))
+    def openapi(self):
+        return self.framework.send_json(json.dumps(self.openapi_infos))
 
     @property
-    def openapi(self):
+    def openapi_infos(self):
         return openapi(
             self.infos, self.framework.url, self.root_path, self.info,
             self.app.name, self.version

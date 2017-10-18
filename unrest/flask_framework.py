@@ -12,8 +12,9 @@ class FlaskUnRest(object):
 
     """
 
-    def __init__(self, app):
+    def __init__(self, app, prefix):
         self.app = app
+        self.prefix = prefix
 
     def register_route(self, path, method, parameters, fun):
         """
@@ -28,14 +29,16 @@ class FlaskUnRest(object):
 '/api/person/<id>/<type>'`
             fun: The route function
         """
-        if self.app.view_functions.pop(fun.__name__, None):
-            log.info('Overriding route %s' % fun.__name__)
+        name = self._name(fun.__name__)
+
+        if self.app.view_functions.pop(name, None):
+            log.info('Overriding route %s' % name)
         getattr(fun, '__func__', fun).provide_automatic_options = False
-        self.app.add_url_rule(path, fun.__name__, fun, methods=[method])
+        self.app.add_url_rule(path, name, fun, methods=[method])
         if parameters:
             log.info(
                 'Registering route %s for %s for %s' %
-                (fun.__name__, path, method)
+                (name, path, method)
             )
             path_with_params = path + '/' + '/'.join(
                 '<%s>' % param for param in parameters
@@ -45,7 +48,7 @@ class FlaskUnRest(object):
                 'Registering route for %s for %s' % (path_with_params, method)
             )
             self.app.add_url_rule(
-                path_with_params, fun.__name__, fun, methods=[method]
+                path_with_params, name, fun, methods=[method]
             )
 
     def request_json(self):
@@ -83,4 +86,8 @@ class FlaskUnRest(object):
         """
         Return the api url root
         """
-        return url_for('unrest_api_index', _external=True)
+        return url_for(self._name('index'), _external=True)
+
+    def _name(self, name):
+        """Generate a unique name for endpoint"""
+        return 'unrest__%s__%s' % (self.prefix, name)
