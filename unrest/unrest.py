@@ -187,9 +187,7 @@ class UnRest(object):
         )
 
     def options(self):
-        return self.framework.send_json(
-            json.dumps(self.options_class(self).all())
-        )
+        return self.framework.send_json(json.dumps(self.Options(self).all()))
 
     def register_openapi(self):
         self.framework.register_route(
@@ -197,9 +195,7 @@ class UnRest(object):
         )
 
     def openapi(self):
-        return self.framework.send_json(
-            json.dumps(self.openapi_class(self).all())
-        )
+        return self.framework.send_json(json.dumps(self.OpenApi(self).all()))
 
     Property = Property
 
