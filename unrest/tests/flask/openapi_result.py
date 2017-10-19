@@ -1,15 +1,27 @@
 openapi = {
     "openapi": "3.0.0",
     "info": {
-        "title": "unrest.tests.flask.conftest unrest api",
-        "version": "1.0"
+        "title":
+            "unrest.tests.flask.conftest unrest api",
+        "version":
+            "1.0",
+        "description":
+            "# Unrest demo\nThis is the demo of unrest api.\n" +
+            "This api expose the `Tree` and `Fruit` entity Rest methods.\n",
+        "contact": {
+            "name": "Florian Mounier",
+            "url": "https://github.com/Kozea/unrest",
+            "email": "florian.mounier@kozea.fr"
+        },
+        "license": {
+            "name": "GNU LGPL v3+"
+        }
     },
     "servers": [{
         "url": "http://localhost/api/"
     }],
     "paths": {
         "/fruit": {
-            "summary": "A bag of fruit",
             "get": {
                 "tags": ["Fruit"],
                 "summary": "Retrieve all Fruit objects",
@@ -33,9 +45,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -68,9 +102,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -84,7 +140,27 @@ openapi = {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Fruit"
+                                "type": "object",
+                                "properties": {
+                                    "fruit_id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "color": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "number"
+                                    },
+                                    "size": {
+                                        "type": "number",
+                                        "format": "double"
+                                    },
+                                    "tree_id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    }
+                                }
                             }
                         }
                     },
@@ -114,9 +190,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -125,10 +223,10 @@ openapi = {
                         }
                     }
                 }
-            }
+            },
+            "summary": "A bag of fruit"
         },
         "/fruit/{fruit_id}": {
-            "summary": "A bag of fruit",
             "get": {
                 "tags": ["Fruit"],
                 "summary":
@@ -153,9 +251,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -194,9 +314,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -215,7 +357,27 @@ openapi = {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Fruit"
+                                "type": "object",
+                                "properties": {
+                                    "fruit_id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "color": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "number"
+                                    },
+                                    "size": {
+                                        "type": "number",
+                                        "format": "double"
+                                    },
+                                    "tree_id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    }
+                                }
                             }
                         }
                     },
@@ -246,9 +408,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -287,9 +471,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -308,7 +514,27 @@ openapi = {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Fruit"
+                                "type": "object",
+                                "properties": {
+                                    "fruit_id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "color": {
+                                        "type": "string"
+                                    },
+                                    "age": {
+                                        "type": "number"
+                                    },
+                                    "size": {
+                                        "type": "number",
+                                        "format": "double"
+                                    },
+                                    "tree_id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    }
+                                }
                             }
                         }
                     },
@@ -339,9 +565,31 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas" +
-                                                    "/Fruit"
+                                                "type": "object",
+                                                "properties": {
+                                                    "fruit_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "color": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "number"
+                                                    },
+                                                    "size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    },
+                                                    "tree_id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "square_size": {
+                                                        "type": "number",
+                                                        "format": "double"
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -355,10 +603,10 @@ openapi = {
                     "in": "path",
                     "required": True
                 }]
-            }
+            },
+            "summary": "A bag of fruit"
         },
         "/tree": {
-            "summary": "Where money doesn't grow",
             "get": {
                 "tags": ["Tree"],
                 "summary": "Retrieve all Tree objects",
@@ -382,8 +630,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -416,8 +715,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -428,8 +778,7 @@ openapi = {
                 },
                 "requestBody": {
                     "description":
-                        "The new Tree objects to replace the current " +
-                        "collection with",
+                        "The new Tree objects to replace the current collection with",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -438,7 +787,16 @@ openapi = {
                                     "objects": {
                                         "type": "array",
                                         "items": {
-                                            "$ref": "#/components/schemas/Tree"
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -472,8 +830,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -487,7 +896,16 @@ openapi = {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Tree"
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     },
@@ -517,8 +935,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -551,8 +1020,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -571,7 +1091,16 @@ openapi = {
                                     "objects": {
                                         "type": "array",
                                         "items": {
-                                            "$ref": "#/components/schemas/Tree"
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "format": "int64"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -604,8 +1133,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -614,10 +1194,10 @@ openapi = {
                         }
                     }
                 }
-            }
+            },
+            "summary": "Where money doesn't grow"
         },
         "/tree/{id}": {
-            "summary": "Where money doesn't grow",
             "get": {
                 "tags": ["Tree"],
                 "summary": "Retrieve the corresponding Tree object",
@@ -641,8 +1221,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -681,8 +1312,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -701,7 +1383,16 @@ openapi = {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Tree"
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     },
@@ -731,8 +1422,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -771,8 +1513,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -791,7 +1584,16 @@ openapi = {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Tree"
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "int64"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     },
@@ -821,8 +1623,59 @@ openapi = {
                                         "objects": {
                                             "type": "array",
                                             "items": {
-                                                "$ref":
-                                                    "#/components/schemas/Tree"
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "format": "int64"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruit_colors": {
+                                                        "type": "string"
+                                                    },
+                                                    "fruits": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fruit_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "color": {
+                                                                    "type":
+                                                                        "string"
+                                                                },
+                                                                "age": {
+                                                                    "type":
+                                                                        "number"
+                                                                },
+                                                                "size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                },
+                                                                "tree_id": {
+                                                                    "type":
+                                                                        "integer",
+                                                                    "format":
+                                                                        "int64"
+                                                                },
+                                                                "square_size": {
+                                                                    "type":
+                                                                        "number",
+                                                                    "format":
+                                                                        "double"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -836,49 +1689,8 @@ openapi = {
                     "in": "path",
                     "required": True
                 }]
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "Fruit": {
-                "type": "object",
-                "properties": {
-                    "fruit_id": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "color": {
-                        "type": "string",
-                        "format": "str"
-                    },
-                    "age": {
-                        "type": "number",
-                        "format": "timedelta"
-                    },
-                    "size": {
-                        "type": "number",
-                        "format": "double"
-                    },
-                    "tree_id": {
-                        "type": "integer",
-                        "format": "int64"
-                    }
-                }
             },
-            "Tree": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    "name": {
-                        "type": "string",
-                        "format": "str"
-                    }
-                }
-            }
+            "summary": "Where money doesn't grow"
         }
     }
 }

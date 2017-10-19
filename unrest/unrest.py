@@ -4,7 +4,8 @@ from collections import defaultdict
 
 from .__about__ import __uri__, __version__
 from .coercers import Property
-from .openapi import openapi
+from .generators.openapi import OpenApi
+from .generators.options import Options
 from .rest import Rest
 
 log = logging.getLogger('unrest')
@@ -77,6 +78,7 @@ class UnRest(object):
             serve_openapi_file=True,
             info={},
     ):
+        self.rests = []
         self.path = path
         self.info = info
         self.version = version
@@ -85,8 +87,6 @@ class UnRest(object):
         self.DeserializeClass = DeserializeClass
         self.allow_options = allow_options
         self.serve_openapi_file = serve_openapi_file
-
-        self.infos = defaultdict(dict)
 
         if app is not None:
             self.init_app(app)
@@ -182,7 +182,7 @@ class UnRest(object):
         )
 
     def options(self):
-        return self.framework.send_json(json.dumps(self.infos))
+        return self.framework.send_json(json.dumps(Options(self).all()))
 
     def register_openapi(self):
         self.framework.register_route(
@@ -190,14 +190,7 @@ class UnRest(object):
         )
 
     def openapi(self):
-        return self.framework.send_json(json.dumps(self.openapi_infos))
-
-    @property
-    def openapi_infos(self):
-        return openapi(
-            self.infos, self.framework.url, self.root_path, self.info,
-            self.app.name, self.version
-        )
+        return self.framework.send_json(json.dumps(OpenApi(self).all()))
 
     Property = Property
 

@@ -11,6 +11,7 @@ from sqlalchemy.orm.strategy_options import Load
 from sqlalchemy.schema import Column
 
 from .coercers import Deserialize, Serialize
+from .generators.options import Options
 
 try:
     from json import JSONDecodeError
@@ -92,6 +93,7 @@ class Rest(object):
             DeserializeClass=Deserialize
     ):
         self.unrest = unrest
+        self.unrest.rests.append(self)
         self.Model = Model
 
         self.methods = methods[:]
@@ -118,9 +120,6 @@ class Rest(object):
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
 
-        self.infos = self.unrest.infos[self.path]
-
-        self.set_infos()
         if self.unrest.allow_options and self.methods:
             self.methods.append('OPTIONS')
 
@@ -330,7 +329,7 @@ class Rest(object):
 
         Returns a description of this rest endpoint.
         """
-        return self.infos
+        return Options(self.unrest).get_route(self)
 
     def declare(self, method):
         """
@@ -503,8 +502,6 @@ class Rest(object):
             self.path, method, self.primary_keys, method_fun
         )
 
-        self.infos['methods'].append(method)
-
     def json(self, data):
         return json.dumps(data)
 
@@ -514,42 +511,6 @@ class Rest(object):
 
     def has(self, pks):
         return pks and all(val is not None for val in pks.values())
-
-    def set_infos(self):
-        self.infos['model'] = self.Model.__name__
-        if self.table.schema:
-            self.infos['schema'] = self.table.schema
-        self.infos['parameters'] = list(self.primary_keys.keys())
-        self.infos['description'] = getattr(self.Model, '__doc__', '')
-
-        def sqlatype(type):
-            try:
-                return type.python_type.__name__
-            except NotImplementedError:
-                return type.__class__.__name__
-
-        self.infos['columns'] = {
-            name: sqlatype(column.type)
-            for name, column in self.columns.items()
-        }
-
-        if self.properties:
-            self.infos['properties'] = {
-                prop.name: getattr(
-                    getattr(self.Model, prop.name), '__doc__', 'Undocumented'
-                )
-                for prop in self.properties
-            }
-
-        if self.relationships:
-            self.infos['relationships'] = {
-                rel: {k: v
-                      for k, v in rest.infos.items() if k != 'methods'}
-                for rel, rest in self.relationships.items()
-            }
-
-        self.infos['batch'] = self.allow_batch
-        self.infos['methods'] = []
 
     def get_from_pk(self, query, **pks):
         for key, val in pks.items():

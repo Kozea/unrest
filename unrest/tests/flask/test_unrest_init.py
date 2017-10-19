@@ -89,6 +89,8 @@ def test_api_options(app, db, http):
                 'size': 'Decimal',
                 'tree_id': 'int'
             },
+            'properties': {},
+            'relationships': {},
             'methods': ['GET', 'OPTIONS'],
             'batch': False
         },
@@ -101,7 +103,7 @@ def test_api_options(app, db, http):
                 'name': 'str'
             },
             'properties': {
-                'fruit_colors': 'The color of fruits'
+                'fruit_colors': 'str'
             },
             'relationships': {
                 'fruits': {
@@ -115,6 +117,8 @@ def test_api_options(app, db, http):
                         'size': 'Decimal',
                         'tree_id': 'int'
                     },
+                    'properties': {},
+                    'relationships': {},
                     'batch': False
                 }
             },
@@ -148,6 +152,8 @@ def test_endpoint_options(app, db, http):
             'size': 'Decimal',
             'tree_id': 'int'
         },
+        'properties': {},
+        'relationships': {},
         'methods': ['GET', 'OPTIONS']
     }
 
