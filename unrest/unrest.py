@@ -1,6 +1,5 @@
 import json
 import logging
-from collections import defaultdict
 
 from .__about__ import __uri__, __version__
 from .coercers import Property
@@ -38,7 +37,9 @@ class UnRest(object):
         framework: Your specific framework class, defaults to auto detect.
         SerializeClass: A global alternative for #Serialize class.
         DeserializeClass: A global alternative for #Deserialize class.
-        allow_options: Set it to False to disable OPTIONS requests
+        allow_options: Set it to False to disable OPTIONS requests.
+        serve_openapi_file: Set it to False to disable openapi file generation.
+        info: Additional info for the openapi metadata.
     Unrest aims to be framework agnostic.
     It currently works with Flask out of the box, for another web framework
     you will have to implement your own Framework class.
@@ -76,6 +77,8 @@ class UnRest(object):
             DeserializeClass=None,
             allow_options=True,
             serve_openapi_file=True,
+            openapi_class=OpenApi,
+            options_class=Options,
             info={},
     ):
         self.rests = []
@@ -87,6 +90,8 @@ class UnRest(object):
         self.DeserializeClass = DeserializeClass
         self.allow_options = allow_options
         self.serve_openapi_file = serve_openapi_file
+        self.OpenApi = openapi_class
+        self.Options = options_class
 
         if app is not None:
             self.init_app(app)
@@ -182,7 +187,9 @@ class UnRest(object):
         )
 
     def options(self):
-        return self.framework.send_json(json.dumps(Options(self).all()))
+        return self.framework.send_json(
+            json.dumps(self.options_class(self).all())
+        )
 
     def register_openapi(self):
         self.framework.register_route(
@@ -190,7 +197,9 @@ class UnRest(object):
         )
 
     def openapi(self):
-        return self.framework.send_json(json.dumps(OpenApi(self).all()))
+        return self.framework.send_json(
+            json.dumps(self.openapi_class(self).all())
+        )
 
     Property = Property
 
