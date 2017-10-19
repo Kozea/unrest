@@ -1,3 +1,9 @@
+0.6.4
+=====
+
+* Add openapi.json file generation
+* Rewrite OPTIONS generation
+
 0.6.3
 =====
 
