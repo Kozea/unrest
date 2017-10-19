@@ -1,14 +1,26 @@
-0.6.4
+0.6.6
 =====
 
 * Add openapi.json file generation
 * Rewrite OPTIONS generation
 
-0.6.3
+0.6.5
 =====
 
 * Fix deferrable columns crash.
 * Add missing default float serializer/deserializer.
+
+0.6.4
+=====
+
+* Don't flush before validating item creation (POST)
+
+0.6.3
+=====
+
+* Add previous and next item in Validatable to allow cross field validation.
+* Allow field validator lists in validators.
+* Disable autoflush while validating to prevent sql errors.
 
 0.6.2
 =====
