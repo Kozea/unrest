@@ -140,7 +140,10 @@ class OpenApi(object):
         return [{
             'name': pk,
             'in': 'path',
-            'required': True
+            'required': True,
+            'schema': {
+                'type': 'string'
+            }
         } for pk in rest.primary_keys]
 
     def get_operation_request_body(self, rest, method, params):
