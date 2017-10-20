@@ -1,3 +1,8 @@
+0.6.7
+=====
+
+* Add schema for parameter in openapi apparently required according to last swagger commit.
+
 0.6.6
 =====
 
@@ -44,11 +49,11 @@
 
 * Add ValidationError on Validatable to avoid the need of having a unrest instance.
 
-
 0.5.0
 =====
 
 * Add validators argument to Rest to provide a mapping of field validators for incoming data.
+
 
 0.4.1
 =====
