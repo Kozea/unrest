@@ -287,7 +287,10 @@ openapi = {
                 "parameters": [{
                     "name": "fruit_id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }]
             },
             "put": {
@@ -350,7 +353,10 @@ openapi = {
                 "parameters": [{
                     "name": "fruit_id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }],
                 "requestBody": {
                     "description": "The Fruit object to create or replace",
@@ -444,7 +450,10 @@ openapi = {
                 "parameters": [{
                     "name": "fruit_id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }]
             },
             "patch": {
@@ -507,7 +516,10 @@ openapi = {
                 "parameters": [{
                     "name": "fruit_id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }],
                 "requestBody": {
                     "description": "The Fruit object patches.",
@@ -601,7 +613,10 @@ openapi = {
                 "parameters": [{
                     "name": "fruit_id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }]
             },
             "summary": "A bag of fruit"
@@ -1285,7 +1300,10 @@ openapi = {
                 "parameters": [{
                     "name": "id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }]
             },
             "put": {
@@ -1376,7 +1394,10 @@ openapi = {
                 "parameters": [{
                     "name": "id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }],
                 "requestBody": {
                     "description": "The Tree object to create or replace",
@@ -1486,7 +1507,10 @@ openapi = {
                 "parameters": [{
                     "name": "id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }]
             },
             "patch": {
@@ -1577,7 +1601,10 @@ openapi = {
                 "parameters": [{
                     "name": "id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }],
                 "requestBody": {
                     "description": "The Tree object patches.",
@@ -1687,7 +1714,10 @@ openapi = {
                 "parameters": [{
                     "name": "id",
                     "in": "path",
-                    "required": True
+                    "required": True,
+                    "schema": {
+                        "type": "string"
+                    }
                 }]
             },
             "summary": "Where money doesn't grow"
