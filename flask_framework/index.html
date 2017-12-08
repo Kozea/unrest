@@ -156,13 +156,14 @@ This is the framework abstraction you can implement for your own framework</p>
 <p>Must return the string of the current JSON request content or None</p>
 <h3 id="unrest.flask_framework.FlaskUnRest.send_json">send_json</h3>
 
-<pre><code class="python">FlaskUnRest.send_json(self, json)
+<pre><code class="python">FlaskUnRest.send_json(self, json, status_code=200)
 </code></pre>
 
-<p>Send a 200 JSON response with <code>json</code> as content</p>
+<p>Send a <code>status_code</code> JSON response with <code>json</code> as content</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>json</strong>: The JSON string to send.</li>
+<li><strong>status_code: The response status code. (Default</strong>: 200)</li>
 </ul>
 <h3 id="unrest.flask_framework.FlaskUnRest.send_error">send_error</h3>
 
