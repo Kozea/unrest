@@ -200,10 +200,11 @@ class UnRest(object):
     Property = Property
 
     class Response(object):
-        def __init__(self, data, wrapper=lambda x: x):
+        def __init__(self, data, wrapper=lambda x: x, status_code=200):
             if isinstance(data, self.__class__):
                 self.data = data.data
                 self.wrapper = lambda r: wrapper(data.wrapper(r))
             else:
                 self.data = data
                 self.wrapper = wrapper
+            self.status_code = status_code

@@ -37,8 +37,7 @@ class FlaskUnRest(object):
         self.app.add_url_rule(path, name, fun, methods=[method])
         if parameters:
             log.info(
-                'Registering route %s for %s for %s' %
-                (name, path, method)
+                'Registering route %s for %s for %s' % (name, path, method)
             )
             path_with_params = path + '/' + '/'.join(
                 '<%s>' % param for param in parameters
@@ -60,15 +59,18 @@ class FlaskUnRest(object):
 
         return request.data.decode('utf-8')
 
-    def send_json(self, json):
+    def send_json(self, json, status_code=200):
         """
-        Send a 200 JSON response with `json` as content
+        Send a `status_code` JSON response with `json` as content
 
         # Arguments
             json: The JSON string to send.
+            status_code: The response status code. (Default: 200)
         """
         return current_app.response_class(
-            (json, '\n'), mimetype=current_app.config['JSONIFY_MIMETYPE']
+            (json, '\n'),
+            status=status_code,
+            mimetype=current_app.config['JSONIFY_MIMETYPE']
         )
 
     def send_error(self, message, status_code):

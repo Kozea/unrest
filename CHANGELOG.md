@@ -1,3 +1,8 @@
+0.6.8
+=====
+
+* Return a 404 with json on GET for an unknown id.
+
 0.6.7
 =====
 

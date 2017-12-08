@@ -141,7 +141,9 @@ class Rest(object):
         if self.has(pks):
             item = self.get_from_pk(self.query, **pks)
             if item is None:
-                self.raise_error(404, '%s(%r) not found' % (self.name, pks))
+                return self.unrest.Response(
+                    self.serialize([]), status_code=404
+                )
 
             return self.serialize([item])
 
@@ -446,7 +448,9 @@ class Rest(object):
                 errors.append(error)
             elif not valid:
                 self.raise_error(
-                    500, 'Validation Error', extra={'errors': [error]}
+                    500, 'Validation Error', extra={
+                        'errors': [error]
+                    }
                 )
 
     def validate_all(self, items):
@@ -487,7 +491,9 @@ class Rest(object):
                 response = self.unrest.Response(response)
 
             json = self.json(response.data)
-            return response.wrapper(self.unrest.framework.send_json(json))
+            return response.wrapper(
+                self.unrest.framework.send_json(json, response.status_code)
+            )
 
         return wrapped
 
@@ -520,9 +526,9 @@ class Rest(object):
     def get_all_from_pks(self, query, items_pks):
         return query.filter(
             or_(
-                * [
+                *[
                     and_(
-                        * [
+                        *[
                             getattr(self.Model, key) == val
                             for key, val in pks.items()
                         ]
