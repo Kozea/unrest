@@ -120,7 +120,8 @@ class Rest(object):
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
 
-        if self.unrest.allow_options and self.methods:
+        if (self.unrest.allow_options and self.methods
+                and 'OPTIONS' not in self.methods):
             self.methods.append('OPTIONS')
 
         for method in self.methods:
@@ -362,6 +363,39 @@ class Rest(object):
             self.register_method(method, fun)
 
         return register_fun
+
+    def sub(self, query_factory, **kwargs):
+        """This methods return a copy of the current rest endpoint and takes a
+        {query_factory} argument to alter the current query.
+
+        # Arguments
+            query_factory: A function that takes the original query
+                in parameter and returns a new query.
+            **kwargs: Can be used to override Rest constructor arguments
+                (query is not supported)
+        """
+
+        assert not kwargs.get('query'), 'query is not supported on sub rest'
+        inherited = {
+            'methods': self.methods,
+            'name': 'sub' + self.name,
+            'only': self.only,
+            'exclude': self.exclude,
+            'properties': self.properties,
+            'relationships': self.relationships,
+            'allow_batch': self.allow_batch,
+            'auth': self.auth,
+            'read_auth': self.read_auth,
+            'write_auth': self.write_auth,
+            'validators': self.validators,
+            'primary_keys': self._primary_keys,
+            'SerializeClass': self.SerializeClass,
+            'DeserializeClass': self.DeserializeClass,
+        }
+        inherited.update(kwargs)
+        subrest = self.__class__(self.unrest, self.Model, **inherited)
+        subrest.query_factory = lambda q: query_factory(self.query_factory(q))
+        return subrest
 
     def kwargs_to_pks(self, kwargs):
         if not kwargs:
