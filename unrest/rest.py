@@ -182,7 +182,7 @@ class Rest(object):
             self.validate(item, previousItem)
             if existingItem is None:
                 self.session.add(item)
-            self.session.commit()
+            self.session.flush()
             return self.serialize([item])
 
         if not self.allow_batch:
@@ -195,7 +195,7 @@ class Rest(object):
         items = self.deserialize_all(payload)
         self.validate_all(items)
         self.session.add_all(items)
-        self.session.commit()
+        self.session.flush()
         return self.serialize(items)
 
     def post(self, payload, **pks):
@@ -222,7 +222,7 @@ class Rest(object):
         item = self.deserialize(payload, self.Model())
         self.session.add(item)
         self.validate(item)
-        self.session.commit()
+        self.session.flush()
         return self.serialize([item])
 
     def delete(self, payload, **pks):
@@ -242,7 +242,7 @@ class Rest(object):
                 self.raise_error(404, '%s(%r) not found' % (self.name, pks))
 
             self.session.delete(item)
-            self.session.commit()
+            self.session.flush()
             return self.serialize([item])
 
         if not self.allow_batch:
@@ -253,7 +253,7 @@ class Rest(object):
 
         items = self.undefered_query.all()
         self.query.delete()
-        self.session.commit()
+        self.session.flush()
         return self.serialize(items)
 
     def patch(self, payload, **pks):
@@ -286,7 +286,7 @@ class Rest(object):
                 self.raise_error(404, '%s(%r) not found' % (self.name, pks))
             self.deserialize(payload, item, blank_missing=False)
             self.validate(item)
-            self.session.commit()
+            self.session.flush()
             return self.serialize([item])
 
         if not self.allow_batch:
@@ -323,7 +323,7 @@ class Rest(object):
             # Merge only patched colmuns
             self.deserialize(patch, item, blank_missing=False)
         self.validate_all(items)
-        self.session.commit()
+        self.session.flush()
         return self.serialize(items)
 
     def options(self, payload, **pks):
@@ -517,6 +517,9 @@ class Rest(object):
                     decorated = self.auth(decorated)
 
                 response = decorated(payload, **pks)
+
+                if method in ['PUT', 'POST', 'DELETE', 'PATCH']:
+                    self.session.commit()
             except self.unrest.RestError as e:
                 return self.unrest.framework.send_error(
                     dict(message=e.message, **e.extra), e.status

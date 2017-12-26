@@ -1,6 +1,7 @@
 # 0.7.0
 
 * Add a `rest.sub` method to generate sub collections endpoint.
+* Db session commit is now done in the method wrapper instead of the rest methods. This prevents multi commits when calling multiple rest methods inside a `@declare` for instance. No commit is done on GET methods! -Don't alter db on GETs.-
 
 ## [0.6.8](https://github.com/Kozea/unrest/compare/0.6.7...0.6.8)
 
