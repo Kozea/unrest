@@ -257,7 +257,7 @@ Primary keys: Patch only one</p>
 <p>Returns a description of this rest endpoint.</p>
 <h3 id="unrest.rest.Rest.declare">declare</h3>
 
-<pre><code class="python">Rest.declare(self, method)
+<pre><code class="python">Rest.declare(self, method, manual_commit=False)
 </code></pre>
 
 <p>A decorator to register an alternative method.
@@ -278,6 +278,7 @@ def get(payload, fruit_id=None):
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>method</strong>: The method to override ('GET' for exemple)</li>
+<li><strong>manual_commit</strong>: Don't auto commit after the method.</li>
 </ul>
 <h3 id="unrest.rest.Rest.sub">sub</h3>
 
