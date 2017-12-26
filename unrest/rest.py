@@ -528,6 +528,13 @@ class Rest(object):
                 )
             if not isinstance(response, self.unrest.Response):
                 response = self.unrest.Response(response)
+            log.info(
+                '%s %s%s' % (
+                    method, self.path,
+                    ': %d occurences' % response.data['occurences']
+                    if response.data.get('occurences') is not None else ''
+                )
+            )
 
             json = self.json(response.data)
             return response.wrapper(
