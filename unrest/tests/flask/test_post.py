@@ -111,3 +111,36 @@ def test_post_tree_custom(rest, http):
             'name': 'I ALWAYS WANT THIS NAME'
         },
     ]
+
+
+def test_post_tree_custom_manual_commit(rest, http):
+    tree = rest(Tree)
+
+    @tree.declare('POST', True)
+    def post(payload, id=None):
+        payload['name'] = 'I ALWAYS WANT THIS NAME'
+        return tree.post(payload, id=id)
+
+    code, json = http.post('/api/tree', json={'name': 'cedar'})
+    assert code == 200
+    assert json['occurences'] == 1
+    assert idsorted(json['objects']) == [
+        {
+            'id': 4,
+            'name': 'I ALWAYS WANT THIS NAME'
+        },
+    ]
+    # The post should not be commited
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 3
+    assert idsorted(json['objects']) == [{
+        'id': 1,
+        'name': 'pine'
+    }, {
+        'id': 2,
+        'name': 'maple'
+    }, {
+        'id': 3,
+        'name': 'oak'
+    }]

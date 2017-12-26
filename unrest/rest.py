@@ -334,7 +334,7 @@ class Rest(object):
         """
         return Options(self.unrest).get_route(self)
 
-    def declare(self, method):
+    def declare(self, method, manual_commit=False):
         """
         A decorator to register an alternative method.
         The original is still callable with rest.{method}
@@ -355,12 +355,13 @@ class Rest(object):
 
         # Arguments
             method: The method to override ('GET' for exemple)
+            manual_commit: Don't auto commit after the method.
         """
 
         def register_fun(fun):
             if self.unrest.allow_options and not self.methods:
                 self.register_method('OPTIONS')
-            self.register_method(method, fun)
+            self.register_method(method, fun, manual_commit)
 
         return register_fun
 
@@ -497,7 +498,7 @@ class Rest(object):
     def raise_error(self, status, message, extra=None):
         self.unrest.raise_error(status, message, extra)
 
-    def wrap_native(self, method, method_fun):
+    def wrap_native(self, method, method_fun, manual_commit=False):
         @wraps(method_fun)
         def wrapped(**kwargs):
             pks = self.kwargs_to_pks(kwargs)
@@ -518,7 +519,8 @@ class Rest(object):
 
                 response = decorated(payload, **pks)
 
-                if method in ['PUT', 'POST', 'DELETE', 'PATCH']:
+                if not manual_commit and method in ['PUT', 'POST', 'DELETE',
+                                                    'PATCH']:
                     self.session.commit()
             except self.unrest.RestError as e:
                 return self.unrest.framework.send_error(
@@ -534,11 +536,11 @@ class Rest(object):
 
         return wrapped
 
-    def register_method(self, method, method_fun=None):
+    def register_method(self, method, method_fun=None, manual_commit=False):
         if method != 'OPTIONS':
             assert method in self.unrest.all, 'Unknown method %s' % method
         method_fun = method_fun or getattr(self, method.lower())
-        method_fun = self.wrap_native(method, method_fun)
+        method_fun = self.wrap_native(method, method_fun, manual_commit)
         # str() for python 2 compat
         method_fun.__name__ = str('_'.join((method, ) + self.name_parts))
         self.unrest.framework.register_route(
