@@ -1,5 +1,5 @@
 __title__ = "unrest"
-__version__ = "0.7.1"
+__version__ = "0.7.2"
 
 __summary__ = "A troubling rest api library for sqlalchemy models"
 __uri__ = "https://github.com/Kozea/unrest"
