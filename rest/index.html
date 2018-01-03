@@ -176,9 +176,12 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 <li><strong>primary_keys</strong>: A list of column names to use as primary_keys
         (use real db primary keys by default)</li>
 <li><strong>defaults</strong>: A mapping of column -&gt; values which sets the default value
-        of the columns when the column is not present in the payload.</li>
+        of the columns when the column is not present in the payload.
+        Can be a callable, in this case it will be called at runtime with
+        the payload as argument.</li>
 <li><strong>fixed</strong>: A mapping of column -&gt; values which replaces the values
-        present or not in the payload.</li>
+        present or not in the payload. Can be a callable, in this case it
+        will be called at runtime with the payload as argument.</li>
 <li><strong>SerializeClass</strong>: An alternative <code>Serialize</code> class.</li>
 <li><strong>DeserializeClass</strong>: An alternative <code>Deserialize</code> class.</li>
 </ul>
