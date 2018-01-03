@@ -1,7 +1,11 @@
+## [0.7.3](https://github.com/Kozea/unrest/compare/0.7.2...0.7.3)
+
+* `defaults` and `fixed` attributes can now be callable.
+
 ## [0.7.2](https://github.com/Kozea/unrest/compare/0.7.1...0.7.2)
 
-* Add a defaults attribute to set column defaults.
-* Add a fixed attribute to force columns values.
+* Add a `defaults` attribute to set column defaults.
+* Add a `fixed` attribute to force columns values.
 
 ## [0.7.1](https://github.com/Kozea/unrest/compare/0.7.0...0.7.1)
 

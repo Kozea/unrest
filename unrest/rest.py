@@ -21,6 +21,12 @@ except ImportError:
 log = logging.getLogger('unrest.rest')
 
 
+def call_me_maybe(fun_or_value, *args, **kwargs):
+    if callable(fun_or_value):
+        return fun_or_value(*args, **kwargs)
+    return fun_or_value
+
+
 class Rest(object):
     """
     This is the entry point for generating a REST endpoint for a specific model
@@ -69,8 +75,11 @@ class Rest(object):
             (use real db primary keys by default)
         defaults: A mapping of column -> values which sets the default value
             of the columns when the column is not present in the payload.
-            fixed: A mapping of column -> values which replaces the values
-            present or not in the payload.
+            Can be a callable, in this case it will be called at runtime with
+            the payload as argument.
+        fixed: A mapping of column -> values which replaces the values
+            present or not in the payload. Can be a callable, in this case it
+            will be called at runtime with the payload as argument.
         SerializeClass: An alternative #Serialize class.
         DeserializeClass: An alternative #Deserialize class.
     """
@@ -453,9 +462,9 @@ class Rest(object):
     def set_defaults(self, payload, columns):
         for name, column in columns.items():
             if name in self.fixed:
-                payload[name] = self.fixed[name]
+                payload[name] = call_me_maybe(self.fixed[name], payload)
             elif name not in payload and name in self.defaults:
-                payload[name] = self.defaults[name]
+                payload[name] = call_me_maybe(self.defaults[name], payload)
 
     class Validatable(object):
         def __init__(self, value, name, previous, next, ValidationError):

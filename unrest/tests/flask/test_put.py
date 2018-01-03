@@ -57,7 +57,7 @@ def test_put_with_defaults(rest, http):
         allow_batch=True,
         defaults={
             'color': 'white',
-            'age': 42.0,
+            'age': lambda p: p['size'] * 2,
         }
     )
     code, json = http.put(
@@ -80,14 +80,14 @@ def test_put_with_defaults(rest, http):
             'fruit_id': 1,
             'color': 'white',
             'size': 1.0,
-            'age': 42.0,
+            'age': 2.0,
             'tree_id': 1
         },
         {
             'fruit_id': 2,
             'color': 'yellow',
             'size': 2.0,
-            'age': 42.0,
+            'age': 4.0,
             'tree_id': 2
         },
     ]
@@ -100,14 +100,14 @@ def test_put_with_defaults(rest, http):
             'fruit_id': 1,
             'color': 'white',
             'size': 1.0,
-            'age': 42.0,
+            'age': 2.0,
             'tree_id': 1
         },
         {
             'fruit_id': 2,
             'color': 'yellow',
             'size': 2.0,
-            'age': 42.0,
+            'age': 4.0,
             'tree_id': 2
         },
     ]
@@ -120,7 +120,7 @@ def test_put_with_fixed(rest, http):
         allow_batch=True,
         fixed={
             'color': 'white',
-            'age': 42.0,
+            'age': lambda p: p['size'] * 2,
         }
     )
     code, json = http.put(
@@ -143,14 +143,14 @@ def test_put_with_fixed(rest, http):
             'fruit_id': 1,
             'color': 'white',
             'size': 1.0,
-            'age': 42.0,
+            'age': 2.0,
             'tree_id': 1
         },
         {
             'fruit_id': 2,
             'color': 'white',
             'size': 2.0,
-            'age': 42.0,
+            'age': 4.0,
             'tree_id': 2
         },
     ]
@@ -163,14 +163,14 @@ def test_put_with_fixed(rest, http):
             'fruit_id': 1,
             'color': 'white',
             'size': 1.0,
-            'age': 42.0,
+            'age': 2.0,
             'tree_id': 1
         },
         {
             'fruit_id': 2,
             'color': 'white',
             'size': 2.0,
-            'age': 42.0,
+            'age': 4.0,
             'tree_id': 2
         },
     ]
