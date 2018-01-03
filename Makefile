@@ -19,7 +19,7 @@ check-outdated:
 	$(PIP) list --outdated --format=columns
 
 check: lint
-	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS) -p no:warnings
+	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS) -p no:warnings --cov unrest
 
 .PHONY: docs
 docs:

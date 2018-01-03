@@ -19,7 +19,6 @@ except ImportError:
     JSONDecodeError = Exception
 
 log = logging.getLogger('unrest.rest')
-notset = object()
 
 
 class Rest(object):
@@ -68,6 +67,10 @@ class Rest(object):
             `rest.ValidationError(reason)` (where `rest = Unrest()`)
         primary_keys: A list of column names to use as primary_keys
             (use real db primary keys by default)
+        defaults: A mapping of column -> values which sets the default value
+            of the columns when the column is not present in the payload.
+            fixed: A mapping of column -> values which replaces the values
+            present or not in the payload.
         SerializeClass: An alternative #Serialize class.
         DeserializeClass: An alternative #Deserialize class.
     """
@@ -89,6 +92,8 @@ class Rest(object):
             write_auth=None,
             validators=None,
             primary_keys=None,
+            defaults=None,
+            fixed=None,
             SerializeClass=Serialize,
             DeserializeClass=Deserialize
     ):
@@ -116,6 +121,8 @@ class Rest(object):
 
         self.validators = validators or {}
         self._primary_keys = primary_keys
+        self.defaults = defaults or {}
+        self.fixed = fixed or {}
 
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
@@ -414,9 +421,12 @@ class Rest(object):
                 name: column
                 for name, column in self.columns.items() if name in payload
             }
+        self.set_defaults(payload, columns)
         return self.DeserializeClass(payload, columns).merge(item)
 
     def deserialize_all(self, payload):
+        for item in payload['objects']:
+            self.set_defaults(item, self.columns)
         return self.DeserializeClass(payload, self.columns).create(self.Model)
 
     def serialize_object(self, item):
@@ -439,6 +449,13 @@ class Rest(object):
         if 'occurences' not in rv:
             rv['occurences'] = len(rv['objects'])
         return rv
+
+    def set_defaults(self, payload, columns):
+        for name, column in columns.items():
+            if name in self.fixed:
+                payload[name] = self.fixed[name]
+            elif name not in payload and name in self.defaults:
+                payload[name] = self.defaults[name]
 
     class Validatable(object):
         def __init__(self, value, name, previous, next, ValidationError):

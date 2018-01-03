@@ -64,6 +64,41 @@ def test_put_tree_without_id(rest, http):
     ]
 
 
+def test_put_tree_unexisting(rest, http):
+    rest(Tree, methods=['GET', 'PUT'])
+    code, json = http.put('/api/tree/4', json={'name': 'palm'})
+    assert code == 200
+    assert json['occurences'] == 1
+    assert idsorted(json['objects']) == [
+        {
+            'id': 4,
+            'name': 'palm'
+        },
+    ]
+
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 4
+    assert idsorted(json['objects']) == [
+        {
+            'id': 1,
+            'name': 'pine'
+        },
+        {
+            'id': 2,
+            'name': 'maple'
+        },
+        {
+            'id': 3,
+            'name': 'oak'
+        },
+        {
+            'id': 4,
+            'name': 'palm'
+        },
+    ]
+
+
 def test_put_tree_with_another_id(rest, http):
     rest(Tree, methods=['GET', 'PUT'])
     code, json = http.put('/api/tree/1', json={'id': 5, 'name': 'cedar'})
@@ -73,8 +108,10 @@ def test_put_tree_with_another_id(rest, http):
 def test_put_fruit(rest, http):
     rest(Fruit, methods=['GET', 'PUT'])
     code, json = http.put(
-        '/api/fruit/1', json={'fruit_id': 1,
-                              'color': 'blue'}
+        '/api/fruit/1', json={
+            'fruit_id': 1,
+            'color': 'blue'
+        }
     )
     assert code == 200
     assert json['occurences'] == 1

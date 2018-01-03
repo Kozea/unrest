@@ -1,5 +1,5 @@
 from . import idsorted
-from ..model import Tree
+from ..model import Fruit, Tree
 
 
 def test_put_tree_implicitly_unallowed(rest, http):
@@ -46,5 +46,131 @@ def test_put_tree(rest, http):
         {
             'id': 2,
             'name': 'mango'
+        },
+    ]
+
+
+def test_put_with_defaults(rest, http):
+    rest(
+        Fruit,
+        methods=['GET', 'PUT'],
+        allow_batch=True,
+        defaults={
+            'color': 'white',
+            'age': 42.0,
+        }
+    )
+    code, json = http.put(
+        '/api/fruit',
+        json={
+            'objects': [{
+                'size': 1.0,
+                'tree_id': 1
+            }, {
+                'color': 'yellow',
+                'size': 2.0,
+                'tree_id': 2
+            }]
+        }
+    )
+    assert code == 200
+    assert json['occurences'] == 2
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'white',
+            'size': 1.0,
+            'age': 42.0,
+            'tree_id': 1
+        },
+        {
+            'fruit_id': 2,
+            'color': 'yellow',
+            'size': 2.0,
+            'age': 42.0,
+            'tree_id': 2
+        },
+    ]
+
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 2
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'white',
+            'size': 1.0,
+            'age': 42.0,
+            'tree_id': 1
+        },
+        {
+            'fruit_id': 2,
+            'color': 'yellow',
+            'size': 2.0,
+            'age': 42.0,
+            'tree_id': 2
+        },
+    ]
+
+
+def test_put_with_fixed(rest, http):
+    rest(
+        Fruit,
+        methods=['GET', 'PUT'],
+        allow_batch=True,
+        fixed={
+            'color': 'white',
+            'age': 42.0,
+        }
+    )
+    code, json = http.put(
+        '/api/fruit',
+        json={
+            'objects': [{
+                'size': 1.0,
+                'tree_id': 1
+            }, {
+                'color': 'yellow',
+                'size': 2.0,
+                'tree_id': 2
+            }]
+        }
+    )
+    assert code == 200
+    assert json['occurences'] == 2
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'white',
+            'size': 1.0,
+            'age': 42.0,
+            'tree_id': 1
+        },
+        {
+            'fruit_id': 2,
+            'color': 'white',
+            'size': 2.0,
+            'age': 42.0,
+            'tree_id': 2
+        },
+    ]
+
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 2
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'white',
+            'size': 1.0,
+            'age': 42.0,
+            'tree_id': 1
+        },
+        {
+            'fruit_id': 2,
+            'color': 'white',
+            'size': 2.0,
+            'age': 42.0,
+            'tree_id': 2
         },
     ]

@@ -163,7 +163,7 @@ class Deserialize(object):
         self.columns = columns
 
     def merge(self, item, payload=None):
-        """Deserialize the given payload into the existing sqlachemy `item`"""
+        """Deserialize the given payload into the existing sqlalchemy `item`"""
         for name, column in self.columns.items():
             setattr(item, name, self.deserialize(name, column, payload))
         return item

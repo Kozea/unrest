@@ -109,3 +109,27 @@ def test_get_fruit_with_hybrid_property_and_formatter(rest, http):
     assert code == 200
     assert json['occurences'] == 5
     assert idsorted(json['objects'], 'fruit_id') == results
+
+
+def test_get_fruit_with_primary_keys(rest, http):
+    rest(Fruit, primary_keys=['fruit_id', 'age'], only=[])
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert json['primary_keys'] == ['fruit_id', 'age']
+    assert idsorted(json['objects'], 'fruit_id') == [{
+        'fruit_id': 1,
+        'age': 1041300.0,
+    }, {
+        'fruit_id': 2,
+        'age': 4233830.213,
+    }, {
+        'fruit_id': 3,
+        'age': 0.0,
+    }, {
+        'fruit_id': 4,
+        'age': 2400.0,
+    }, {
+        'fruit_id': 5,
+        'age': 7200.000012,
+    }]
