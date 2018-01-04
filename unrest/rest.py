@@ -71,6 +71,8 @@ class Rest(object):
             A validator function takes a `Rest.Validatable` object as parameter
             and must return the final value for the field or raise a
             `rest.ValidationError(reason)` (where `rest = Unrest()`)
+        validation_error_code: The http return code when the validation fails.
+            Defaults to 500
         primary_keys: A list of column names to use as primary_keys
             (use real db primary keys by default)
         defaults: A mapping of column -> values which sets the default value
@@ -100,6 +102,7 @@ class Rest(object):
             read_auth=None,
             write_auth=None,
             validators=None,
+            validation_error_code=500,
             primary_keys=None,
             defaults=None,
             fixed=None,
@@ -129,6 +132,7 @@ class Rest(object):
         self.write_auth = write_auth
 
         self.validators = validators or {}
+        self.validation_error_code = validation_error_code
         self._primary_keys = primary_keys
         self.defaults = defaults or {}
         self.fixed = fixed or {}
@@ -509,7 +513,9 @@ class Rest(object):
                 errors.append(error)
             elif not valid:
                 self.raise_error(
-                    500, 'Validation Error', extra={
+                    self.validation_error_code,
+                    'Validation Error',
+                    extra={
                         'errors': [error]
                     }
                 )

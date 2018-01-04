@@ -1,3 +1,7 @@
+## [0.7.3](https://github.com/Kozea/unrest/compare/0.7.3...0.7.4)
+
+* Add a `validation_error_code` to change the validation error http status.
+
 ## [0.7.3](https://github.com/Kozea/unrest/compare/0.7.2...0.7.3)
 
 * `defaults` and `fixed` attributes can now be callable.
