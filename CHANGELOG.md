@@ -1,4 +1,8 @@
-## [0.7.3](https://github.com/Kozea/unrest/compare/0.7.3...0.7.4)
+## [0.7.5](https://github.com/Kozea/unrest/compare/0.7.4...0.7.5)
+
+* Fix `declare` decorator not returning function.
+
+## [0.7.4](https://github.com/Kozea/unrest/compare/0.7.3...0.7.4)
 
 * Add a `validation_error_code` to change the validation error http status.
 

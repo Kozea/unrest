@@ -382,6 +382,7 @@ class Rest(object):
             if self.unrest.allow_options and not self.methods:
                 self.register_method('OPTIONS')
             self.register_method(method, fun, manual_commit)
+            return fun
 
         return register_fun
 

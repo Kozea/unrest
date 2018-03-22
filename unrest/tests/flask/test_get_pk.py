@@ -139,6 +139,8 @@ def test_get_custom(rest, http):
     def get(payload, fruit_id=None):
         return {'Hey': 'Overridden'}
 
+    assert get is not None
+
     code, json = http.get('/api/fruit/3')
     assert code == 200
     assert json == {'Hey': 'Overridden'}
