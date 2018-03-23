@@ -3,7 +3,7 @@ import decimal
 import logging
 from base64 import b64decode, b64encode
 
-import dateutil
+from dateutil.parser import parse as dateparse
 from sqlalchemy.types import String
 
 log = logging.getLogger('unrest.coercers')
@@ -196,13 +196,13 @@ class Deserialize(object):
         return data
 
     def deserialize_datetime(self, type, data):
-        return dateutil.parser.parse(data)
+        return dateparse(data)
 
     def deserialize_date(self, type, data):
-        return dateutil.parser.parse(data).date()
+        return dateparse(data).date()
 
     def deserialize_time(self, type, data):
-        return dateutil.parser.parse(data).time()
+        return dateparse(data).time()
 
     def deserialize_interval(self, type, data):
         return datetime.timedelta(seconds=data)

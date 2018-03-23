@@ -1,3 +1,7 @@
+## [0.7.6](https://github.com/Kozea/unrest/compare/0.7.5...0.7.6)
+
+* Fix dateutil import.
+
 ## [0.7.5](https://github.com/Kozea/unrest/compare/0.7.4...0.7.5)
 
 * Fix `declare` decorator not returning function.
