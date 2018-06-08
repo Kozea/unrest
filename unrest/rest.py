@@ -413,6 +413,8 @@ class Rest(object):
             'primary_keys': self._primary_keys,
             'SerializeClass': self.SerializeClass,
             'DeserializeClass': self.DeserializeClass,
+            'fixed': self.fixed,
+            'defaults': self.defaults,
         }
         inherited.update(kwargs)
         subrest = self.__class__(self.unrest, self.Model, **inherited)
@@ -516,9 +518,7 @@ class Rest(object):
                 self.raise_error(
                     self.validation_error_code,
                     'Validation Error',
-                    extra={
-                        'errors': [error]
-                    }
+                    extra={'errors': [error]}
                 )
 
     def validate_all(self, items):
@@ -622,8 +622,8 @@ class Rest(object):
 
     @property
     def query(self):
-        if hasattr(self.Model, 'query') and isinstance(self.Model.query, Query
-                                                       ):
+        if hasattr(self.Model, 'query') and isinstance(self.Model.query,
+                                                       Query):
             query = self.Model.query
         else:
             query = self.session.query(self.Model)
