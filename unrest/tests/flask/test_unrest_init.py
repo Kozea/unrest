@@ -234,3 +234,18 @@ def test_sub(app, db, http):
     code, json = http.get('/api/nomaple')
     assert code == 200
     assert json['occurences'] == 1
+
+
+def test_sub_fixed(app, db, http):
+    rest = UnRest(app, db.session)
+
+    fruit = rest(
+        Fruit,
+        defaults={'size': 1.0},
+        fixed={'color': 'blue'},
+        methods=rest.all,
+        properties=[rest.Property('square_size', Float())]
+    )
+    subfruit = fruit.sub(lambda q: q.filter(Fruit.age == 2.0))
+    for key in ['defaults', 'fixed']:
+        assert getattr(subfruit, key) == getattr(fruit, key)
