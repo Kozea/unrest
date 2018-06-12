@@ -622,10 +622,8 @@ class Rest(object):
 
     @property
     def query(self):
-        if hasattr(self.Model, 'query') and isinstance(self.Model.query,
-                                                       Query):
-            query = self.Model.query
-        else:
+        query = getattr(self.Model, 'query', None)
+        if not query or not isinstance(query, Query):
             query = self.session.query(self.Model)
         return self.query_factory(query)
 
