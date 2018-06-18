@@ -8,8 +8,8 @@ python:
   #- pypy
 
 install:
-  - pip install --upgrade pip setuptools
-  - pip install --upgrade .[test]
+  - pip install --upgrade --upgrade-strategy eager pip setuptools
+  - pip install --upgrade --upgrade-strategy eager .[test]
 
 script: py.test --isort --flake8 --cov-report= --cov=unrest
 
