@@ -73,7 +73,7 @@ def test_api_options(app, db, http):
         methods=rest.all,
         relationships={'fruits': fruit},
         properties=['fruit_colors'],
-        allow_batch=True
+        allow_batch=True,
     )
     code, json = http.options('/api')
     assert code == 200
@@ -87,24 +87,19 @@ def test_api_options(app, db, http):
                 'color': 'str',
                 'fruit_id': 'int',
                 'size': 'Decimal',
-                'tree_id': 'int'
+                'tree_id': 'int',
             },
             'properties': {},
             'relationships': {},
             'methods': ['GET', 'OPTIONS'],
-            'batch': False
+            'batch': False,
         },
         '/api/tree': {
             'model': 'Tree',
             'description': "Where money doesn't grow",
             'parameters': ['id'],
-            'columns': {
-                'id': 'int',
-                'name': 'str'
-            },
-            'properties': {
-                'fruit_colors': 'str'
-            },
+            'columns': {'id': 'int', 'name': 'str'},
+            'properties': {'fruit_colors': 'str'},
             'relationships': {
                 'fruits': {
                     'model': 'Fruit',
@@ -115,16 +110,16 @@ def test_api_options(app, db, http):
                         'color': 'str',
                         'fruit_id': 'int',
                         'size': 'Decimal',
-                        'tree_id': 'int'
+                        'tree_id': 'int',
                     },
                     'properties': {},
                     'relationships': {},
-                    'batch': False
+                    'batch': False,
                 }
             },
             'methods': ['GET', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
-            'batch': True
-        }
+            'batch': True,
+        },
     }
 
 
@@ -136,7 +131,7 @@ def test_endpoint_options(app, db, http):
         methods=rest.all,
         relationships={'fruits': fruit},
         properties=['fruit_colors'],
-        allow_batch=True
+        allow_batch=True,
     )
     code, json = http.options('/api/fruit')
     assert code == 200
@@ -150,11 +145,11 @@ def test_endpoint_options(app, db, http):
             'color': 'str',
             'fruit_id': 'int',
             'size': 'Decimal',
-            'tree_id': 'int'
+            'tree_id': 'int',
         },
         'properties': {},
         'relationships': {},
-        'methods': ['GET', 'OPTIONS']
+        'methods': ['GET', 'OPTIONS'],
     }
 
 
@@ -163,32 +158,29 @@ def test_openapi(app, db, http):
         app,
         db.session,
         info={
-            'description':
-                '''# Unrest demo
+            'description': '''# Unrest demo
 This is the demo of unrest api.
 This api expose the `Tree` and `Fruit` entity Rest methods.
 ''',
             'contact': {
                 'name': __about__.__author__,
                 'url': __about__.__uri__,
-                'email': __about__.__email__
+                'email': __about__.__email__,
             },
-            'license': {
-                'name': __about__.__license__
-            }
-        }
+            'license': {'name': __about__.__license__},
+        },
     )
     fruit = rest(
         Fruit,
         methods=rest.all,
-        properties=[rest.Property('square_size', Float())]
+        properties=[rest.Property('square_size', Float())],
     )
     rest(
         Tree,
         methods=rest.all,
         relationships={'fruits': fruit},
         properties=['fruit_colors'],
-        allow_batch=True
+        allow_batch=True,
     )
 
     code, json = http.get('/api/openapi.json')
@@ -202,7 +194,7 @@ def test_sub(app, db, http):
     fruit = rest(
         Fruit,
         methods=rest.all,
-        properties=[rest.Property('square_size', Float())]
+        properties=[rest.Property('square_size', Float())],
     )
     tree = rest(
         Tree,
@@ -210,13 +202,26 @@ def test_sub(app, db, http):
         relationships={'fruits': fruit},
         properties=['fruit_colors'],
         query=lambda q: q.filter(Tree.name != 'pine'),
-        allow_batch=True
+        allow_batch=True,
     )
     subtree = tree.sub(lambda q: q.filter(Tree.name != 'oak'))
-    for key in ['unrest', 'Model', 'methods', 'only', 'exclude', 'properties',
-                'relationships', 'allow_batch', 'auth', 'read_auth',
-                'write_auth', 'validators', '_primary_keys', 'SerializeClass',
-                'DeserializeClass']:
+    for key in [
+        'unrest',
+        'Model',
+        'methods',
+        'only',
+        'exclude',
+        'properties',
+        'relationships',
+        'allow_batch',
+        'auth',
+        'read_auth',
+        'write_auth',
+        'validators',
+        '_primary_keys',
+        'SerializeClass',
+        'DeserializeClass',
+    ]:
         assert getattr(subtree, key) == getattr(tree, key)
     assert subtree.name == 'subtree'
 
@@ -244,7 +249,7 @@ def test_sub_fixed(app, db, http):
         defaults={'size': 1.0},
         fixed={'color': 'blue'},
         methods=rest.all,
-        properties=[rest.Property('square_size', Float())]
+        properties=[rest.Property('square_size', Float())],
     )
     subfruit = fruit.sub(lambda q: q.filter(Fruit.age == 2.0))
     for key in ['defaults', 'fixed']:

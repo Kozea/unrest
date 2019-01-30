@@ -39,7 +39,7 @@ class Options(object):
             'properties': self.get_properties(rest),
             'relationships': self.get_relationships(rest),
             'methods': rest.methods,
-            'batch': rest.allow_batch
+            'batch': rest.allow_batch,
         }
 
     def all(self):

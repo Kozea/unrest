@@ -39,8 +39,8 @@ class FlaskUnRest(object):
             log.info(
                 'Registering route %s for %s for %s' % (name, path, method)
             )
-            path_with_params = path + '/' + '/'.join(
-                '<%s>' % param for param in parameters
+            path_with_params = (
+                path + '/' + '/'.join('<%s>' % param for param in parameters)
             )
 
             log.info(
@@ -70,7 +70,7 @@ class FlaskUnRest(object):
         return current_app.response_class(
             (json, '\n'),
             status=status_code,
-            mimetype=current_app.config['JSONIFY_MIMETYPE']
+            mimetype=current_app.config['JSONIFY_MIMETYPE'],
         )
 
     def send_error(self, message, status_code):

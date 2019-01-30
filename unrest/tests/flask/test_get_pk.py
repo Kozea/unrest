@@ -25,12 +25,7 @@ def test_get_pk_tree_name(rest, http):
     code, json = http.get('/api/forest/2')
     assert code == 200
     assert json['occurences'] == 1
-    assert idsorted(json['objects']) == [
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-    ]
+    assert idsorted(json['objects']) == [{'id': 2, 'name': 'maple'}]
 
 
 def test_get_pk_tree_query(rest, http, db):
@@ -41,12 +36,7 @@ def test_get_pk_tree_query(rest, http, db):
     code, json = http.get('/api/tree/2')
     assert code == 200
     assert json['occurences'] == 1
-    assert idsorted(json['objects']) == [
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-    ]
+    assert idsorted(json['objects']) == [{'id': 2, 'name': 'maple'}]
 
 
 def test_get_pk_tree_query_not_found(rest, http, db):
@@ -82,13 +72,15 @@ def test_get_pk_fruits(rest, http):
     code, json = http.get('/api/fruit/1')
     assert code == 200
     assert json['occurences'] == 1
-    assert idsorted(json['objects'], 'fruit_id') == [{
-        'fruit_id': 1,
-        'color': 'grey',
-        'size': 12.0,
-        'age': 1041300.0,
-        'tree_id': 1
-    }]
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'grey',
+            'size': 12.0,
+            'age': 1_041_300.0,
+            'tree_id': 1,
+        }
+    ]
 
 
 def test_get_pk_fruits_only(rest, http):
@@ -96,11 +88,9 @@ def test_get_pk_fruits_only(rest, http):
     code, json = http.get('/api/fruit/2')
     assert code == 200
     assert json['occurences'] == 1
-    assert idsorted(json['objects'], 'fruit_id') == [{
-        'fruit_id': 2,
-        'color': 'darkgrey',
-        'size': 23.0
-    }]
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {'fruit_id': 2, 'color': 'darkgrey', 'size': 23.0}
+    ]
 
 
 def test_get_pk_fruits_exclude(rest, http):
@@ -108,11 +98,9 @@ def test_get_pk_fruits_exclude(rest, http):
     code, json = http.get('/api/fruit/3')
     assert code == 200
     assert json['occurences'] == 1
-    assert idsorted(json['objects'], 'fruit_id') == [{
-        'fruit_id': 3,
-        'size': 2.12,
-        'tree_id': 1
-    }]
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {'fruit_id': 3, 'size': 2.12, 'tree_id': 1}
+    ]
 
 
 def test_get_pk_fruits_only_exclude(rest, http):
@@ -120,10 +108,9 @@ def test_get_pk_fruits_only_exclude(rest, http):
     code, json = http.get('/api/fruit/4')
     assert code == 200
     assert json['occurences'] == 1
-    assert idsorted(json['objects'], 'fruit_id') == [{
-        'fruit_id': 4,
-        'size': 0.5
-    }]
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {'fruit_id': 4, 'size': 0.5}
+    ]
 
 
 def test_no_method(rest, http):
@@ -157,10 +144,12 @@ def test_get_custom_extend(rest, http):
     code, json = http.get('/api/fruit/4')
     assert code == 200
     assert json['occurences'] == 1
-    assert idsorted(json['objects'], 'fruit_id') == [{
-        'fruit_id': 5,
-        'color': 'orangered',
-        'size': 100.0,
-        'age': 7200.000012,
-        'tree_id': 2
-    }]
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {
+            'fruit_id': 5,
+            'color': 'orangered',
+            'size': 100.0,
+            'age': 7200.000_012,
+            'tree_id': 2,
+        }
+    ]

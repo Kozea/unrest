@@ -47,7 +47,7 @@ def test_read_write_decorator(rest, http):
         Tree,
         methods=rest.all,
         read_auth=raise_if_id_is_1,
-        write_auth=raise_if_id_is_2
+        write_auth=raise_if_id_is_2,
     )
     assert http.get('/api/tree/1')[0] == 403
     assert http.get('/api/tree/2')[0] == 200
@@ -92,7 +92,7 @@ def test_all_decorator(rest, http):
         methods=rest.all,
         read_auth=raise_if_id_is_1,
         write_auth=raise_if_id_is_2,
-        auth=raise_if_id_is_3
+        auth=raise_if_id_is_3,
     )
     assert http.get('/api/tree/1')[0] == 403
     assert http.get('/api/tree/2')[0] == 200

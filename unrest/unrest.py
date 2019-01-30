@@ -67,19 +67,19 @@ class UnRest(object):
             self.message = message
 
     def __init__(
-            self,
-            app=None,
-            session=None,
-            path='/api',
-            version='',
-            framework=None,
-            SerializeClass=None,
-            DeserializeClass=None,
-            allow_options=True,
-            serve_openapi_file=True,
-            openapi_class=OpenApi,
-            options_class=Options,
-            info={},
+        self,
+        app=None,
+        session=None,
+        path='/api',
+        version='',
+        framework=None,
+        SerializeClass=None,
+        DeserializeClass=None,
+        allow_options=True,
+        serve_openapi_file=True,
+        openapi_class=OpenApi,
+        options_class=Options,
+        info={},
     ):
         self.rests = []
         self.path = path
@@ -112,6 +112,7 @@ class UnRest(object):
             else:
                 if isinstance(app, Flask):
                     from .flask_framework import FlaskUnRest
+
                     self.framework = FlaskUnRest(app, prefix=prefix)
         if not self.framework:
             raise NotImplementedError(
@@ -175,11 +176,15 @@ class UnRest(object):
 
     def index(self):
         return (
-            '<h1>unrest <small>api server</small></h1> version %s '
-            '<a href="%s">unrest</a>'
-        ) % (__version__, __uri__) + (
-            ' <a href="%s/openapi.json">openapi.json</a>' % self.root_path
-        ) if self.serve_openapi_file else ''
+            (
+                '<h1>unrest <small>api server</small></h1> version %s '
+                '<a href="%s">unrest</a>'
+            )
+            % (__version__, __uri__)
+            + (' <a href="%s/openapi.json">openapi.json</a>' % self.root_path)
+            if self.serve_openapi_file
+            else ''
+        )
 
     def register_options(self):
         self.framework.register_route(

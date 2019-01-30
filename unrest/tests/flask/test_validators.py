@@ -16,49 +16,33 @@ def test_put_tree_validation(rest, http):
         Tree,
         methods=['GET', 'PUT'],
         validators={'name': name_validator},
-        allow_batch=True
+        allow_batch=True,
     )
     code, json = http.put(
         '/api/tree',
         json={
-            'objects': [{
-                'id': 1,
-                'name': 'cedar'
-            }, {
-                'id': 2,
-                'name': 'mango'
-            }]
-        }
+            'objects': [{'id': 1, 'name': 'cedar'}, {'id': 2, 'name': 'mango'}]
+        },
     )
     assert code == 500
     assert json['message'] == 'Validation Error'
-    assert json['errors'] == [{
-        'id': 1,
-        'fields': {
-            'name': 'Name must be shorter than 4 characters.'
+    assert json['errors'] == [
+        {
+            'id': 1,
+            'fields': {'name': 'Name must be shorter than 4 characters.'},
         },
-    }, {
-        'id': 2,
-        'fields': {
-            'name': 'Name must be shorter than 4 characters.'
+        {
+            'id': 2,
+            'fields': {'name': 'Name must be shorter than 4 characters.'},
         },
-    }]
+    ]
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
-        {
-            'id': 1,
-            'name': 'pine'
-        },
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-        {
-            'id': 3,
-            'name': 'oak'
-        },
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
     ]
 
 
@@ -74,28 +58,19 @@ def test_put_pk_tree_validation(rest, http):
     code, json = http.put('/api/tree/1', json={'id': 1, 'name': 'cedar'})
     assert code == 500
     assert json['message'] == 'Validation Error'
-    assert json['errors'] == [{
-        'id': 1,
-        'fields': {
-            'name': 'Name must be shorter than 4 characters.'
-        },
-    }]
+    assert json['errors'] == [
+        {
+            'id': 1,
+            'fields': {'name': 'Name must be shorter than 4 characters.'},
+        }
+    ]
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
-        {
-            'id': 1,
-            'name': 'pine'
-        },
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-        {
-            'id': 3,
-            'name': 'oak'
-        },
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
     ]
 
 
@@ -110,29 +85,15 @@ def test_put_pk_tree_validation_ok(rest, http):
     rest(Tree, methods=['GET', 'PUT'], validators={'name': name_validator})
     code, json = http.put('/api/tree/1', json={'id': 1, 'name': 'elm'})
     assert json['occurences'] == 1
-    assert idsorted(json['objects']) == [
-        {
-            'id': 1,
-            'name': 'elm'
-        },
-    ]
+    assert idsorted(json['objects']) == [{'id': 1, 'name': 'elm'}]
 
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
-        {
-            'id': 1,
-            'name': 'elm'
-        },
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-        {
-            'id': 3,
-            'name': 'oak'
-        },
+        {'id': 1, 'name': 'elm'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
     ]
 
 
@@ -148,29 +109,20 @@ def test_post_tree_validation(rest, http):
     code, json = http.post('/api/tree', json={'name': 'mango'})
     assert code == 500
     assert json['message'] == 'Validation Error'
-    assert json['errors'] == [{
-        'id': None,
-        'fields': {
-            'name': 'Name must be shorter than 4 characters.'
-        },
-    }]
+    assert json['errors'] == [
+        {
+            'id': None,
+            'fields': {'name': 'Name must be shorter than 4 characters.'},
+        }
+    ]
 
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
-        {
-            'id': 1,
-            'name': 'pine'
-        },
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-        {
-            'id': 3,
-            'name': 'oak'
-        },
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
     ]
 
 
@@ -204,8 +156,8 @@ def test_put_fruit_dual_validation(rest, http):
             'color': color_validator,
             'size': size_validator,
             'age': age_validator,
-            'tree_id': tree_id_validator
-        }
+            'tree_id': tree_id_validator,
+        },
     )
     code, json = http.put(
         '/api/fruit/3',
@@ -214,20 +166,22 @@ def test_put_fruit_dual_validation(rest, http):
             'color': 'green',
             'size': 50.2,
             'age': 0,
-            'tree_id': 0
-        }
+            'tree_id': 0,
+        },
     )
     assert code == 500
     assert json['message'] == 'Validation Error'
-    assert json['errors'] == [{
-        'fruit_id': 3,
-        'fields': {
-            'color': 'A brown fruit cannot become green',
-            'size': 'Fruit too big for its age',
-            'age': 'Fruit too old',
-            'tree_id': 'Invalid tree_id',
-        },
-    }]
+    assert json['errors'] == [
+        {
+            'fruit_id': 3,
+            'fields': {
+                'color': 'A brown fruit cannot become green',
+                'size': 'Fruit too big for its age',
+                'age': 'Fruit too old',
+                'tree_id': 'Invalid tree_id',
+            },
+        }
+    ]
 
 
 def test_validation_error_code(rest, http):
@@ -242,31 +196,22 @@ def test_validation_error_code(rest, http):
         Tree,
         methods=['GET', 'PUT'],
         validators={'name': name_validator},
-        validation_error_code=202
+        validation_error_code=202,
     )
     code, json = http.put('/api/tree/1', json={'id': 1, 'name': 'cedar'})
     assert code == 202
     assert json['message'] == 'Validation Error'
-    assert json['errors'] == [{
-        'id': 1,
-        'fields': {
-            'name': 'Name must be shorter than 4 characters.'
-        },
-    }]
+    assert json['errors'] == [
+        {
+            'id': 1,
+            'fields': {'name': 'Name must be shorter than 4 characters.'},
+        }
+    ]
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
-        {
-            'id': 1,
-            'name': 'pine'
-        },
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-        {
-            'id': 3,
-            'name': 'oak'
-        },
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
     ]

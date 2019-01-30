@@ -11,6 +11,9 @@ clean:
 	rm -fr $(VENV)
 	rm -fr *.egg-info
 
+fix:
+	blac,
+
 lint:
 	$(PYTEST) --flake8 -m flake8 $(PROJECT_NAME)
 	$(PYTEST) --isort -m isort $(PROJECT_NAME)

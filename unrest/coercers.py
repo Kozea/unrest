@@ -73,23 +73,26 @@ class Serialize(object):
             try:
                 return iter(it)
             except TypeError:
-                return (it, )
+                return (it,)
 
         return dict(
             {
                 name: self.serialize(name, column)
                 for name, column in self.columns.items()
             },
-            **dict({
-                property.name: property.get(self, self.model)
-                for property in self.properties
-            }, **{
-                key: [
-                    relationship_rest.serialize_object(item)
-                    for item in enforce_iterable(getattr(self.model, key))
-                ]
-                for key, relationship_rest in self.relationships.items()
-            })
+            **dict(
+                {
+                    property.name: property.get(self, self.model)
+                    for property in self.properties
+                },
+                **{
+                    key: [
+                        relationship_rest.serialize_object(item)
+                        for item in enforce_iterable(getattr(self.model, key))
+                    ]
+                    for key, relationship_rest in self.relationships.items()
+                },
+            ),
         )
 
     def serialize(self, name, column):

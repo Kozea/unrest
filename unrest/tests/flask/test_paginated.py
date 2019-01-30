@@ -22,14 +22,8 @@ def test_paginated(rest, http):
     assert json['offset'] == 0
     assert json['primary_keys'] == ['id']
     assert idsorted(json['objects']) == [
-        {
-            'id': 1,
-            'name': 'pine'
-        },
-        {
-            'id': 2,
-            'name': 'maple'
-        },
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
     ]
     code, json = http.get('/api/tree?offset=1')
     assert code == 200
@@ -38,14 +32,8 @@ def test_paginated(rest, http):
     assert json['offset'] == 1
     assert json['primary_keys'] == ['id']
     assert idsorted(json['objects']) == [
-        {
-            'id': 2,
-            'name': 'maple'
-        },
-        {
-            'id': 3,
-            'name': 'oak'
-        },
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
     ]
     code, json = http.get('/api/tree?offset=2')
     assert code == 200
@@ -53,12 +41,7 @@ def test_paginated(rest, http):
     assert json['limit'] == 2
     assert json['offset'] == 2
     assert json['primary_keys'] == ['id']
-    assert idsorted(json['objects']) == [
-        {
-            'id': 3,
-            'name': 'oak'
-        },
-    ]
+    assert idsorted(json['objects']) == [{'id': 3, 'name': 'oak'}]
     code, json = http.get('/api/tree?offset=3')
     assert code == 200
     assert json['occurences'] == 3

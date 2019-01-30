@@ -11,6 +11,7 @@ Base = declarative_base()
 
 class Tree(Base):
     """Where money doesn't grow"""
+
     __tablename__ = 'tree'
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -23,6 +24,7 @@ class Tree(Base):
 
 class Fruit(Base):
     """A bag of fruit"""
+
     __tablename__ = 'fruit'
     fruit_id = Column('idf', Integer, primary_key=True)
     color = Column('hue', String(50))
@@ -49,7 +51,7 @@ def fill_data(session):
             color='grey',
             size=12,
             age=timedelta(days=12, hours=1, minutes=15),
-            tree=pine
+            tree=pine,
         )
     )
     session.add(
@@ -57,19 +59,19 @@ def fill_data(session):
             color='darkgrey',
             size=23,
             age=timedelta(days=49, seconds=230, milliseconds=213),
-            tree=pine
+            tree=pine,
         )
     )
     session.add(Fruit(color='brown', size=2.12, age=timedelta(0), tree=pine))
     session.add(
-        Fruit(color='red', size=.5, age=timedelta(minutes=40), tree=maple)
+        Fruit(color='red', size=0.5, age=timedelta(minutes=40), tree=maple)
     )
     session.add(
         Fruit(
             color='orangered',
             size=100,
             age=timedelta(hours=2, microseconds=12),
-            tree=maple
+            tree=maple,
         )
     )
 

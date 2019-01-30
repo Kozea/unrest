@@ -37,32 +37,27 @@ db.session.remove()
 
 # Optional info mapping (useful to enrich openapi file)
 info = {
-    'description':
-        '''# Unrest demo
+    'description': '''# Unrest demo
 This is the demo of unrest api.
 This api expose the `Tree` and `Fruit` entity Rest methods.
 ''',
     'contact': {
         'name': __about__.__author__,
         'url': __about__.__uri__,
-        'email': __about__.__email__
+        'email': __about__.__email__,
     },
-    'license': {
-        'name': __about__.__license__
-    }
+    'license': {'name': __about__.__license__},
 }
 
 # Init Unrest
 rest = UnRest(app, db.session, info=info)
 fruit = rest(
-    Fruit,
-    methods=rest.all,
-    properties=[rest.Property('square_size', Float())]
+    Fruit, methods=rest.all, properties=[rest.Property('square_size', Float())]
 )
 rest(
     Tree,
     methods=rest.all,
     relationships={'fruits': fruit},
     properties=['fruit_colors'],
-    allow_batch=True
+    allow_batch=True,
 )
