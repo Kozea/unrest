@@ -13,18 +13,19 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
     var mkdocs_page_name = "Flask";
     var mkdocs_page_input_path = "flask_framework.md";
-    var mkdocs_page_url = "/flask_framework/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -38,7 +39,7 @@
         <a href=".." class="icon icon-home"> unrest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -133,6 +134,9 @@
 
 <p>Unrest flask framework implementation.
 This is the framework abstraction you can implement for your own framework</p>
+<h3 id="unrest.flask_framework.FlaskUnRest.url">url</h3>
+
+<p>Return the api url root</p>
 <h3 id="unrest.flask_framework.FlaskUnRest.register_route">register_route</h3>
 
 <pre><code class="python">FlaskUnRest.register_route(self, path, method, parameters, fun)
@@ -163,7 +167,7 @@ This is the framework abstraction you can implement for your own framework</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>json</strong>: The JSON string to send.</li>
-<li><strong>status_code: The response status code. (Default</strong>: 200)</li>
+<li><strong>status_code</strong>: The response status code. (Default: 200)</li>
 </ul>
 <h3 id="unrest.flask_framework.FlaskUnRest.send_error">send_error</h3>
 
@@ -176,9 +180,6 @@ This is the framework abstraction you can implement for your own framework</p>
 <li><strong>message</strong>: The JSON string containing the error message.</li>
 <li><strong>status_code</strong>: The HTTP status code (i.e. 402)</li>
 </ul>
-<h3 id="unrest.flask_framework.FlaskUnRest.url">url</h3>
-
-<p>Return the api url root</p>
               
             </div>
           </div>
@@ -221,9 +222,8 @@ This is the framework abstraction you can implement for your own framework</p>
     </span>
 </div>
     <script>var base_url = '..';</script>
-    <script src="../js/theme.js"></script>
-      <script src="../search/require.js"></script>
-      <script src="../search/search.js"></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>

@@ -13,18 +13,19 @@
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="../css/highlight.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
   
   <script>
     // Current page data
     var mkdocs_page_name = "UnRest";
     var mkdocs_page_input_path = "unrest.md";
-    var mkdocs_page_url = "/unrest/";
+    var mkdocs_page_url = null;
   </script>
   
-  <script src="../js/jquery-2.1.1.min.js"></script>
-  <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
 
@@ -38,7 +39,7 @@
         <a href=".." class="icon icon-home"> unrest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -128,7 +129,7 @@
 
 <h2 id="unrest.UnRest">UnRest</h2>
 
-<pre><code class="python">UnRest(self, app=None, session=None, path='/api', version='', framework=None, SerializeClass=None, DeserializeClass=None, allow_options=True, serve_openapi_file=True, openapi_class=&lt;class 'unrest.generators.openapi.OpenApi'&gt;, options_class=&lt;class 'unrest.generators.options.Options'&gt;, info={})
+<pre><code class="python">UnRest(self, app=None, session=None, path='/api', version='', framework=None, SerializeClass=None, DeserializeClass=None, RestClass=&lt;class 'unrest.rest.Rest'&gt;, allow_options=True, serve_openapi_file=True, openapi_class=&lt;class 'unrest.generators.openapi.OpenApi'&gt;, options_class=&lt;class 'unrest.generators.options.Options'&gt;, info={})
 </code></pre>
 
 <p>A troubling rest api library for sqlalchemy models.
@@ -154,6 +155,7 @@ rest(Model2)
 <li><strong>framework</strong>: Your specific framework class, defaults to auto detect.</li>
 <li><strong>SerializeClass</strong>: A global alternative for <code>Serialize</code> class.</li>
 <li><strong>DeserializeClass</strong>: A global alternative for <code>Deserialize</code> class.</li>
+<li><strong>RestClass</strong>: Replace the default <code>Rest</code> class.</li>
 <li><strong>allow_options</strong>: Set it to False to disable OPTIONS requests.</li>
 <li><strong>serve_openapi_file</strong>: Set it to False to disable openapi file generation.</li>
 <li><strong>info</strong>: Additional info for the openapi metadata.
@@ -162,6 +164,10 @@ It currently works with Flask out of the box, for another web framework
 you will have to implement your own Framework class.
 See <code>FlaskUnRest</code> in <code>flask_framework.py</code></li>
 </ul>
+<h3 id="unrest.UnRest.all">all</h3>
+
+<p>Return all supported methods. Useful for the rest
+<code>method</code> keyword argument.</p>
 <h3 id="unrest.UnRest.RestError">RestError</h3>
 
 <pre><code class="python">UnRest.RestError(self, status, message, extra=None)
@@ -188,10 +194,6 @@ wrapper and will return a <code>status</code> http error with the specified
 
 <p>Sets the sqlalchemy session on UnRest
 if it was missing during instantiation.</p>
-<h3 id="unrest.UnRest.all">all</h3>
-
-<p>Return all supported methods. Useful for the rest
-<code>method</code> keyword argument.</p>
 <h3 id="unrest.UnRest.raise_error">raise_error</h3>
 
 <pre><code class="python">UnRest.raise_error(self, status, message, extra=None)
@@ -259,9 +261,8 @@ and message as content.</p>
     </span>
 </div>
     <script>var base_url = '..';</script>
-    <script src="../js/theme.js"></script>
-      <script src="../search/require.js"></script>
-      <script src="../search/search.js"></script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
 </body>
 </html>
