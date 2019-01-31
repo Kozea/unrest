@@ -37,6 +37,7 @@ class UnRest(object):
         framework: Your specific framework class, defaults to auto detect.
         SerializeClass: A global alternative for #Serialize class.
         DeserializeClass: A global alternative for #Deserialize class.
+        RestClass: Replace the default #Rest class.
         allow_options: Set it to False to disable OPTIONS requests.
         serve_openapi_file: Set it to False to disable openapi file generation.
         info: Additional info for the openapi metadata.
@@ -75,6 +76,7 @@ class UnRest(object):
         framework=None,
         SerializeClass=None,
         DeserializeClass=None,
+        RestClass=Rest,
         allow_options=True,
         serve_openapi_file=True,
         openapi_class=OpenApi,
@@ -88,6 +90,7 @@ class UnRest(object):
         self._framework = framework
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
+        self.RestClass = RestClass
         self.allow_options = allow_options
         self.serve_openapi_file = serve_openapi_file
         self.OpenApi = openapi_class
@@ -166,7 +169,7 @@ class UnRest(object):
         if self.DeserializeClass is not None:
             kwargs.setdefault('DeserializeClass', self.DeserializeClass)
 
-        rest = Rest(self, *args, **kwargs)
+        rest = self.RestClass(self, *args, **kwargs)
         return rest
 
     def register_index(self):

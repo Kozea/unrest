@@ -2,6 +2,7 @@ from sqlalchemy.types import Float
 
 from unrest import UnRest, __about__
 from unrest.flask_framework import FlaskUnRest
+from unrest.rest import Rest
 
 from ..model import Fruit, Tree
 from .openapi_result import openapi
@@ -43,6 +44,31 @@ def test_explicit_framework(app, db, http):
     rest = UnRest(app, db.session, framework=FlaskUnRest)
     rest(Tree)
     code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 3
+
+
+def test_normal_rest_class(app, db, http):
+    rest = UnRest(app, db.session, framework=FlaskUnRest)
+    tree = rest(Tree, name='tree')
+    assert isinstance(tree, Rest)
+
+
+def test_alternative_rest_class(app, db, http):
+    class NewRest(Rest):
+        def __init__(self, *args, **kwargs):
+            kwargs['name'] = 'new_' + kwargs['name']
+            super().__init__(*args, **kwargs)
+
+    new_rest = UnRest(
+        app, db.session, framework=FlaskUnRest, RestClass=NewRest
+    )
+    new_tree = new_rest(Tree, name='tree')
+    assert isinstance(new_tree, NewRest)
+
+    code, json = http.get('/api/tree')
+    assert code == 404
+    code, json = http.get('/api/new_tree')
     assert code == 200
     assert json['occurences'] == 3
 
