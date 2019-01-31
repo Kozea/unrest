@@ -63,7 +63,7 @@ class OpenApi(object):
     def get_path_url(self, rest, params):
         path = rest.path
         if path.startswith(self.unrest.root_path):
-            path = path[len(self.unrest.root_path) :]
+            path = path[len(self.unrest.root_path) :]  # noqa
         if params:
             path += '/' + '/'.join('{%s}' % pk for pk in rest.primary_keys)
         return path
