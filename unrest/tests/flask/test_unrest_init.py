@@ -73,6 +73,17 @@ def test_alternative_rest_class(app, db, http):
     assert json['occurences'] == 3
 
 
+def test_empty_get_pk_as_404(app, db, http):
+    rest = UnRest(
+        app, db.session, framework=FlaskUnRest, empty_get_as_404=True
+    )
+    rest(Tree)
+    code, json = http.get('/api/tree/6')
+    assert code == 404
+    assert json['occurences'] == 0
+    assert json['objects'] == []
+
+
 def test_empty_explicit_framework(app, db, http):
     class FakeUnRest(object):
         def __init__(self, app, prefix):

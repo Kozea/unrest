@@ -15,7 +15,7 @@ def test_get_pk_unknown_tree(rest, http):
     rest(Tree)
     rest(Fruit)
     code, json = http.get('/api/tree/6')
-    assert code == 404
+    assert code == 200
     assert json['occurences'] == 0
     assert json['objects'] == []
 
@@ -45,7 +45,7 @@ def test_get_pk_tree_query_not_found(rest, http, db):
 
     rest(Tree, query=base_query)
     code, json = http.get('/api/tree/1')
-    assert code == 404
+    assert code == 200
     assert json['occurences'] == 0
     assert json['objects'] == []
 
@@ -61,7 +61,7 @@ def test_get_pk_tree_query_factory(rest, http, db):
 def test_get_pk_tree_query_factory_not_found(rest, http, db):
     rest(Tree, query=lambda q: q.filter(Tree.id < 2))
     code, json = http.get('/api/tree/3')
-    assert code == 404
+    assert code == 200
     assert json['occurences'] == 0
     assert json['objects'] == []
 

@@ -40,6 +40,7 @@ class UnRest(object):
         RestClass: Replace the default #Rest class.
         allow_options: Set it to False to disable OPTIONS requests.
         serve_openapi_file: Set it to False to disable openapi file generation.
+        empty_get_as_404: If True return a 404 on get with id not found
         info: Additional info for the openapi metadata.
     Unrest aims to be framework agnostic.
     It currently works with Flask out of the box, for another web framework
@@ -81,6 +82,7 @@ class UnRest(object):
         serve_openapi_file=True,
         openapi_class=OpenApi,
         options_class=Options,
+        empty_get_as_404=False,
         info={},
     ):
         self.rests = []
@@ -95,6 +97,7 @@ class UnRest(object):
         self.serve_openapi_file = serve_openapi_file
         self.OpenApi = openapi_class
         self.Options = options_class
+        self.empty_get_as_404 = empty_get_as_404
 
         if app is not None:
             self.init_app(app)
@@ -206,13 +209,3 @@ class UnRest(object):
         return self.framework.send_json(json.dumps(self.OpenApi(self).all()))
 
     Property = Property
-
-    class Response(object):
-        def __init__(self, data, wrapper=lambda x: x, status_code=200):
-            if isinstance(data, self.__class__):
-                self.data = data.data
-                self.wrapper = lambda r: wrapper(data.wrapper(r))
-            else:
-                self.data = data
-                self.wrapper = wrapper
-            self.status_code = status_code

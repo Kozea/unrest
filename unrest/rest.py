@@ -156,8 +156,8 @@ class Rest(object):
         The GET method
 
         No arguments: Returns all query elements. (/api/model/)
-        Primary keys: Returns the element in query with the primary keys or
-            404. (/api/model/pk)
+        Primary keys: Returns the element in query with the primary keys.
+            (/api/model/pk)
 
         # Arguments
             payload: The json request content ignored for GET.
@@ -165,12 +165,7 @@ class Rest(object):
         """
         if self.has(pks):
             item = self.get_from_pk(self.query, **pks)
-            if item is None:
-                return self.unrest.Response(
-                    self.serialize([]), status_code=404
-                )
-
-            return self.serialize([item])
+            return self.serialize([item] if item else [])
 
         items = self.query
         return self.serialize(items)
@@ -579,7 +574,7 @@ class Rest(object):
                 if self.auth:
                     decorated = self.auth(decorated)
 
-                response = decorated(payload, **pks)
+                data = decorated(payload, **pks)
 
                 if not manual_commit and method in [
                     'PUT',
@@ -592,23 +587,19 @@ class Rest(object):
                 return self.unrest.framework.send_error(
                     dict(message=e.message, **e.extra), e.status
                 )
-            if not isinstance(response, self.unrest.Response):
-                response = self.unrest.Response(response)
+
             log.info(
                 '%s %s%s'
                 % (
                     method,
                     self.path,
-                    ': %d occurences' % response.data['occurences']
-                    if response.data.get('occurences') is not None
+                    ': %d occurences' % data['occurences']
+                    if 'occurences' in data
                     else '',
                 )
             )
 
-            json = self.json(response.data)
-            return response.wrapper(
-                self.unrest.framework.send_json(json, response.status_code)
-            )
+            return self.make_response(data, method)
 
         return wrapped
 
@@ -622,6 +613,18 @@ class Rest(object):
         self.unrest.framework.register_route(
             self.path, method, self.primary_keys, method_fun
         )
+
+    def make_response(self, data, method):
+        status = 200
+        if (
+            method == 'GET'
+            and self.unrest.empty_get_as_404
+            and 'occurences' in data
+            and data['occurences'] == 0
+        ):
+            status = 404
+        json = self.json(data)
+        return self.unrest.framework.send_json(json, status)
 
     def json(self, data):
         return json.dumps(data)

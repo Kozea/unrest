@@ -59,7 +59,7 @@ class FlaskUnRest(object):
 
         return request.data.decode('utf-8')
 
-    def send_json(self, json, status_code=200):
+    def send_json(self, json, status_code=200, headers=None):
         """
         Send a `status_code` JSON response with `json` as content
 
@@ -71,6 +71,7 @@ class FlaskUnRest(object):
             (json, '\n'),
             status=status_code,
             mimetype=current_app.config['JSONIFY_MIMETYPE'],
+            headers=headers,
         )
 
     def send_error(self, message, status_code):
