@@ -1,7 +1,7 @@
 openapi = {
     "openapi": "3.0.0",
     "info": {
-        "title": "unrest.tests.flask.conftest unrest api",
+        "title": "unrest api",
         "version": "1.0",
         "description": "# Unrest demo\nThis is the demo of unrest api.\n"
         + "This api expose the `Tree` and `Fruit` entity Rest methods.\n",
