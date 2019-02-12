@@ -4,6 +4,7 @@ from unrest import UnRest, __about__
 from unrest.framework.flask import FlaskUnRest
 from unrest.rest import Rest
 
+from ...util import Response
 from ..model import Fruit, Tree
 from .openapi_result import openapi
 
@@ -287,3 +288,33 @@ def test_sub_fixed(app, db, http):
     subfruit = fruit.sub(lambda q: q.filter(Fruit.age == 2.0))
     for key in ['defaults', 'fixed']:
         assert getattr(subfruit, key) == getattr(fruit, key)
+
+
+def test_idiom(app, db, http):
+    class FakeIdiom(object):
+        def __init__(self, rest):
+            self.rest = rest
+
+        def request_to_data(self, request):
+            if request.method == 'PUT':
+                return {'name': 'sth'}
+
+        def data_to_response(self, data, method, status=200):
+            payload = 'Hello %d' % data['occurences']
+            headers = {'Content-Type': 'text/plain'}
+            response = Response(payload, headers, status)
+            return response
+
+    rest = UnRest(app, db.session, IdiomClass=FakeIdiom)
+    rest(Tree, methods=['GET', 'PUT'])
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['html'] == 'Hello 3'
+
+    code, json = http.put('/api/tree/1')
+    assert code == 200
+    assert json['html'] == 'Hello 1'
+
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['html'] == 'Hello 3'

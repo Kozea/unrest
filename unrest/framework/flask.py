@@ -50,7 +50,7 @@ class FlaskUnRest(object):
             response = fun(request)
 
             return self.app.response_class(
-                (response.payload, '\n'),
+                response.payload,
                 status=response.status,
                 headers=response.headers,
             )
