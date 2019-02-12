@@ -39,6 +39,7 @@ tests_requirements = [
     'flask',
     'flask-sqlalchemy',
     'tornado',
+    'pyyaml',
 ]
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
@@ -59,7 +60,13 @@ setup(
     install_requires=['sqlalchemy', 'python-dateutil'],
     setup_requires=pytest_runner,
     test_requires=tests_requirements,
-    extras_require={'test': tests_requirements, 'docs': ['pydoc-markdown']},
+    extras_require={
+        'test': tests_requirements,
+        'docs': ['pydoc-markdown'],
+        'flask': ['flask'],
+        'tornado': ['tornado'],
+        'yaml': ['pyyaml'],
+    },
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
