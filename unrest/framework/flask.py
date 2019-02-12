@@ -1,6 +1,10 @@
 import logging
+from functools import wraps
 
-from flask import current_app, jsonify, request, url_for
+from flask import request as flask_request
+from flask import url_for
+
+from ..util import Request
 
 log = logging.getLogger('unrest.flask')
 
@@ -30,59 +34,47 @@ class FlaskUnRest(object):
             fun: The route function
         """
         name = self._name(fun.__name__)
+        getattr(fun, '__func__', fun).provide_automatic_options = False
+
+        @wraps(fun)
+        def unrest_fun(**url_parameters):
+            request = Request(
+                flask_request.url,
+                flask_request.method,
+                url_parameters,
+                flask_request.args,
+                flask_request.data,
+                flask_request.headers,
+            )
+
+            response = fun(request)
+
+            return self.app.response_class(
+                (response.payload, '\n'),
+                status=response.status,
+                headers=response.headers,
+            )
 
         if self.app.view_functions.pop(name, None):
             log.info('Overriding route %s' % name)
-        getattr(fun, '__func__', fun).provide_automatic_options = False
-        self.app.add_url_rule(path, name, fun, methods=[method])
+
+        self.app.add_url_rule(path, name, unrest_fun, methods=[method])
         if parameters:
-            log.info(
-                'Registering route %s for %s for %s' % (name, path, method)
-            )
             path_with_params = (
                 path + '/' + '/'.join('<%s>' % param for param in parameters)
             )
 
             log.info(
-                'Registering route for %s for %s' % (path_with_params, method)
+                'Registering route %s for %s for %s'
+                % (name, path_with_params, method)
             )
             self.app.add_url_rule(
-                path_with_params, name, fun, methods=[method]
+                path_with_params, name, unrest_fun, methods=[method]
             )
-
-    def request_json(self):
-        """
-        Must return the string of the current JSON request content or None
-        """
-        if not request.is_json:
-            return None
-
-        return request.data.decode('utf-8')
-
-    def send_json(self, json, status_code=200, headers=None):
-        """
-        Send a `status_code` JSON response with `json` as content
-
-        # Arguments
-            json: The JSON string to send.
-            status_code: The response status code. (Default: 200)
-        """
-        return current_app.response_class(
-            (json, '\n'),
-            status=status_code,
-            mimetype=current_app.config['JSONIFY_MIMETYPE'],
-            headers=headers,
-        )
-
-    def send_error(self, message, status_code):
-        """
-        Send an error as a JSON response with the given status code.
-
-        # Arguments
-            message: The JSON string containing the error message.
-            status_code: The HTTP status code (i.e. 402)
-        """
-        return jsonify(message), status_code
+        else:
+            log.info(
+                'Registering route %s for %s for %s' % (name, path, method)
+            )
 
     @property
     def url(self):

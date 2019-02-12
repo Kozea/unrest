@@ -4,3 +4,5 @@ build
 .env
 .coverage
 .pytest_cache
+pip-wheel-metadata
+examples/unrest-test.db

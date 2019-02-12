@@ -38,6 +38,7 @@ tests_requirements = [
     'pytest',
     'flask',
     'flask-sqlalchemy',
+    'tornado',
 ]
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)

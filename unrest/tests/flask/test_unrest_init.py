@@ -1,7 +1,7 @@
 from sqlalchemy.types import Float
 
 from unrest import UnRest, __about__
-from unrest.flask_framework import FlaskUnRest
+from unrest.framework.flask import FlaskUnRest
 from unrest.rest import Rest
 
 from ..model import Fruit, Tree
@@ -91,10 +91,6 @@ def test_empty_explicit_framework(app, db, http):
 
         def register_route(self, *args, **kwargs):
             pass
-
-        request_json = register_route
-        send_json = register_route
-        send_error = register_route
 
     rest = UnRest(app, db.session, framework=FakeUnRest)
     rest(Tree)

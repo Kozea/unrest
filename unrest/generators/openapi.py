@@ -50,10 +50,7 @@ class OpenApi(object):
         }[model_name]
 
     def get_info(self):
-        info = {
-            "title": self.unrest.app.name + ' unrest api',
-            "version": self.unrest.version or '1.0',
-        }
+        info = {"title": 'unrest api', "version": self.unrest.version or '1.0'}
         info.update(**self.unrest.info)
         return info
 

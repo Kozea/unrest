@@ -1,4 +1,3 @@
-import json
 import logging
 from collections import OrderedDict
 from copy import deepcopy
@@ -12,6 +11,7 @@ from sqlalchemy.schema import Column
 
 from .coercers import Deserialize, Serialize
 from .generators.options import Options
+from .idiom.unrest import UnRestIdiom
 
 try:
     from json import JSONDecodeError
@@ -106,6 +106,7 @@ class Rest(object):
         primary_keys=None,
         defaults=None,
         fixed=None,
+        IdiomClass=UnRestIdiom,
         SerializeClass=Serialize,
         DeserializeClass=Deserialize,
     ):
@@ -137,6 +138,8 @@ class Rest(object):
         self._primary_keys = primary_keys
         self.defaults = defaults or {}
         self.fixed = fixed or {}
+
+        self.idiom = IdiomClass(self)
 
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
@@ -438,7 +441,7 @@ class Rest(object):
         subrest.query_factory = lambda q: query_factory(self.query_factory(q))
         return subrest
 
-    def kwargs_to_pks(self, kwargs):
+    def parameters_to_pks(self, kwargs):
         if not kwargs:
             return {}
         item = self.Model()
@@ -555,14 +558,11 @@ class Rest(object):
 
     def wrap_native(self, method, method_fun, manual_commit=False):
         @wraps(method_fun)
-        def wrapped(**kwargs):
-            pks = self.kwargs_to_pks(kwargs)
-            json = self.unrest.framework.request_json()
+        def wrapped(request):
             try:
-                try:
-                    payload = self.unjson(json)
-                except JSONDecodeError as e:
-                    self.raise_error(400, 'JSON Error in payload: %s' % e)
+                pks = self.parameters_to_pks(request.parameters)
+                payload = self.idiom.request_to_data(request)
+
                 decorated = method_fun
                 if method == 'GET' and self.read_auth:
                     decorated = self.read_auth(decorated)
@@ -584,8 +584,8 @@ class Rest(object):
                 ]:
                     self.session.commit()
             except self.unrest.RestError as e:
-                return self.unrest.framework.send_error(
-                    dict(message=e.message, **e.extra), e.status
+                return self.idiom.data_to_response(
+                    dict(message=e.message, **e.extra), method, e.status
                 )
 
             log.info(
@@ -599,7 +599,7 @@ class Rest(object):
                 )
             )
 
-            return self.make_response(data, method)
+            return self.idiom.data_to_response(data, method)
 
         return wrapped
 
@@ -613,25 +613,6 @@ class Rest(object):
         self.unrest.framework.register_route(
             self.path, method, self.primary_keys, method_fun
         )
-
-    def make_response(self, data, method):
-        status = 200
-        if (
-            method == 'GET'
-            and self.unrest.empty_get_as_404
-            and 'occurences' in data
-            and data['occurences'] == 0
-        ):
-            status = 404
-        json = self.json(data)
-        return self.unrest.framework.send_json(json, status)
-
-    def json(self, data):
-        return json.dumps(data)
-
-    def unjson(self, data):
-        if data:
-            return json.loads(data)
 
     def has(self, pks):
         return pks and all(val is not None for val in pks.values())

@@ -6,6 +6,7 @@ from .coercers import Property
 from .generators.openapi import OpenApi
 from .generators.options import Options
 from .rest import Rest
+from .util import Response
 
 log = logging.getLogger('unrest')
 
@@ -34,7 +35,8 @@ class UnRest(object):
         path: Default '/api', sets the root url path for your endpoints
         version: Adds a version to the root url path if specified
             (i.e. /api/v2)
-        framework: Your specific framework class, defaults to auto detect.
+        framework: A specific framework class, defaults to auto detect.
+        IdiomClass: An idiom class, defaults to json unrest format.
         SerializeClass: A global alternative for #Serialize class.
         DeserializeClass: A global alternative for #Deserialize class.
         RestClass: Replace the default #Rest class.
@@ -75,6 +77,7 @@ class UnRest(object):
         path='/api',
         version='',
         framework=None,
+        IdiomClass=None,
         SerializeClass=None,
         DeserializeClass=None,
         RestClass=Rest,
@@ -90,6 +93,7 @@ class UnRest(object):
         self.info = info
         self.version = version
         self._framework = framework
+        self.IdiomClass = IdiomClass
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
         self.RestClass = RestClass
@@ -117,7 +121,7 @@ class UnRest(object):
                 pass
             else:
                 if isinstance(app, Flask):
-                    from .flask_framework import FlaskUnRest
+                    from .framework.flask import FlaskUnRest
 
                     self.framework = FlaskUnRest(app, prefix=prefix)
         if not self.framework:
@@ -167,6 +171,8 @@ class UnRest(object):
     def __call__(self, *args, **kwargs):
         """Returns a #unrest.Rest instance. See rest entry points."""
 
+        if self.IdiomClass is not None:
+            kwargs.setdefault('IdiomClass', self.IdiomClass)
         if self.SerializeClass is not None:
             kwargs.setdefault('SerializeClass', self.SerializeClass)
         if self.DeserializeClass is not None:
@@ -180,8 +186,8 @@ class UnRest(object):
             self.root_path + '/', 'GET', None, self.index
         )
 
-    def index(self):
-        return (
+    def index(self, request):
+        return Response(
             (
                 '<h1>unrest <small>api server</small></h1> version %s '
                 '<a href="%s">unrest</a>'
@@ -189,23 +195,30 @@ class UnRest(object):
             % (__version__, __uri__)
             + (' <a href="%s/openapi.json">openapi.json</a>' % self.root_path)
             if self.serve_openapi_file
-            else ''
+            else '',
+            {'Content-Type': 'text/html'},
+            200,
         )
+
+    def send_json(self, data):
+        payload = json.dumps(data)
+        headers = {'Content-Type': 'application/json'}
+        return Response(payload, headers, 200)
 
     def register_options(self):
         self.framework.register_route(
             self.root_path, 'OPTIONS', None, self.options
         )
 
-    def options(self):
-        return self.framework.send_json(json.dumps(self.Options(self).all()))
+    def options(self, request):
+        return self.send_json(self.Options(self).all())
 
     def register_openapi(self):
         self.framework.register_route(
             self.root_path + '/openapi.json', 'GET', None, self.openapi
         )
 
-    def openapi(self):
-        return self.framework.send_json(json.dumps(self.OpenApi(self).all()))
+    def openapi(self, request):
+        return self.send_json(self.OpenApi(self).all())
 
     Property = Property
