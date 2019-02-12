@@ -8,7 +8,7 @@ from .generators.options import Options
 from .rest import Rest
 from .util import Response
 
-log = logging.getLogger('unrest')
+log = logging.getLogger(__name__)
 
 
 class UnRest(object):

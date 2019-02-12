@@ -6,7 +6,7 @@ from flask import url_for
 
 from ..util import Request
 
-log = logging.getLogger('unrest.flask')
+log = logging.getLogger(__name__)
 
 
 class FlaskUnRest(object):

@@ -18,7 +18,7 @@ try:
 except ImportError:
     JSONDecodeError = Exception
 
-log = logging.getLogger('unrest.rest')
+log = logging.getLogger(__name__)
 
 
 def call_me_maybe(fun_or_value, *args, **kwargs):

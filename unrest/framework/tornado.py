@@ -5,7 +5,7 @@ from tornado.web import RequestHandler, _ApplicationRouter
 
 from ..util import Request
 
-log = logging.getLogger('unrest.flask')
+log = logging.getLogger(__name__)
 
 
 class TornadoUnRest(object):
