@@ -1,13 +1,12 @@
 import logging
-from collections import OrderedDict
+from contextlib import contextmanager
 from copy import deepcopy
-from functools import wraps
+from functools import partial, wraps
 
 from sqlalchemy import and_, or_
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.query import Query
 from sqlalchemy.orm.strategy_options import Load
-from sqlalchemy.schema import Column
 
 from .coercers import Deserialize, Serialize
 from .generators.options import Options
@@ -25,6 +24,10 @@ def call_me_maybe(fun_or_value, *args, **kwargs):
     if callable(fun_or_value):
         return fun_or_value(*args, **kwargs)
     return fun_or_value
+
+
+def identity(arg):
+    return arg
 
 
 class Rest(object):
@@ -143,6 +146,8 @@ class Rest(object):
 
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
+
+        self._query_alterer = identity
 
         if (
             self.unrest.allow_options
@@ -579,7 +584,8 @@ class Rest(object):
                 if self.auth:
                     decorated = self.auth(decorated)
 
-                data = decorated(payload, **pks)
+                with self.query_request(request):
+                    data = decorated(payload, **pks)
 
                 if not manual_commit and method in [
                     'PUT',
@@ -590,7 +596,7 @@ class Rest(object):
                     self.session.commit()
             except self.unrest.RestError as e:
                 return self.idiom.data_to_response(
-                    dict(message=e.message, **e.extra), method, e.status
+                    dict(message=e.message, **e.extra), request, e.status
                 )
 
             log.info(
@@ -642,6 +648,12 @@ class Rest(object):
             )
         ).all()
 
+    @contextmanager
+    def query_request(self, request):
+        self._query_alterer = partial(self.idiom.alter_query, request)
+        yield
+        self._query_alterer = identity
+
     @property
     def session(self):
         return self.unrest.session
@@ -651,7 +663,7 @@ class Rest(object):
         query = getattr(self.Model, 'query', None)
         if not query or not isinstance(query, Query):
             query = self.session.query(self.Model)
-        return self.query_factory(query)
+        return self._query_alterer(self.query_factory(query))
 
     @property
     def undefered_query(self):
