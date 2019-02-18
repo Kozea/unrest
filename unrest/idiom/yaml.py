@@ -22,9 +22,9 @@ class YamlIdiom(Idiom):
             except yaml.JSONDecodeError as e:
                 self.rest.raise_error(400, 'YAML Error in payload: %s' % e)
 
-    def data_to_response(self, data, method, status=200):
+    def data_to_response(self, data, request, status=200):
         if (
-            method == 'GET'
+            request.method == 'GET'
             and self.rest.unrest.empty_get_as_404
             and 'occurences' in data
             and data['occurences'] == 0

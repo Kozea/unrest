@@ -599,7 +599,7 @@ class Rest(object):
                 )
             )
 
-            return self.idiom.data_to_response(data, method)
+            return self.idiom.data_to_response(data, request)
 
         return wrapped
 
