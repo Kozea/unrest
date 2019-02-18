@@ -42,7 +42,7 @@ class FlaskUnRest(object):
                 flask_request.url,
                 flask_request.method,
                 url_parameters,
-                flask_request.args,
+                dict(flask_request.args.lists()),
                 flask_request.data,
                 flask_request.headers,
             )
