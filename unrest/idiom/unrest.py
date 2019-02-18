@@ -1,15 +1,11 @@
 import json
 
+from . import Idiom
 from ..util import Response
 
 
-class UnRestIdiom(object):
-    def __init__(self, rest):
-        self.rest = rest
-
+class UnRestIdiom(Idiom):
     def request_to_data(self, request):
-        # if request.headers['Content-Type'] != 'application/json':
-        #     return
         if request.payload:
             try:
                 return json.loads(request.payload.decode('utf-8'))

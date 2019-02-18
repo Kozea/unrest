@@ -3,10 +3,11 @@ try:
 except ImportError:
     yaml = None
 
+from . import Idiom
 from ..util import Response
 
 
-class YamlIdiom(object):
+class YamlIdiom(Idiom):
     def __init__(self, rest):
         self.rest = rest
         if yaml is None:
@@ -15,8 +16,6 @@ class YamlIdiom(object):
             )
 
     def request_to_data(self, request):
-        # if request.headers['Content-Type'] != 'application/yaml':
-        #     return
         if request.payload:
             try:
                 return yaml.load(request.payload.decode('utf-8'))
