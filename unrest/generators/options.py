@@ -16,7 +16,7 @@ class Options(object):
 
     def get_properties(self, rest):
         return {
-            property.name: self.get_property(property.sqlalchemy_type)
+            property.name: self.get_property(property.type)
             for property in rest.properties
         }
 
