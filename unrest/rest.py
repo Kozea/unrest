@@ -205,6 +205,7 @@ class Rest(object):
             if existingItem is None:
                 self.session.add(item)
             self.session.flush()
+            self.session.expire(item)
             return self.serialize([item])
 
         if not self.allow_batch:
@@ -219,6 +220,7 @@ class Rest(object):
         self.validate_all(items)
         self.session.add_all(items)
         self.session.flush()
+        self.session.expire_all()
         return self.serialize(items)
 
     def post(self, payload, **pks):
@@ -247,6 +249,7 @@ class Rest(object):
         self.session.add(item)
         self.validate(item)
         self.session.flush()
+        self.session.expire(item)
         return self.serialize([item])
 
     def delete(self, payload, **pks):
@@ -312,6 +315,7 @@ class Rest(object):
             self.deserialize(payload, item, blank_missing=False)
             self.validate(item)
             self.session.flush()
+            self.session.expire(item)
             return self.serialize([item])
 
         if not self.allow_batch:
@@ -364,6 +368,7 @@ class Rest(object):
             self.deserialize(patch, item, blank_missing=False)
         self.validate_all(items)
         self.session.flush()
+        self.session.expire_all()
         return self.serialize(items)
 
     def options(self, payload, **pks):
