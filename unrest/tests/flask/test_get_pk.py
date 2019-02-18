@@ -77,6 +77,7 @@ def test_get_pk_fruits(rest, http):
             'fruit_id': 1,
             'color': 'grey',
             'size': 12.0,
+            'double_size': 24.0,
             'age': 1_041_300.0,
             'tree_id': 1,
         }
@@ -94,7 +95,7 @@ def test_get_pk_fruits_only(rest, http):
 
 
 def test_get_pk_fruits_exclude(rest, http):
-    rest(Fruit, exclude=['color', 'age'])
+    rest(Fruit, exclude=['color', 'age', 'double_size'])
     code, json = http.get('/api/fruit/3')
     assert code == 200
     assert json['occurences'] == 1
@@ -149,6 +150,7 @@ def test_get_custom_extend(rest, http):
             'fruit_id': 5,
             'color': 'orangered',
             'size': 100.0,
+            'double_size': 200.0,
             'age': 7200.000_012,
             'tree_id': 2,
         }

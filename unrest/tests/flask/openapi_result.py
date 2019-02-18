@@ -52,6 +52,10 @@ openapi = {
                                                         "type": "integer",
                                                         "format": "int64",
                                                     },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
+                                                    },
                                                     "square_size": {
                                                         "type": "number",
                                                         "format": "double",
@@ -103,6 +107,10 @@ openapi = {
                                                         "type": "integer",
                                                         "format": "int64",
                                                     },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
+                                                    },
                                                     "square_size": {
                                                         "type": "number",
                                                         "format": "double",
@@ -136,6 +144,10 @@ openapi = {
                                     "tree_id": {
                                         "type": "integer",
                                         "format": "int64",
+                                    },
+                                    "double_size": {
+                                        "type": "number",
+                                        "format": "double",
                                     },
                                 },
                             }
@@ -180,6 +192,10 @@ openapi = {
                                                     "tree_id": {
                                                         "type": "integer",
                                                         "format": "int64",
+                                                    },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
                                                     },
                                                     "square_size": {
                                                         "type": "number",
@@ -234,6 +250,10 @@ openapi = {
                                                     "tree_id": {
                                                         "type": "integer",
                                                         "format": "int64",
+                                                    },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
                                                     },
                                                     "square_size": {
                                                         "type": "number",
@@ -294,6 +314,10 @@ openapi = {
                                                         "type": "integer",
                                                         "format": "int64",
                                                     },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
+                                                    },
                                                     "square_size": {
                                                         "type": "number",
                                                         "format": "double",
@@ -335,6 +359,10 @@ openapi = {
                                     "tree_id": {
                                         "type": "integer",
                                         "format": "int64",
+                                    },
+                                    "double_size": {
+                                        "type": "number",
+                                        "format": "double",
                                     },
                                 },
                             }
@@ -379,6 +407,10 @@ openapi = {
                                                     "tree_id": {
                                                         "type": "integer",
                                                         "format": "int64",
+                                                    },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
                                                     },
                                                     "square_size": {
                                                         "type": "number",
@@ -439,6 +471,10 @@ openapi = {
                                                         "type": "integer",
                                                         "format": "int64",
                                                     },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
+                                                    },
                                                     "square_size": {
                                                         "type": "number",
                                                         "format": "double",
@@ -480,6 +516,10 @@ openapi = {
                                     "tree_id": {
                                         "type": "integer",
                                         "format": "int64",
+                                    },
+                                    "double_size": {
+                                        "type": "number",
+                                        "format": "double",
                                     },
                                 },
                             }
@@ -524,6 +564,10 @@ openapi = {
                                                     "tree_id": {
                                                         "type": "integer",
                                                         "format": "int64",
+                                                    },
+                                                    "double_size": {
+                                                        "type": "number",
+                                                        "format": "double",
                                                     },
                                                     "square_size": {
                                                         "type": "number",
@@ -602,6 +646,10 @@ openapi = {
                                                                     "type": "integer",
                                                                     "format": "int64",
                                                                 },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
+                                                                },
                                                                 "square_size": {
                                                                     "type": "number",
                                                                     "format": "double",
@@ -670,6 +718,10 @@ openapi = {
                                                                 "tree_id": {
                                                                     "type": "integer",
                                                                     "format": "int64",
+                                                                },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
                                                                 },
                                                                 "square_size": {
                                                                     "type": "number",
@@ -766,6 +818,10 @@ openapi = {
                                                                     "type": "integer",
                                                                     "format": "int64",
                                                                 },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
+                                                                },
                                                                 "square_size": {
                                                                     "type": "number",
                                                                     "format": "double",
@@ -853,6 +909,10 @@ openapi = {
                                                                     "type": "integer",
                                                                     "format": "int64",
                                                                 },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
+                                                                },
                                                                 "square_size": {
                                                                     "type": "number",
                                                                     "format": "double",
@@ -921,6 +981,10 @@ openapi = {
                                                                 "tree_id": {
                                                                     "type": "integer",
                                                                     "format": "int64",
+                                                                },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
                                                                 },
                                                                 "square_size": {
                                                                     "type": "number",
@@ -1017,6 +1081,10 @@ openapi = {
                                                                     "type": "integer",
                                                                     "format": "int64",
                                                                 },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
+                                                                },
                                                                 "square_size": {
                                                                     "type": "number",
                                                                     "format": "double",
@@ -1088,6 +1156,10 @@ openapi = {
                                                                 "tree_id": {
                                                                     "type": "integer",
                                                                     "format": "int64",
+                                                                },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
                                                                 },
                                                                 "square_size": {
                                                                     "type": "number",
@@ -1165,6 +1237,10 @@ openapi = {
                                                                 "tree_id": {
                                                                     "type": "integer",
                                                                     "format": "int64",
+                                                                },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
                                                                 },
                                                                 "square_size": {
                                                                     "type": "number",
@@ -1261,6 +1337,10 @@ openapi = {
                                                                     "type": "integer",
                                                                     "format": "int64",
                                                                 },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
+                                                                },
                                                                 "square_size": {
                                                                     "type": "number",
                                                                     "format": "double",
@@ -1337,6 +1417,10 @@ openapi = {
                                                                 "tree_id": {
                                                                     "type": "integer",
                                                                     "format": "int64",
+                                                                },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
                                                                 },
                                                                 "square_size": {
                                                                     "type": "number",
@@ -1432,6 +1516,10 @@ openapi = {
                                                                 "tree_id": {
                                                                     "type": "integer",
                                                                     "format": "int64",
+                                                                },
+                                                                "double_size": {
+                                                                    "type": "number",
+                                                                    "format": "double",
                                                                 },
                                                                 "square_size": {
                                                                     "type": "number",

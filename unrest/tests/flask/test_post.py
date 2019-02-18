@@ -103,6 +103,7 @@ def test_post_with_defaults(rest, http):
             'fruit_id': 6,
             'color': 'white',
             'size': 1.0,
+            'double_size': 2.0,
             'age': 2.0,
             'tree_id': 1,
         }
@@ -117,6 +118,7 @@ def test_post_with_defaults(rest, http):
             'fruit_id': 7,
             'color': 'yellow',
             'size': 2.0,
+            'double_size': 4.0,
             'age': 4.0,
             'tree_id': 2,
         }
@@ -130,6 +132,7 @@ def test_post_with_defaults(rest, http):
             'fruit_id': 6,
             'color': 'white',
             'size': 1.0,
+            'double_size': 2.0,
             'age': 2.0,
             'tree_id': 1,
         },
@@ -137,6 +140,7 @@ def test_post_with_defaults(rest, http):
             'fruit_id': 7,
             'color': 'yellow',
             'size': 2.0,
+            'double_size': 4.0,
             'age': 4.0,
             'tree_id': 2,
         },
@@ -157,6 +161,7 @@ def test_post_with_fixed(rest, http):
             'fruit_id': 6,
             'color': 'white',
             'size': 1.0,
+            'double_size': 2.0,
             'age': 2.0,
             'tree_id': 1,
         }
@@ -171,6 +176,7 @@ def test_post_with_fixed(rest, http):
             'fruit_id': 7,
             'color': 'white',
             'size': 2.0,
+            'double_size': 4.0,
             'age': 4.0,
             'tree_id': 2,
         }
@@ -184,6 +190,7 @@ def test_post_with_fixed(rest, http):
             'fruit_id': 6,
             'color': 'white',
             'size': 1.0,
+            'double_size': 2.0,
             'age': 2.0,
             'tree_id': 1,
         },
@@ -191,6 +198,7 @@ def test_post_with_fixed(rest, http):
             'fruit_id': 7,
             'color': 'white',
             'size': 2.0,
+            'double_size': 4.0,
             'age': 4.0,
             'tree_id': 2,
         },

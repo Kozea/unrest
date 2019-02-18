@@ -1,4 +1,4 @@
-from sqlalchemy.types import Float
+from sqlalchemy.types import Float, Numeric
 
 from . import idsorted
 from ..model import Fruit, Tree
@@ -33,6 +33,7 @@ results = [
         'fruit_id': 1,
         'color': 'grey',
         'size': 12.0,
+        'double_size': 24.0,
         'age': 1_041_300.0,
         'tree_id': 1,
         'square_size': 144.0,
@@ -41,6 +42,7 @@ results = [
         'fruit_id': 2,
         'color': 'darkgrey',
         'size': 23.0,
+        'double_size': 46.0,
         'age': 4_233_830.213,
         'tree_id': 1,
         'square_size': 529.0,
@@ -49,6 +51,7 @@ results = [
         'fruit_id': 3,
         'color': 'brown',
         'size': 2.12,
+        'double_size': 4.24,
         'age': 0.0,
         'tree_id': 1,
         'square_size': 4.4944,
@@ -57,6 +60,7 @@ results = [
         'fruit_id': 4,
         'color': 'red',
         'size': 0.5,
+        'double_size': 1.0,
         'age': 2400.0,
         'tree_id': 2,
         'square_size': 0.25,
@@ -65,6 +69,7 @@ results = [
         'fruit_id': 5,
         'color': 'orangered',
         'size': 100.0,
+        'double_size': 200.0,
         'age': 7200.000_012,
         'tree_id': 2,
         'square_size': 10000.0,

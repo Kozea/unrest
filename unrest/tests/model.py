@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import deferred, relationship
+from sqlalchemy.orm import column_property, deferred, relationship
 from sqlalchemy.sql.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Interval, Numeric, String
 
@@ -36,6 +36,8 @@ class Fruit(Base):
     @hybrid_property
     def square_size(self):
         return self.size * self.size
+
+    double_size = column_property(2 * size)
 
 
 def fill_data(session):

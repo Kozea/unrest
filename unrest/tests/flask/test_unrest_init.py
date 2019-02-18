@@ -4,6 +4,7 @@ from unrest import UnRest, __about__
 from unrest.framework.flask import FlaskUnRest
 from unrest.rest import Rest
 
+from ...idiom import Idiom
 from ...util import Response
 from ..model import Fruit, Tree
 from .openapi_result import openapi
@@ -122,6 +123,7 @@ def test_api_options(app, db, http):
                 'fruit_id': 'int',
                 'size': 'Decimal',
                 'tree_id': 'int',
+                'double_size': 'Decimal',
             },
             'properties': {},
             'relationships': {},
@@ -145,6 +147,7 @@ def test_api_options(app, db, http):
                         'fruit_id': 'int',
                         'size': 'Decimal',
                         'tree_id': 'int',
+                        'double_size': 'Decimal',
                     },
                     'properties': {},
                     'relationships': {},
@@ -180,6 +183,7 @@ def test_endpoint_options(app, db, http):
             'fruit_id': 'int',
             'size': 'Decimal',
             'tree_id': 'int',
+            'double_size': 'Decimal',
         },
         'properties': {},
         'relationships': {},
@@ -291,10 +295,7 @@ def test_sub_fixed(app, db, http):
 
 
 def test_idiom(app, db, http):
-    class FakeIdiom(object):
-        def __init__(self, rest):
-            self.rest = rest
-
+    class FakeIdiom(Idiom):
         def request_to_data(self, request):
             if request.method == 'PUT':
                 return {'name': 'sth'}
