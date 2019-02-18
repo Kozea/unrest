@@ -454,9 +454,18 @@ class Rest(object):
     def parameters_to_pks(self, kwargs):
         if not kwargs:
             return {}
-        item = self.Model()
-        self.DeserializeClass(kwargs, self.primary_keys).merge(item)
-        return {name: getattr(item, name) for name in self.primary_keys}
+
+        # In case of column_property or hybrid_property
+        prop_by_name = {prop.name: prop for prop in self.properties}
+        columns = {
+            pk: self.columns.get(pk, prop_by_name.get(pk))
+            for pk in self.primary_keys
+        }
+        deserialize = self.DeserializeClass(kwargs, columns)
+        return {
+            name: deserialize.deserialize(name, column)
+            for name, column in columns.items()
+        }
 
     def deserialize(self, payload, item, blank_missing=True):
         if blank_missing:
@@ -483,7 +492,7 @@ class Rest(object):
 
     def serialize(self, items):
         rv = {}
-        rv['primary_keys'] = list(self.primary_keys.keys())
+        rv['primary_keys'] = self.primary_keys
 
         if isinstance(items, Query):
             rv['occurences'] = items.offset(None).limit(None).count()
@@ -684,28 +693,23 @@ class Rest(object):
         return self.Model.__table__
 
     @property
-    def primary_keys(self):
-        if self._primary_keys:
-            return OrderedDict(
-                (name, column)
-                for name, column in self.model_columns
-                if name in self._primary_keys
-            )
-        ins = inspect(self.Model)
-        return OrderedDict(
-            (ins.get_property_by_column(pk).key, pk) for pk in ins.primary_key
-        )
+    def mapper(self):
+        return inspect(self.Model)
 
     @property
-    def model_columns(self):
-        for name, column in inspect(self.Model).columns.items():
-            if isinstance(column, Column):
-                yield name, column
+    def primary_keys(self):
+        if self._primary_keys:
+            return self._primary_keys
+
+        return [
+            self.mapper.get_property_by_column(pk).key
+            for pk in self.mapper.primary_key
+        ]
 
     @property
     def columns(self):
         def gen():
-            for name, column in self.model_columns:
+            for name, column in self.mapper.columns.items():
                 if name not in self.primary_keys:
                     if self.only is not None and name not in self.only:
                         continue

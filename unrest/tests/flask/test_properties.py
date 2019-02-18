@@ -111,3 +111,38 @@ def test_get_fruit_with_primary_keys(rest, http):
         {'fruit_id': 4, 'age': 2400.0},
         {'fruit_id': 5, 'age': 7200.000_012},
     ]
+
+
+def test_get_tree_with_hybrid_property_as_primary_key(rest, http):
+    rest(
+        Fruit,
+        primary_keys=['square_size'],
+        only=[],
+        properties=[rest.Property('square_size', type=Numeric())],
+    )
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert json['primary_keys'] == ['square_size']
+    assert idsorted(json['objects'], 'square_size') == [
+        {'square_size': 0.25},
+        {'square_size': 4.4944},
+        {'square_size': 144.0},
+        {'square_size': 529.0},
+        {'square_size': 10000.0},
+    ]
+
+
+def test_get_tree_pk_with_hybrid_property_as_primary_key(rest, http):
+    rest(
+        Fruit,
+        primary_keys=['square_size'],
+        only=[],
+        properties=[rest.Property('square_size', type=Numeric())],
+    )
+    code, json = http.get('/api/fruit/0.25')
+    assert code == 200
+    assert json['occurences'] == 1
+    assert json['primary_keys'] == ['square_size']
+    print(json['objects'])
+    assert idsorted(json['objects'], 'square_size') == [{'square_size': 0.25}]
