@@ -129,7 +129,7 @@
 
 <h2 id="unrest.UnRest">UnRest</h2>
 
-<pre><code class="python">UnRest(self, app=None, session=None, path='/api', version='', framework=None, SerializeClass=None, DeserializeClass=None, RestClass=&lt;class 'unrest.rest.Rest'&gt;, allow_options=True, serve_openapi_file=True, openapi_class=&lt;class 'unrest.generators.openapi.OpenApi'&gt;, options_class=&lt;class 'unrest.generators.options.Options'&gt;, info={})
+<pre><code class="python">UnRest(self, app=None, session=None, path='/api', version='', framework=None, IdiomClass=None, SerializeClass=None, DeserializeClass=None, RestClass=&lt;class 'unrest.rest.Rest'&gt;, allow_options=True, serve_openapi_file=True, openapi_class=&lt;class 'unrest.generators.openapi.OpenApi'&gt;, options_class=&lt;class 'unrest.generators.options.Options'&gt;, empty_get_as_404=False, info={})
 </code></pre>
 
 <p>A troubling rest api library for sqlalchemy models.
@@ -152,12 +152,14 @@ rest(Model2)
 <li><strong>path</strong>: Default '/api', sets the root url path for your endpoints</li>
 <li><strong>version</strong>: Adds a version to the root url path if specified
         (i.e. /api/v2)</li>
-<li><strong>framework</strong>: Your specific framework class, defaults to auto detect.</li>
+<li><strong>framework</strong>: A specific framework class, defaults to auto detect.</li>
+<li><strong>IdiomClass</strong>: An idiom class, defaults to json unrest format.</li>
 <li><strong>SerializeClass</strong>: A global alternative for <code>Serialize</code> class.</li>
 <li><strong>DeserializeClass</strong>: A global alternative for <code>Deserialize</code> class.</li>
 <li><strong>RestClass</strong>: Replace the default <code>Rest</code> class.</li>
 <li><strong>allow_options</strong>: Set it to False to disable OPTIONS requests.</li>
 <li><strong>serve_openapi_file</strong>: Set it to False to disable openapi file generation.</li>
+<li><strong>empty_get_as_404</strong>: If True return a 404 on get with id not found</li>
 <li><strong>info</strong>: Additional info for the openapi metadata.
 Unrest aims to be framework agnostic.
 It currently works with Flask out of the box, for another web framework
