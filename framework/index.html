@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Framework - unrest Documentation</title>
+  <title>Frameworks - unrest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,7 +17,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Framework";
+    var mkdocs_page_name = "Frameworks";
     var mkdocs_page_input_path = "framework.md";
     var mkdocs_page_url = null;
   </script>
@@ -72,14 +72,11 @@
     </ul>
 	    </li>
           
-            <li class="toctree-l1">
+            <li class="toctree-l1 current">
 		
-    <span class="caption-text">Frameworks</span>
+    <a class="current" href="./">Frameworks</a>
     <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../flask_framework/">Flask</a>
-                </li>
+            
     </ul>
 	    </li>
           
@@ -105,7 +102,7 @@
     
       
     
-    <li>Framework</li>
+    <li>Frameworks</li>
     <li class="wy-breadcrumbs-aside">
       
         <a href="https://github.com/Kozea/unrest/edit/master/docs/framework.md"
@@ -118,91 +115,79 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest.framework.simple">unrest.framework.simple</h1>
+                <h1 id="unrest.framework">unrest.framework</h1>
 
-<h2 id="unrest.framework.simple.SimpleUnRest">SimpleUnRest</h2>
+<h2 id="unrest.framework.Framework">Framework</h2>
 
-<pre><code class="python">SimpleUnRest(self, app, prefix)
+<pre><code class="python">Framework(self, app, prefix)
 </code></pre>
 
-<p>Unrest tornado framework implementation.
-This is the framework abstraction you can implement for your own framework</p>
-<h3 id="unrest.framework.simple.SimpleUnRest.url">url</h3>
+<p>UnRest Framework abstract class.
+Framework are instanciated with an {app} object which should be your
+framework instance and the {prefix} of this UnRest instance.</p>
+<p>You must implement the <code>register_route</code> method if you want to
+implement you own framework.</p>
+<h3 id="unrest.framework.Framework.url">url</h3>
 
-<p>Return the api url root</p>
-<h3 id="unrest.framework.simple.SimpleUnRest.register_route">register_route</h3>
-
-<pre><code class="python">SimpleUnRest.register_route(self, path, method, parameters, fun)
+<p>Return the api url root
+<h3 id="unrest.framework.Framework.register_route">register_route</h3></p>
+<pre><code class="python">Framework.register_route(self, path, method, parameters, function)
 </code></pre>
 
-<p>Register the given function for <code>path</code> and <code>method</code> with and without
-<code>parameters</code>.</p>
+<p>This method is called by your rest endpoints for each {path} and
+each {method} that should respond with the {function}.
+The route should allow {optionally} the {parameters} within the
+url. These parameters represent the primary keys.</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>path</strong>: The url of the endoint without arguments. ('/api/person')</li>
 <li><strong>method</strong>: The HTTP method to register the route on.</li>
 <li><strong>parameters</strong>: The primary keys of the model that can be given
-        after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
-<li><strong>fun</strong>: The route function</li>
+    after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
+<li><strong>function</strong>: The route function</li>
 </ul>
+<h1 id="unrest.framework.http_server">unrest.framework.http_server</h1>
+
+<h2 id="unrest.framework.http_server.HTTPServerFramework">HTTPServerFramework</h2>
+
+<pre><code class="python">HTTPServerFramework(self, app, prefix)
+</code></pre>
+
+<p>Unrest <code>Framework</code> implementation for http.server.HTTPServer compatible app.
+This exemple implementation requires no external library.</p>
 <h1 id="unrest.framework.flask">unrest.framework.flask</h1>
 
-<h2 id="unrest.framework.flask.FlaskUnRest">FlaskUnRest</h2>
+<h2 id="unrest.framework.flask.FlaskFramework">FlaskFramework</h2>
 
-<pre><code class="python">FlaskUnRest(self, app, prefix)
+<pre><code class="python">FlaskFramework(self, app, prefix)
 </code></pre>
 
-<p>Unrest flask framework implementation.
-This is the framework abstraction you can implement for your own framework</p>
-<h3 id="unrest.framework.flask.FlaskUnRest.url">url</h3>
-
+<p>Unrest <code>Framework</code> implementation for Flask.
+Requires <code>flask</code> to be installed.
+<h3 id="unrest.framework.flask.FlaskFramework.url">url</h3></p>
 <p>Return the api url root</p>
-<h3 id="unrest.framework.flask.FlaskUnRest.register_route">register_route</h3>
-
-<pre><code class="python">FlaskUnRest.register_route(self, path, method, parameters, fun)
-</code></pre>
-
-<p>Register the given function for <code>path</code> and <code>method</code> with and without
-<code>parameters</code>.</p>
-<p><strong>Arguments</strong></p>
-<ul>
-<li><strong>path</strong>: The url of the endoint without arguments. ('/api/person')</li>
-<li><strong>method</strong>: The HTTP method to register the route on.</li>
-<li><strong>parameters</strong>: The primary keys of the model that can be given
-        after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
-<li><strong>fun</strong>: The route function</li>
-</ul>
 <h1 id="unrest.framework.tornado">unrest.framework.tornado</h1>
 
-<h2 id="unrest.framework.tornado.TornadoUnRest">TornadoUnRest</h2>
+<h2 id="unrest.framework.tornado.TornadoFramework">TornadoFramework</h2>
 
-<pre><code class="python">TornadoUnRest(self, app, prefix)
+<pre><code class="python">TornadoFramework(self, app, prefix)
 </code></pre>
 
-<p>Unrest tornado framework implementation.
-This is the framework abstraction you can implement for your own framework</p>
-<h3 id="unrest.framework.tornado.TornadoUnRest.url">url</h3>
-
+<p>Unrest <code>Framework</code> implementation for Tornado.
+Requires <code>tornado</code> to be installed.
+<h3 id="unrest.framework.tornado.TornadoFramework.url">url</h3></p>
 <p>Return the api url root</p>
-<h3 id="unrest.framework.tornado.TornadoUnRest.register_route">register_route</h3>
-
-<pre><code class="python">TornadoUnRest.register_route(self, path, method, parameters, fun)
-</code></pre>
-
-<p>Register the given function for <code>path</code> and <code>method</code> with and without
-<code>parameters</code>.</p>
-<p><strong>Arguments</strong></p>
-<ul>
-<li><strong>path</strong>: The url of the endoint without arguments. ('/api/person')</li>
-<li><strong>method</strong>: The HTTP method to register the route on.</li>
-<li><strong>parameters</strong>: The primary keys of the model that can be given
-        after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
-<li><strong>fun</strong>: The route function</li>
-</ul>
               
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../coercers/" class="btn btn-neutral" title="Serialization/Deserialization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -227,6 +212,8 @@ This is the framework abstraction you can implement for your own framework</p>
       
           <a href="https://github.com/Kozea/unrest/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
+      
+        <span><a href="../coercers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
     </span>
