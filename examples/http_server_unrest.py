@@ -6,7 +6,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.types import Float
 
 from unrest import UnRest
-from unrest.framework.simple import SimpleUnRest
+from unrest.framework.simple import HTTPServerFramework
 from unrest.tests.model import Base, Fruit, Tree, fill_data
 
 
@@ -33,7 +33,7 @@ if not os.path.exists(sqlite_db):
     fill_data(session)
 
 
-rest = UnRest(httpd, session, framework=SimpleUnRest)
+rest = UnRest(httpd, session, framework=HTTPServerFramework)
 fruit = rest(
     Fruit, methods=rest.all, properties=[rest.Property('square_size', Float())]
 )

@@ -47,7 +47,7 @@ class UnRest(object):
     Unrest aims to be framework agnostic.
     It currently works with Flask out of the box, for another web framework
     you will have to implement your own Framework class.
-    See `FlaskUnRest` in `flask_framework.py`
+    See `FlaskFramework` in `flask_framework.py`
     """
 
     class RestError(Exception):
@@ -121,9 +121,9 @@ class UnRest(object):
                 pass
             else:
                 if isinstance(app, Flask):
-                    from .framework.flask import FlaskUnRest
+                    from .framework.flask import FlaskFramework
 
-                    self.framework = FlaskUnRest(app, prefix=prefix)
+                    self.framework = FlaskFramework(app, prefix=prefix)
         if not self.framework:
             raise NotImplementedError(
                 'Your framework %s is not recognized. '

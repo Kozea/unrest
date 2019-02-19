@@ -7,7 +7,7 @@ from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
 
 from unrest import UnRest
-from unrest.framework.tornado import TornadoUnRest
+from unrest.framework.tornado import TornadoFramework
 from unrest.tests.model import Base, Fruit, Tree, fill_data
 
 
@@ -34,7 +34,7 @@ if not os.path.exists(sqlite_db):
     fill_data(session)
 
 
-rest = UnRest(app, session, framework=TornadoUnRest)
+rest = UnRest(app, session, framework=TornadoFramework)
 fruit = rest(
     Fruit, methods=rest.all, properties=[rest.Property('square_size', Float())]
 )

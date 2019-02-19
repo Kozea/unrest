@@ -3,30 +3,38 @@ import re
 from types import MethodType
 from urllib.parse import parse_qs, urlparse
 
+from . import Framework
 from ..util import Request
 
 log = logging.getLogger(__name__)
 
 
-class SimpleUnRest(object):
+class HTTPServerFramework(Framework):
     """
-    Unrest tornado framework implementation.
-    This is the framework abstraction you can implement for your own framework
+    Unrest #Framework implementation for
+    [http.server.HTTPServer](https://docs.python.org/3/library/http.server.html)
+    compatible app.
 
+    This exemple implementation requires no external library.
     """
 
     def __init__(self, app, prefix):
-        self.app = app
-        self.prefix = prefix
+        super().__init__(app, prefix)
         self.url_map = {}
         parent = self
 
-        class SimpleUnRestHandlerClass(self.app.RequestHandlerClass):
+        class HTTPServerFrameworkHandlerClass(self.app.RequestHandlerClass):
+            """
+            http.server.RequestHandlerClass implementation for UnRest
+            #Framework
+            """
+
             def __getattribute__(self, name):
                 if name.startswith('do_'):
                     method = name.replace('do_', '')
 
                     def do_METHOD(self):
+                        # Handle only requests starting with prefix
                         if not self.path.startswith('/' + parent.prefix):
                             return getattr(super(), name)()
                         return self.handle_request(method)
@@ -36,9 +44,11 @@ class SimpleUnRest(object):
 
             def handle_request(self, method):
                 url = urlparse(self.path)
+                # Look up in the url_map if we have matching endpoint
                 for path, methods in parent.url_map.items():
                     match = re.fullmatch(path, url.path)
                     if match:
+                        # With a corresponding method
                         if method not in methods:
                             return self.send(405, 'Method Not Allowed')
                         return self.respond(
@@ -51,7 +61,7 @@ class SimpleUnRest(object):
                 self.end_headers()
                 self.wfile.write(message.encode('utf-8'))
 
-            def respond(self, url, method, fun, url_parameters):
+            def respond(self, url, method, function, url_parameters):
                 length = (
                     int(self.headers['Content-Length'])
                     if 'Content-Length' in self.headers
@@ -67,7 +77,7 @@ class SimpleUnRest(object):
                     self.headers,
                 )
                 try:
-                    response = fun(request)
+                    response = function(request)
                 except Exception:
                     log.exception('Error on ' + method + ' ' + self.path)
                     return self.send(500, 'Internal Server Error')
@@ -77,22 +87,11 @@ class SimpleUnRest(object):
 
                 self.send(response.status, response.payload)
 
-        self.app.RequestHandlerClass = SimpleUnRestHandlerClass
+        self.app.RequestHandlerClass = HTTPServerFrameworkHandlerClass
 
-    def register_route(self, path, method, parameters, fun):
-        """
-        Register the given function for `path` and `method` with and without
-        `parameters`.
-
-        # Arguments
-            path: The url of the endoint without arguments. ('/api/person')
-            method: The HTTP method to register the route on.
-            parameters: The primary keys of the model that can be given
-                after the path. `PrimaryKey('id'), PrimaryKey('type')) -> \
-'/api/person/<id>/<type>'`
-            fun: The route function
-        """
-        name = self._name(fun.__name__.replace(method + '_', ''))
+    def register_route(self, path, method, parameters, function):
+        name = self._name(function.__name__.replace(method + '_', ''))
+        # Creating an url regex that accept parameters
         path_with_params = (
             path
             + '(?:/'
@@ -102,6 +101,7 @@ class SimpleUnRest(object):
             else path
         )
 
+        # If this is the first method for path, initialize method mapping
         if path_with_params not in self.url_map:
             self.url_map[path_with_params] = {}
 
@@ -113,16 +113,5 @@ class SimpleUnRest(object):
             % (name, path_with_params, method)
         )
 
-        self.url_map[path_with_params][method] = fun
-
-    @property
-    def url(self):
-        """
-        Return the api url root
-        """
-        # No external in tornado
-        return '/' + self.prefix
-
-    def _name(self, name):
-        """Generate a unique name for endpoint"""
-        return 'unrest__%s__%s' % (self.prefix, name)
+        # Associate UnRest function with path and method
+        self.url_map[path_with_params][method] = function

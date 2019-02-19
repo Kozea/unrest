@@ -3,40 +3,28 @@ from functools import wraps
 
 from tornado.web import RequestHandler, _ApplicationRouter
 
+from . import Framework
 from ..util import Request
 
 log = logging.getLogger(__name__)
 
 
-class TornadoUnRest(object):
+class TornadoFramework(Framework):
     """
-    Unrest tornado framework implementation.
-    This is the framework abstraction you can implement for your own framework
+    Unrest #Framework implementation for Tornado.
 
+    Requires [tornado](https://www.tornadoweb.org/) to be installed.
     """
 
     def __init__(self, app, prefix):
-        self.app = app
-        self.prefix = prefix
+        super().__init__(app, prefix)
         self.router = _ApplicationRouter(app)
         self.app.default_router.add_rules(
             [(r'/' + prefix + r'/(.*)', self.router)]
         )
 
-    def register_route(self, path, method, parameters, fun):
-        """
-        Register the given function for `path` and `method` with and without
-        `parameters`.
-
-        # Arguments
-            path: The url of the endoint without arguments. ('/api/person')
-            method: The HTTP method to register the route on.
-            parameters: The primary keys of the model that can be given
-                after the path. `PrimaryKey('id'), PrimaryKey('type')) -> \
-'/api/person/<id>/<type>'`
-            fun: The route function
-        """
-        name = self._name(fun.__name__.replace(method + '_', ''))
+    def register_route(self, path, method, parameters, function):
+        name = self._name(function.__name__.replace(method + '_', ''))
         path_with_params = (
             path
             + '(?:/'
@@ -56,7 +44,7 @@ class TornadoUnRest(object):
             % (name, path_with_params, method)
         )
 
-        @wraps(fun)
+        @wraps(function)
         def tornado_fun(self, **url_parameters):
             request = Request(
                 self.request.path,
@@ -67,7 +55,7 @@ class TornadoUnRest(object):
                 self.request.headers,
             )
 
-            response = fun(request)
+            response = function(request)
             for name, value in response.headers.items():
                 self.set_header(name, value)
             self.set_status(response.status)
@@ -77,12 +65,4 @@ class TornadoUnRest(object):
 
     @property
     def url(self):
-        """
-        Return the api url root
-        """
-        # No external in tornado
         return self.app.reverse_url(self._name('index'))
-
-    def _name(self, name):
-        """Generate a unique name for endpoint"""
-        return 'unrest__%s__%s' % (self.prefix, name)

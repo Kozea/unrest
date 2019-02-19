@@ -1,7 +1,7 @@
 from sqlalchemy.types import Float
 
 from unrest import UnRest, __about__
-from unrest.framework.flask import FlaskUnRest
+from unrest.framework.flask import FlaskFramework
 from unrest.rest import Rest
 
 from ...idiom import Idiom
@@ -43,7 +43,7 @@ def test_path_and_version(app, db, http):
 
 
 def test_explicit_framework(app, db, http):
-    rest = UnRest(app, db.session, framework=FlaskUnRest)
+    rest = UnRest(app, db.session, framework=FlaskFramework)
     rest(Tree)
     code, json = http.get('/api/tree')
     assert code == 200
@@ -51,7 +51,7 @@ def test_explicit_framework(app, db, http):
 
 
 def test_normal_rest_class(app, db, http):
-    rest = UnRest(app, db.session, framework=FlaskUnRest)
+    rest = UnRest(app, db.session, framework=FlaskFramework)
     tree = rest(Tree, name='tree')
     assert isinstance(tree, Rest)
 
@@ -63,7 +63,7 @@ def test_alternative_rest_class(app, db, http):
             super().__init__(*args, **kwargs)
 
     new_rest = UnRest(
-        app, db.session, framework=FlaskUnRest, RestClass=NewRest
+        app, db.session, framework=FlaskFramework, RestClass=NewRest
     )
     new_tree = new_rest(Tree, name='tree')
     assert isinstance(new_tree, NewRest)
@@ -77,7 +77,7 @@ def test_alternative_rest_class(app, db, http):
 
 def test_empty_get_pk_as_404(app, db, http):
     rest = UnRest(
-        app, db.session, framework=FlaskUnRest, empty_get_as_404=True
+        app, db.session, framework=FlaskFramework, empty_get_as_404=True
     )
     rest(Tree)
     code, json = http.get('/api/tree/6')
@@ -161,7 +161,7 @@ def test_api_options(app, db, http):
 
 
 def test_endpoint_options(app, db, http):
-    rest = UnRest(app, db.session, framework=FlaskUnRest)
+    rest = UnRest(app, db.session, framework=FlaskFramework)
     fruit = rest(Fruit)
     rest(
         Tree,

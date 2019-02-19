@@ -4,39 +4,26 @@ from functools import wraps
 from flask import request as flask_request
 from flask import url_for
 
+from . import Framework
 from ..util import Request
 
 log = logging.getLogger(__name__)
 
 
-class FlaskUnRest(object):
+class FlaskFramework(Framework):
     """
-    Unrest flask framework implementation.
-    This is the framework abstraction you can implement for your own framework
+    Unrest #Framework implementation for Flask.
 
+    Requires [flask](http://flask.pocoo.org/) to be installed.
     """
 
-    def __init__(self, app, prefix):
-        self.app = app
-        self.prefix = prefix
+    def register_route(self, path, method, parameters, function):
+        name = self._name(function.__name__)
+        getattr(
+            function, '__func__', function
+        ).provide_automatic_options = False
 
-    def register_route(self, path, method, parameters, fun):
-        """
-        Register the given function for `path` and `method` with and without
-        `parameters`.
-
-        # Arguments
-            path: The url of the endoint without arguments. ('/api/person')
-            method: The HTTP method to register the route on.
-            parameters: The primary keys of the model that can be given
-                after the path. `PrimaryKey('id'), PrimaryKey('type')) -> \
-'/api/person/<id>/<type>'`
-            fun: The route function
-        """
-        name = self._name(fun.__name__)
-        getattr(fun, '__func__', fun).provide_automatic_options = False
-
-        @wraps(fun)
+        @wraps(function)
         def unrest_fun(**url_parameters):
             request = Request(
                 flask_request.url,
@@ -47,7 +34,7 @@ class FlaskUnRest(object):
                 flask_request.headers,
             )
 
-            response = fun(request)
+            response = function(request)
 
             return self.app.response_class(
                 response.payload,
@@ -78,11 +65,4 @@ class FlaskUnRest(object):
 
     @property
     def url(self):
-        """
-        Return the api url root
-        """
         return url_for(self._name('index'), _external=True)
-
-    def _name(self, name):
-        """Generate a unique name for endpoint"""
-        return 'unrest__%s__%s' % (self.prefix, name)

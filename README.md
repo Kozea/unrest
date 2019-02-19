@@ -18,7 +18,7 @@ To activate data modification, set the methods array like this:
 rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH']) # or simply methods=rest.all
 ```
 
-You will get both routes on the four methods. Please see [the wikipedia page](https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URL_and_HTTP_methods) for their signification.
+You will get both routes (collection and member) on the four methods. Please see [the wikipedia page](https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URI_and_HTTP_methods) for their signification.
 
 You can also override the default methods like this:
 

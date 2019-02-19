@@ -1,3 +1,23 @@
+# [1.0.0](https://github.com/Kozea/unrest/compare/0.7.8...1.0.0)
+
+### Breaking Changes
+* **Framework API now requires only a register route but the rest function now takes a `Request` and must return a `Response`.**
+* **`Property` property `sqlalchemy_type` has been renamed to `type` for compat with columns.**
+* **`column_property` are now considered as normal columns.**
+
+<hr />
+
+* Add `Request`/`Response` util classes.
+* Add an `Idiom` abstraction with converts request to data and data to response.
+* Add a `yaml` idiom (`YamlIdiom`).
+* Add a `json_server` idiom (`JsonServerIdiom`).
+* Add a native python framework implementation (`HTTPServerFramework`).
+* Add a tornado framework implementation (`TornadoFramework`).
+* Add cleaner examples.
+* Expire items after add/edit to refresh `column_property` and externally dependent columns (i.e. FDW).
+* Properties can now be used in `primary_keys`.
+
+
 ## [0.7.8](https://github.com/Kozea/unrest/compare/0.7.7...0.7.8)
 
 * Add a `RestClass` option to `UnRest` to allow `Rest` overload

@@ -21,12 +21,16 @@ log = logging.getLogger(__name__)
 
 
 def call_me_maybe(fun_or_value, *args, **kwargs):
+    """Call first argument {fun_or_value} with {*args}, {**kwargs}
+        if it is callable, return it otherwise.
+    """
     if callable(fun_or_value):
         return fun_or_value(*args, **kwargs)
     return fun_or_value
 
 
 def identity(arg):
+    """Identity function, return {arg}"""
     return arg
 
 
@@ -417,8 +421,9 @@ class Rest(object):
         return register_fun
 
     def sub(self, query_factory, **kwargs):
-        """This methods return a copy of the current rest endpoint and takes a
-        {query_factory} argument to alter the current query.
+        """
+        This methods return a copy of the current rest endpoint and takes a
+        `query_factory` argument to alter the current query.
 
         # Arguments
             query_factory: A function that takes the original query
@@ -451,8 +456,12 @@ class Rest(object):
         subrest.query_factory = lambda q: query_factory(self.query_factory(q))
         return subrest
 
-    def parameters_to_pks(self, kwargs):
-        if not kwargs:
+    def parameters_to_pks(self, parameters):
+        """
+        Transform query parameters into primary keys mapping with
+        deserialized values.
+        """
+        if not parameters:
             return {}
 
         # In case of column_property or hybrid_property
@@ -461,7 +470,7 @@ class Rest(object):
             pk: self.columns.get(pk, prop_by_name.get(pk))
             for pk in self.primary_keys
         }
-        deserialize = self.DeserializeClass(kwargs, columns)
+        deserialize = self.DeserializeClass(parameters, columns)
         return {
             name: deserialize.deserialize(name, column)
             for name, column in columns.items()
@@ -491,6 +500,18 @@ class Rest(object):
         ).dict()
 
     def serialize(self, items):
+        """
+        Serialize all items and return a mapping containing:
+
+        # Arguments
+            objects: The serialized objects
+            primary_keys: The list of primary keys defined for this rest
+                endpoint
+            occurences: The number of total occurences (without limit)
+            offset if there's a query offset
+            limit if there's a query limit
+        """
+
         rv = {}
         rv['primary_keys'] = self.primary_keys
 
@@ -523,7 +544,8 @@ class Rest(object):
 
     def validate(self, item, existing=None, errors=None):
         """
-        Validates all validators colums against validators.
+        Validates all validators columns against validators.
+
         Raise RestError if validation errors.
         """
         with self.session.no_autoflush:

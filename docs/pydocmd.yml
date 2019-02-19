@@ -9,8 +9,21 @@ generate:
   - unrest.rest++
 - coercers.md:
   - unrest.coercers++
-- flask_framework.md:
-  - unrest.flask_framework++
+- framework.md:
+  - unrest.framework++
+  - unrest.framework.http_server++
+  - unrest.framework.flask++
+  - unrest.framework.tornado++
+- idiom.md:
+  - unrest.idiom.unrest++
+  - unrest.idiom.yaml++
+  - unrest.idiom.json_server++
+- generators.md:
+  - unrest.generators.openapi++
+  - unrest.generators.options++
+- util.md:
+  - unrest.util.Request++
+  - unrest.util.Response++
 
 pages:
 - Home: index.md << ../README.md
@@ -18,5 +31,7 @@ pages:
   - UnRest: unrest.md
   - Rest entry points: rest.md
   - Serialization/Deserialization: coercers.md
-- Frameworks:
-  - Flask: flask_framework.md
+- Frameworks: framework.md
+- Idioms: idiom.md
+- Util: util.md
+- Generators: generators.md
