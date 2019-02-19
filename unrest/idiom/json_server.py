@@ -11,6 +11,8 @@ from ..util import Response
 
 
 class JsonServerIdiom(Idiom):
+    PK_DELIM = '___'
+
     def request_to_data(self, request):
         if request.payload:
             try:
@@ -29,6 +31,14 @@ class JsonServerIdiom(Idiom):
             status = 404
 
         objects = data['objects']
+        for object in objects:
+            for key, relationship in self.rest.relationships.items():
+                object[key] = [
+                    self.PK_DELIM.join(
+                        ref[pk] for pk in relationship.primary_keys
+                    )
+                    for ref in object[key]
+                ]
         if request.parameters:
             objects = objects[0]
         payload = json.dumps(objects)
@@ -104,7 +114,9 @@ class JsonServerIdiom(Idiom):
                     query = query.order_by(way(sort.split('.')[-1]))
 
         if request.method == 'GET':
-            query = query.order_by(*self.rest.primary_keys.values())
+            query = query.order_by(
+                *[getattr(Model, pk) for pk in self.rest.primary_keys]
+            )
 
         # Offset / Limit
         offset = int(params['start'] or 0)
