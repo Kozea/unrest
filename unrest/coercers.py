@@ -87,7 +87,7 @@ class Serialize(object):
                 },
                 **{
                     key: [
-                        relationship_rest.serialize_object(item)
+                        relationship_rest.serialize(item)
                         for item in enforce_iterable(getattr(self.model, key))
                     ]
                     for key, relationship_rest in self.relationships.items()

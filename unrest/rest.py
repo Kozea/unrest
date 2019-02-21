@@ -177,10 +177,10 @@ class Rest(object):
         """
         if self.has(pks):
             item = self.get_from_pk(self.query, **pks)
-            return self.serialize([item] if item else [])
+            return self.serialize_all([item] if item else [])
 
         items = self.query
-        return self.serialize(items)
+        return self.serialize_all(items)
 
     def put(self, payload, **pks):
         """
@@ -215,7 +215,7 @@ class Rest(object):
                 self.session.add(item)
             self.session.flush()
             self.session.expire(item)
-            return self.serialize([item])
+            return self.serialize_all([item])
 
         if not self.allow_batch:
             raise self.unrest.RestError(
@@ -230,7 +230,7 @@ class Rest(object):
         self.session.add_all(items)
         self.session.flush()
         self.session.expire_all()
-        return self.serialize(items)
+        return self.serialize_all(items)
 
     def post(self, payload, **pks):
         """
@@ -259,7 +259,7 @@ class Rest(object):
         self.validate(item)
         self.session.flush()
         self.session.expire(item)
-        return self.serialize([item])
+        return self.serialize_all([item])
 
     def delete(self, payload, **pks):
         """
@@ -279,7 +279,7 @@ class Rest(object):
 
             self.session.delete(item)
             self.session.flush()
-            return self.serialize([item])
+            return self.serialize_all([item])
 
         if not self.allow_batch:
             raise self.unrest.RestError(
@@ -291,7 +291,7 @@ class Rest(object):
         items = self.undefered_query.all()
         self.query.delete()
         self.session.flush()
-        return self.serialize(items)
+        return self.serialize_all(items)
 
     def patch(self, payload, **pks):
         """
@@ -325,7 +325,7 @@ class Rest(object):
             self.validate(item)
             self.session.flush()
             self.session.expire(item)
-            return self.serialize([item])
+            return self.serialize_all([item])
 
         if not self.allow_batch:
             raise self.unrest.RestError(
@@ -378,7 +378,7 @@ class Rest(object):
         self.validate_all(items)
         self.session.flush()
         self.session.expire_all()
-        return self.serialize(items)
+        return self.serialize_all(items)
 
     def options(self, payload, **pks):
         """
@@ -494,12 +494,13 @@ class Rest(object):
             self.set_defaults(item, self.columns)
         return self.DeserializeClass(payload, self.columns).create(self.Model)
 
-    def serialize_object(self, item):
+    def serialize(self, item):
+        """Serialize an `item` with the given `SerializeClass`"""
         return self.SerializeClass(
             item, self.columns, self.properties, self.relationships
         ).dict()
 
-    def serialize(self, items):
+    def serialize_all(self, items):
         """
         Serialize all items and return a mapping containing:
 
@@ -522,7 +523,7 @@ class Rest(object):
             if items._limit is not None:
                 rv['limit'] = items._limit
 
-        rv['objects'] = [self.serialize_object(item) for item in items]
+        rv['objects'] = [self.serialize(item) for item in items]
         if 'occurences' not in rv:
             rv['occurences'] = len(rv['objects'])
         return rv
