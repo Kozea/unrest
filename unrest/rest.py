@@ -20,8 +20,8 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 
-def call_me_maybe(fun_or_value, *args, **kwargs):
-    """Call first argument {fun_or_value} with {*args}, {**kwargs}
+def _call_me_maybe(fun_or_value, *args, **kwargs):
+    """Call first argument `fun_or_value` with `*args, **kwargs`
         if it is callable, return it otherwise.
     """
     if callable(fun_or_value):
@@ -29,8 +29,8 @@ def call_me_maybe(fun_or_value, *args, **kwargs):
     return fun_or_value
 
 
-def identity(arg):
-    """Identity function, return {arg}"""
+def _identity(arg):
+    """Identity function, return `arg`"""
     return arg
 
 
@@ -151,7 +151,7 @@ class Rest(object):
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
 
-        self._query_alterer = identity
+        self._query_alterer = _identity
 
         if (
             self.unrest.allow_options
@@ -531,9 +531,9 @@ class Rest(object):
     def set_defaults(self, payload, columns):
         for name, column in columns.items():
             if name in self.fixed:
-                payload[name] = call_me_maybe(self.fixed[name], payload)
+                payload[name] = _call_me_maybe(self.fixed[name], payload)
             elif name not in payload and name in self.defaults:
-                payload[name] = call_me_maybe(self.defaults[name], payload)
+                payload[name] = _call_me_maybe(self.defaults[name], payload)
 
     class Validatable(object):
         def __init__(self, value, name, previous, next, ValidationError):
@@ -684,7 +684,7 @@ class Rest(object):
     def query_request(self, request):
         self._query_alterer = partial(self.idiom.alter_query, request)
         yield
-        self._query_alterer = identity
+        self._query_alterer = _identity
 
     @property
     def session(self):
