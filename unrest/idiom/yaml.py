@@ -15,7 +15,7 @@ class YamlIdiom(Idiom):
                 'You must have pyyaml installed to use this idiom'
             )
 
-    def request_to_data(self, request):
+    def request_to_payload(self, request):
         if request.payload:
             try:
                 return yaml.load(request.payload.decode('utf-8'))

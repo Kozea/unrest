@@ -5,7 +5,8 @@ from ..util import Response
 
 
 class UnRestIdiom(Idiom):
-    def request_to_data(self, request):
+
+    def request_to_payload(self, request):
         if request.payload:
             try:
                 return json.loads(request.payload.decode('utf-8'))

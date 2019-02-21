@@ -9,11 +9,12 @@ from sqlalchemy.types import String
 from . import Idiom
 from ..util import Response
 
+PK_DELIM = '___'
+
 
 class JsonServerIdiom(Idiom):
-    PK_DELIM = '___'
 
-    def request_to_data(self, request):
+    def request_to_payload(self, request):
         if request.payload:
             try:
                 return json.loads(request.payload.decode('utf-8'))
@@ -34,9 +35,7 @@ class JsonServerIdiom(Idiom):
         for object in objects:
             for key, relationship in self.rest.relationships.items():
                 object[key] = [
-                    self.PK_DELIM.join(
-                        ref[pk] for pk in relationship.primary_keys
-                    )
+                    PK_DELIM.join(ref[pk] for pk in relationship.primary_keys)
                     for ref in object[key]
                 ]
         if request.parameters:

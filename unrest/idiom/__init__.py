@@ -2,7 +2,7 @@ class Idiom(object):
     def __init__(self, rest):
         self.rest = rest
 
-    def request_to_data(self, request):
+    def request_to_payload(self, request):
         raise NotImplementedError()
 
     def data_to_response(self, data, request, status=200):

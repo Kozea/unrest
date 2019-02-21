@@ -296,7 +296,7 @@ def test_sub_fixed(app, db, http):
 
 def test_idiom(app, db, http):
     class FakeIdiom(Idiom):
-        def request_to_data(self, request):
+        def request_to_payload(self, request):
             if request.method == 'PUT':
                 return {'name': 'sth'}
 

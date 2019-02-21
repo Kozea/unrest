@@ -603,7 +603,7 @@ class Rest(object):
         def wrapped(request):
             try:
                 pks = self.parameters_to_pks(request.parameters)
-                payload = self.idiom.request_to_data(request)
+                payload = self.idiom.request_to_payload(request)
 
                 decorated = method_fun
                 if method == 'GET' and self.read_auth:
