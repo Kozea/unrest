@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 class HTTPServerFramework(Framework):
     """
-    Unrest #Framework implementation for
+    Unrest #::unrest.framework#Framework implementation for
     [http.server.HTTPServer](https://docs.python.org/3/library/http.server.html)
     compatible app.
 

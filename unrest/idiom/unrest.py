@@ -5,6 +5,14 @@ from ..util import Response
 
 
 class UnRestIdiom(Idiom):
+    """
+    The default UnRest implementation.
+
+    Parses request payload as json.
+    Serialize data as json.
+    Can return a 404 on empty GET if `empty_get_as_404` is set as True in the
+    Unrest instance.
+    """
 
     def request_to_payload(self, request):
         if request.payload:

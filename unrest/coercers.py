@@ -10,6 +10,16 @@ log = logging.getLogger('unrest.coercers')
 
 
 class Property(object):
+    """
+    A Property wrapper used instead of a string in a #::unrest.rest#Rest
+    properties parameter.
+
+    # Arguments
+        name: This property name
+        type: The sqlalchemy type used for type coercion
+        formatter: An optional function to transform the parameter as string
+    """
+
     def __init__(self, name, type=None, formatter=None):
         self.name = name
         self.type = type or String()
@@ -136,7 +146,7 @@ class Deserialize(object):
     """
     Base deserializer class
 
-    Casts JSON data back to compatible python sqlalchemy type.
+    Casts raw data back to compatible python sqlalchemy type.
 
     Not all types are implemented as of now and it's fairly easy to add:
     Just add a `deserialize_type` method for `type` and it shall work.
@@ -157,7 +167,7 @@ class Deserialize(object):
     ```
 
     # Arguments
-        payload: The JSON payload to deserialize
+        payload: The payload to deserialize
         columns: The list of columns to deserialize
     """
 

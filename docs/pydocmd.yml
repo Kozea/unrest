@@ -1,5 +1,16 @@
-site_name: unrest Documentation
+site_name: UnRest Documentation
 repo_url: https://github.com/Kozea/unrest
+headers: markdown
+markdown_extensions:
+    - toc:
+        permalink: 
+    - admonition
+    - def_list
+theme:
+  name: readthedocs
+  navigation_depth: 6
+
+
 generate:
 - unrest.md:
   - unrest:
@@ -15,6 +26,7 @@ generate:
   - unrest.framework.flask++
   - unrest.framework.tornado++
 - idiom.md:
+  - unrest.idiom++
   - unrest.idiom.unrest++
   - unrest.idiom.yaml++
   - unrest.idiom.json_server++
@@ -31,7 +43,7 @@ pages:
   - UnRest: unrest.md
   - Rest entry points: rest.md
   - Serialization/Deserialization: coercers.md
-- Frameworks: framework.md
-- Idioms: idiom.md
-- Util: util.md
-- Generators: generators.md
+  - Frameworks: framework.md
+  - Idioms: idiom.md
+  - Util: util.md
+  - Generators: generators.md

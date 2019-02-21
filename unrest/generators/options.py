@@ -1,4 +1,9 @@
 class Options(object):
+    """
+    This generates an informative object on the #::unrest.UnRest instance used
+    as reply for http OPTIONS request on the unrest API index.
+    """
+
     def __init__(self, unrest):
         self.unrest = unrest
 

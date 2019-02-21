@@ -8,6 +8,15 @@ from ..util import Response
 
 
 class YamlIdiom(Idiom):
+    """
+    This is a very basic yaml implementation.
+
+    It does the same thing as the #::unrest.idiom.unrest#UnRestIdiom+1 but with
+    yaml instead of json.
+
+    Requires pyyaml to be installed.
+    """
+
     def __init__(self, rest):
         self.rest = rest
         if yaml is None:

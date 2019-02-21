@@ -22,7 +22,7 @@ class Framework(object):
         """
         This method is called by your rest endpoints for each `path` and
         each `method` that should respond with the `function`.
-        The route should allow `optionally` the `parameters` within the
+        The route should allow optionally the `parameters` within the
         url. These parameters represent the primary keys.
 
         # Arguments

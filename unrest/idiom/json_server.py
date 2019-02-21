@@ -13,6 +13,14 @@ PK_DELIM = '___'
 
 
 class JsonServerIdiom(Idiom):
+    """
+    The [JSON Server](https://github.com/typicode/json-server) idiom implementation.
+
+    Currently support all basic queries and first-level (no nested props)
+    filter, sort, pagination, slice, operators (`_gte`, `_lte`, `_ne`, `_like`)
+    and `q` full-text search (which works better with
+    [SQLAlchemy-Searchable](https://sqlalchemy-searchable.readthedocs.io))
+    """
 
     def request_to_payload(self, request):
         if request.payload:

@@ -28,26 +28,28 @@ class UnRest(object):
 
     # Arguments
         app: Your web application,
-            can be set afterwards using #UnRest.init_app
+            can be set afterwards using #init_app
         session: Your sqlalchemy session,
-            can be set afterwards using #UnRest.init_session
+            can be set afterwards using #init_session
             and `init_session` method.
         path: Default '/api', sets the root url path for your endpoints
         version: Adds a version to the root url path if specified
             (i.e. /api/v2)
         framework: A specific framework class, defaults to auto detect.
-        IdiomClass: An idiom class, defaults to json unrest format.
-        SerializeClass: A global alternative for #Serialize class.
-        DeserializeClass: A global alternative for #Deserialize class.
-        RestClass: Replace the default #Rest class.
+        IdiomClass: An idiom class, defaults to #::unrest.idiom.unrest.
+        SerializeClass: A global alternative for #::unrest.coercers#Serialize class.
+        DeserializeClass: A global alternative for #::unrest.coercers#Deserialize class.
+        RestClass: Replace the default #::unrest.rest#Rest class.
         allow_options: Set it to False to disable OPTIONS requests.
         serve_openapi_file: Set it to False to disable openapi file generation.
         empty_get_as_404: If True return a 404 on get with id not found
         info: Additional info for the openapi metadata.
+
+    # Frameworks
     Unrest aims to be framework agnostic.
-    It currently works with Flask out of the box, for another web framework
-    you will have to implement your own Framework class.
-    See `FlaskFramework` in `flask_framework.py`
+    It currently works with Flask out of the box and provides some other frameworks:
+    Tornado and python http.server.
+    See #::unrest.framework#Framework
     """
 
     class RestError(Exception):
@@ -142,6 +144,7 @@ class UnRest(object):
 
     @property
     def root_path(self):
+        """Returns this API root path."""
         if self.version:
             return '/'.join((self.path, self.version))
         return self.path
@@ -169,7 +172,7 @@ class UnRest(object):
         raise self.RestError(status, message, extra)
 
     def __call__(self, *args, **kwargs):
-        """Returns a #unrest.Rest instance. See rest entry points."""
+        """Returns a #unrest#Rest instance. See rest entry points."""
 
         if self.IdiomClass is not None:
             kwargs.setdefault('IdiomClass', self.IdiomClass)
@@ -182,11 +185,13 @@ class UnRest(object):
         return rest
 
     def register_index(self):
+        """Register the API index GET route."""
         self.framework.register_route(
             self.root_path + '/', 'GET', None, self.index
         )
 
     def index(self, request):
+        """The API index GET route."""
         return Response(
             (
                 '<h1>unrest <small>api server</small></h1> version %s '
@@ -201,24 +206,37 @@ class UnRest(object):
         )
 
     def send_json(self, data):
+        """
+        Send `data` as json.
+
+        # Arguments
+            data: An object to send as json
+
+        # Returns
+        The #::unrest.util#Response containing the json data
+        """
         payload = json.dumps(data)
         headers = {'Content-Type': 'application/json'}
         return Response(payload, headers, 200)
 
     def register_options(self):
+        """Register the API index OPTIONS route."""
         self.framework.register_route(
             self.root_path, 'OPTIONS', None, self.options
         )
 
     def options(self, request):
+        """The API index OPTIONS route."""
         return self.send_json(self.Options(self).all())
 
     def register_openapi(self):
+        """Register the openapi route."""
         self.framework.register_route(
             self.root_path + '/openapi.json', 'GET', None, self.openapi
         )
 
     def openapi(self, request):
+        """The API openapi route."""
         return self.send_json(self.OpenApi(self).all())
 
     Property = Property

@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 class FlaskFramework(Framework):
     """
-    Unrest #Framework implementation for Flask.
+    Unrest #::unrest.framework#Framework implementation for Flask.
 
     Requires [flask](http://flask.pocoo.org/) to be installed.
     """

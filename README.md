@@ -1,4 +1,4 @@
-# unrest - <small>Simple sqlalchemy rest api generation.</small>
+# UnRest - <small>Simple sqlalchemy rest api generation.</small>
 
 
 ```python

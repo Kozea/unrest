@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 class TornadoFramework(Framework):
     """
-    Unrest #Framework implementation for Tornado.
+    Unrest #::unrest.framework#Framework implementation for Tornado.
 
     Requires [tornado](https://www.tornadoweb.org/) to be installed.
     """

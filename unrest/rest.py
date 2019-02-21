@@ -1,6 +1,5 @@
 import logging
 from contextlib import contextmanager
-from copy import deepcopy
 from functools import partial, wraps
 
 from sqlalchemy import and_, or_
@@ -75,9 +74,9 @@ class Rest(object):
         write_auth: A decorator that will be called on PUT, POST, DELETE
             and PATCH.
         validators: A mapping of field names and validation functions.
-            A validator function takes a `Rest.Validatable` object as parameter
-            and must return the final value for the field or raise a
-            `rest.ValidationError(reason)` (where `rest = Unrest()`)
+            A validator function takes a #::unrest.rest.Rest#Validatable
+            object as parameter and must return the final value for the field
+            or raise a `rest.ValidationError(reason)` (where `rest = Unrest()`)
         validation_error_code: The http return code when the validation fails.
             Defaults to 500
         primary_keys: A list of column names to use as primary_keys
@@ -89,8 +88,8 @@ class Rest(object):
         fixed: A mapping of column -> values which replaces the values
             present or not in the payload. Can be a callable, in this case it
             will be called at runtime with the payload as argument.
-        SerializeClass: An alternative #Serialize class.
-        DeserializeClass: An alternative #Deserialize class.
+        SerializeClass: An alternative #::unrest.coercers#Serialize class.
+        DeserializeClass: An alternative #::unrest.coercers#Deserialize class.
     """
 
     def __init__(
@@ -167,12 +166,12 @@ class Rest(object):
         """
         The GET method
 
-        No arguments: Returns all query elements. (/api/model/)
-        Primary keys: Returns the element in query with the primary keys.
-            (/api/model/pk)
+        - With no arguments: Returns all query elements. (/api/model/)
+        - With primary keys: Returns the element in query with the primary keys.
+        (/api/model/pk)
 
         # Arguments
-            payload: The json request content ignored for GET.
+            payload: The request content ignored for GET.
             pks: The primary keys in url if any.
         """
         if self.has(pks):
@@ -186,13 +185,13 @@ class Rest(object):
         """
         The PUT method
 
-        No arguments: If allow_batch set to true replace all the query elements
+        - With no arguments: If allow_batch set to true replace all the query elements
             with the ones in the request payload.
-        Primary keys: Create or replace the element associated
+        - With primary keys: Create or replace the element associated
             with the primary keys from the one in the request payload.
 
         # Arguments
-            payload: The json request content containing new elements.
+            payload: The request content containing new elements.
             pks: The primary keys in url if any.
         """
         if not payload:
@@ -235,11 +234,11 @@ class Rest(object):
         """
         The POST method
 
-        No arguments: Add element from request payload.
-        Primary keys: Correspond to new collection creation. Unused.
+        - With no arguments: Add element from request payload.
+        - With primary keys: Correspond to new collection creation. Unused.
 
         # Arguments
-            payload: The json request content containing the new element.
+            payload: The request content containing the new element.
             pks: The primary keys in url if any.
         """
         if self.has(pks):
@@ -264,11 +263,11 @@ class Rest(object):
         """
         The DELETE method
 
-        No arguments: If allow_batch set to true delete all query elements.
-        Primary keys: Delete the element associated with the primary keys.
+        - With no arguments: If allow_batch set to true delete all query elements.
+        - With primary keys: Delete the element associated with the primary keys.
 
         # Arguments
-            payload: The json request content ignored in DELETE.
+            payload: The request content ignored in DELETE.
             pks: The primary keys of the element to delete.
         """
         if self.has(pks):
@@ -296,12 +295,12 @@ class Rest(object):
         """
         The PATCH method
 
-        No arguments: If allow_batch set to true patch existing elements
+        - With no arguments: If allow_batch set to true patch existing elements
             with element attributes specified in the request payload.
-        Primary keys: Patch only one
+        - With primary keys: Patch only one
 
         # Arguments
-            payload: The json request content containing
+            payload: The request content containing
                 a list of attributes to be patched.
             pks: The primary keys of the element to patch.
         """
@@ -429,6 +428,9 @@ class Rest(object):
                 in parameter and returns a new query.
             **kwargs: Can be used to override Rest constructor arguments
                 (query is not supported)
+
+        # Returns
+        A #::unrest.rest#Rest endpoint copied from this one
         """
 
         assert not kwargs.get('query'), 'query is not supported on sub rest'
@@ -476,6 +478,15 @@ class Rest(object):
         }
 
     def deserialize(self, payload, item, blank_missing=True):
+        """
+        Deserialize the payload item in the provided item.
+
+        # Arguments
+            payload: The payload containing the item object
+            item: An instance of the model to put values in
+            blank_missing: Set non-provided by payload item attributes at None
+        """
+
         if blank_missing:
             columns = self.columns
         else:
@@ -489,6 +500,12 @@ class Rest(object):
         return self.DeserializeClass(payload, columns).merge(item)
 
     def deserialize_all(self, payload):
+        """
+        Deserialize all the payload items.
+
+        # Arguments
+            payload: The payload containing the item list
+        """
         for item in payload['objects']:
             self.set_defaults(item, self.columns)
         return self.DeserializeClass(payload, self.columns).create(self.Model)
@@ -503,13 +520,15 @@ class Rest(object):
         """
         Serialize all items and return a mapping containing:
 
-        # Arguments
-            objects: The serialized objects
-            primary_keys: The list of primary keys defined for this rest
-                endpoint
-            occurences: The number of total occurences (without limit)
-            offset if there's a query offset
-            limit if there's a query limit
+        # Returns
+        A dict containing:
+
+        - objects: The serialized objects
+        - primary_keys: The list of primary keys defined for this rest
+            endpoint
+        - occurences: The number of total occurences (without limit)
+        - offset if there's a query offset
+        - limit if there's a query limit
         """
 
         rv = {}
@@ -528,6 +547,7 @@ class Rest(object):
         return rv
 
     def set_defaults(self, payload, columns):
+        """Sets in payload item all the fixed and defaults values"""
         for name, column in columns.items():
             if name in self.fixed:
                 payload[name] = _call_me_maybe(self.fixed[name], payload)
@@ -535,6 +555,17 @@ class Rest(object):
                 payload[name] = _call_me_maybe(self.defaults[name], payload)
 
     class Validatable(object):
+        """
+        A validatable class that is used as validators argument.
+
+        # Arguments
+            value: The current field value
+            name: The current field name
+            item: The current item
+            ValidationError: The #::unrest.UnRest#ValidationError Exception
+                to raise on validation error.
+        """
+
         def __init__(self, value, name, item, ValidationError):
             self.value = value
             self.name = name
@@ -586,6 +617,17 @@ class Rest(object):
                 )
 
     def validate_all(self, items):
+        """
+        Calls validate on all the `items` and raise an error if any does not
+        validate.
+
+        # Arguments
+            items: A list of item to validate
+
+        # Raises
+        A #::unrest.UnRest#RestError on validation error
+        """
+
         errors = []
         for item in items:
             self.validate(item, errors=errors)
@@ -593,16 +635,40 @@ class Rest(object):
             self.raise_error(500, 'Validation Error', extra={'errors': errors})
 
     def raise_error(self, status, message, extra=None):
+        """Shortcut function to #::unrest.UnRest#raise_error."""
         self.unrest.raise_error(status, message, extra)
 
-    def wrap_native(self, method, method_fun, manual_commit=False):
-        @wraps(method_fun)
+    def wrap_route(self, method, route, manual_commit=False):
+        """
+        Wrap a method route method ( #get, #post, #put, #delete, #patch, #options )
+        with a function that takes a #::unrest.util#Request as parameters and:
+
+        - converts request parameters into primary keys values
+        - calls the current idiom #::unrest.idiom.Idiom#request_to_payload
+        - checks auth with `read_auth`, `write_auth` and `auth` if defined
+        - calls the wrapped `method` with the previously obtained payload
+        - commits the session if `manual_commit` is False and method is amongst
+            modification ones
+        - and finally calls #::unrest.idiom.Idiom#data_to_response with the
+            return value of the wrapped function to return
+            the #::unrest.util#Response
+
+        # Arguments
+            method: The current http method
+            route: The route associated with this http method
+            manual_commit: Set this to True to prevent auto commit after route call
+
+        # Returns
+        The #::unrest.util#Response of this request
+        """
+
+        @wraps(route)
         def wrapped(request):
             try:
                 pks = self.parameters_to_pks(request.parameters)
                 payload = self.idiom.request_to_payload(request)
 
-                decorated = method_fun
+                decorated = route
                 if method == 'GET' and self.read_auth:
                     decorated = self.read_auth(decorated)
                 if (
@@ -643,26 +709,40 @@ class Rest(object):
 
         return wrapped
 
-    def register_method(self, method, method_fun=None, manual_commit=False):
+    def register_method(self, method, route=None, manual_commit=False):
+        """
+        Register a `route` function associated with the http `method`.
+
+        # Arguments
+            method: The http method to register the route with
+            route: The route function, defaults to this rest.{method}
+            manual_commit: Set this to True to prevent auto commit after route call
+        """
         if method != 'OPTIONS':
             assert method in self.unrest.all, 'Unknown method %s' % method
-        method_fun = method_fun or getattr(self, method.lower())
-        method_fun = self.wrap_native(method, method_fun, manual_commit)
+        route = route or getattr(self, method.lower())
+        route = self.wrap_route(method, route, manual_commit)
         # str() for python 2 compat
-        method_fun.__name__ = str('_'.join((method,) + self.name_parts))
+        route.__name__ = str('_'.join((method,) + self.name_parts))
         self.unrest.framework.register_route(
-            self.path, method, self.primary_keys, method_fun
+            self.path, method, self.primary_keys, route
         )
 
     def has(self, pks):
+        """Returns whether the pks dict has values in it."""
         return pks and all(val is not None for val in pks.values())
 
     def get_from_pk(self, query, **pks):
+        """Get the item from `query` that has `**pks` or None if not found."""
         for key, val in pks.items():
             query = query.filter(getattr(self.Model, key) == val)
         return query.first()
 
     def get_all_from_pks(self, query, items_pks):
+        """
+        Get all items from `query` correponding to the primary keys `items_pks`
+        in one query.
+        """
         return query.filter(
             or_(
                 *[
@@ -679,16 +759,22 @@ class Rest(object):
 
     @contextmanager
     def query_request(self, request):
+        """
+        Context manager that sets the `_query_alterer` to the idiom alter_query
+        and restore it to identity at exit.
+        """
         self._query_alterer = partial(self.idiom.alter_query, request)
         yield
         self._query_alterer = _identity
 
     @property
     def session(self):
+        """Shortcut property to the #::unrest#UnRest session."""
         return self.unrest.session
 
     @property
     def query(self):
+        """Gets the current query associated to this Model."""
         query = getattr(self.Model, 'query', None)
         if not query or not isinstance(query, Query):
             query = self.session.query(self.Model)
@@ -696,28 +782,37 @@ class Rest(object):
 
     @property
     def undefered_query(self):
+        """Gets the query with all attributes undefered."""
         return self.query.options(Load(self.Model).undefer('*'))
 
     @property
     def name_parts(self):
+        """
+        Returns a tuple containing optionally the schema of this table and its
+        name.
+        """
         if self.table.schema:
             return (self.table.schema, self.name)
         return (self.name,)
 
     @property
     def path(self):
+        """Gets the root path of this endpoint."""
         return '/'.join((self.unrest.root_path,) + self.name_parts)
 
     @property
     def table(self):
+        """This Model table name."""
         return self.Model.__table__
 
     @property
     def mapper(self):
+        """Get the SQLAlchemy mapper of this Model."""
         return inspect(self.Model)
 
     @property
     def primary_keys(self):
+        """This model primary keys names."""
         if self._primary_keys:
             return self._primary_keys
 
@@ -728,6 +823,8 @@ class Rest(object):
 
     @property
     def columns(self):
+        """Gets all columns of this model `column_property` included."""
+
         def gen():
             for name, column in self.mapper.columns.items():
                 if name not in self.primary_keys:
