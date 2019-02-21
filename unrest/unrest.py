@@ -30,8 +30,7 @@ class UnRest(object):
         app: Your web application,
             can be set afterwards using #init_app
         session: Your sqlalchemy session,
-            can be set afterwards using #init_session
-            and `init_session` method.
+            can be set afterwards using the #init_session method.
         path: Default '/api', sets the root url path for your endpoints
         version: Adds a version to the root url path if specified
             (i.e. /api/v2)
@@ -172,7 +171,7 @@ class UnRest(object):
         raise self.RestError(status, message, extra)
 
     def __call__(self, *args, **kwargs):
-        """Returns a #unrest#Rest instance. See rest entry points."""
+        """Returns a #::unrest.rest#Rest instance. See rest entry points."""
 
         if self.IdiomClass is not None:
             kwargs.setdefault('IdiomClass', self.IdiomClass)
