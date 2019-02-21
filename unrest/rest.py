@@ -208,9 +208,8 @@ class Rest(object):
                 else:
                     payload[pk] = val
             existingItem = self.get_from_pk(self.query, **pks)
-            previousItem = deepcopy(existingItem)
             item = self.deserialize(payload, existingItem or self.Model())
-            self.validate(item, previousItem)
+            self.validate(item)
             if existingItem is None:
                 self.session.add(item)
             self.session.flush()
@@ -536,14 +535,13 @@ class Rest(object):
                 payload[name] = _call_me_maybe(self.defaults[name], payload)
 
     class Validatable(object):
-        def __init__(self, value, name, previous, next, ValidationError):
+        def __init__(self, value, name, item, ValidationError):
             self.value = value
             self.name = name
-            self.previous = previous
-            self.next = next
+            self.item = item
             self.ValidationError = ValidationError
 
-    def validate(self, item, existing=None, errors=None):
+    def validate(self, item, errors=None):
         """
         Validates all validators columns against validators.
 
@@ -568,7 +566,6 @@ class Rest(object):
                                 self.Validatable(
                                     getattr(item, key),
                                     key,
-                                    existing,
                                     item,
                                     self.unrest.ValidationError,
                                 )
