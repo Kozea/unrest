@@ -8,7 +8,7 @@
   <meta name="description" content="None">
   
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Home - unrest Documentation</title>
+  <title>Home - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="." class="icon icon-home"> unrest Documentation</a>
+        <a href="." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -53,7 +53,7 @@
     <a class="current" href=".">Home</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#unrest-simple-sqlalchemy-rest-api-generation">unrest - Simple sqlalchemy rest api generation.</a></li>
+    <li class="toctree-l2"><a href="#unrest-simple-sqlalchemy-rest-api-generation">UnRest - Simple sqlalchemy rest api generation.</a></li>
     
         <ul>
         
@@ -93,22 +93,23 @@
                     
     <a class="" href="coercers/">Serialization/Deserialization</a>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                <li class="">
+                    
     <a class="" href="framework/">Frameworks</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
     <a class="" href="idiom/">Idioms</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
+    <a class="" href="util/">Util</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="generators/">Generators</a>
+                </li>
+    </ul>
 	    </li>
           
         </ul>
@@ -121,7 +122,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href=".">unrest Documentation</a>
+        <a href=".">UnRest Documentation</a>
       </nav>
 
       
@@ -146,7 +147,7 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest-simple-sqlalchemy-rest-api-generation">unrest - <small>Simple sqlalchemy rest api generation.</small></h1>
+                <h1 id="unrest-simple-sqlalchemy-rest-api-generation">UnRest - <small>Simple sqlalchemy rest api generation.</small><a class="headerlink" href="#unrest-simple-sqlalchemy-rest-api-generation" title="Permanent link"></a></h1>
 <pre><code class="python">from unrest import UnRest
 # First, initialize UnRest with your web application
 rest = UnRest(app)
@@ -160,7 +161,7 @@ rest(Person)
 <pre><code class="python">rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH']) # or simply methods=rest.all
 </code></pre>
 
-<p>You will get both routes on the four methods. Please see <a href="https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URL_and_HTTP_methods">the wikipedia page</a> for their signification.</p>
+<p>You will get both routes (collection and member) on the four methods. Please see <a href="https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URI_and_HTTP_methods">the wikipedia page</a> for their signification.</p>
 <p>You can also override the default methods like this:</p>
 <pre><code class="python">person = rest(Person)
 
@@ -179,9 +180,9 @@ def get(payload, login=None):
     }
 </code></pre>
 
-<h2 id="documentation">Documentation</h2>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link"></a></h2>
 <p>Full documentation can be found at <a href="https://kozea.github.io/unrest/">kozea.github.io/unrest</a></p>
-<h2 id="example">Example</h2>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link"></a></h2>
 <p>Consider this simple web application:</p>
 <pre><code class="python">from datetime import timedelta
 
@@ -253,8 +254,8 @@ app.run(debug=True)
 </code></pre>
 
 <p>You will now have:</p>
-<h2 id="get">GET</h2>
-<h3 id="with-primary-keys-arguments">With primary keys arguments</h3>
+<h2 id="get">GET<a class="headerlink" href="#get" title="Permanent link"></a></h2>
+<h3 id="with-primary-keys-arguments">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/tree/1
 
 200 OK
@@ -286,7 +287,7 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h3 id="without-argument">Without argument</h3>
+<h3 id="without-argument">Without argument<a class="headerlink" href="#without-argument" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/tree
 
 200 OK
@@ -354,8 +355,8 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h2 id="put">PUT</h2>
-<h3 id="with-primary-keys-arguments_1">With primary keys arguments</h3>
+<h2 id="put">PUT<a class="headerlink" href="#put" title="Permanent link"></a></h2>
+<h3 id="with-primary-keys-arguments_1">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_1" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X PUT -H &quot;Content-Type: application/json&quot; -d '{
   &quot;name&quot;: &quot;cedar&quot;
 }'
@@ -387,7 +388,7 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h3 id="without-argument_1">Without argument</h3>
+<h3 id="without-argument_1">Without argument<a class="headerlink" href="#without-argument_1" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PUT -H &quot;Content-Type: application/json&quot; -d '{
   &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 22, &quot;name&quot;: &quot;mango&quot;}]
 }'
@@ -441,8 +442,8 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h2 id="post">POST</h2>
-<h3 id="with-primary-keys-arguments_2">With primary keys arguments</h3>
+<h2 id="post">POST<a class="headerlink" href="#post" title="Permanent link"></a></h2>
+<h3 id="with-primary-keys-arguments_2">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_2" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X POST -H &quot;Content-Type: application/json&quot;
 
 501 Not Implemented
@@ -451,7 +452,7 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h3 id="without-argument_2">Without argument</h3>
+<h3 id="without-argument_2">Without argument<a class="headerlink" href="#without-argument_2" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X POST -H &quot;Content-Type: application/json&quot; -d '{
   &quot;color&quot;: &quot;forestgreen&quot;, &quot;size&quot;: 3.14, &quot;age&quot;: 1.5926, &quot;tree_id&quot;: 3
 }'
@@ -524,8 +525,8 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h2 id="delete">DELETE</h2>
-<h3 id="with-primary-keys-arguments_3">With primary keys arguments</h3>
+<h2 id="delete">DELETE<a class="headerlink" href="#delete" title="Permanent link"></a></h2>
+<h3 id="with-primary-keys-arguments_3">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_3" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/fruit/3 -X DELETE
 
 200 OK
@@ -589,7 +590,7 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h3 id="without-argument_3">Without argument</h3>
+<h3 id="without-argument_3">Without argument<a class="headerlink" href="#without-argument_3" title="Permanent link"></a></h3>
 <p>Batch delete is not allowed on fruit:</p>
 <pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X DELETE
 
@@ -631,8 +632,8 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h2 id="patch">PATCH</h2>
-<h3 id="with-primary-keys-arguments_4">With primary keys arguments</h3>
+<h2 id="patch">PATCH<a class="headerlink" href="#patch" title="Permanent link"></a></h2>
+<h3 id="with-primary-keys-arguments_4">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_4" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/fruit/1 -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
   &quot;color&quot;: &quot;blue&quot;
 }'
@@ -652,7 +653,7 @@ app.run(debug=True)
 }
 </code></pre>
 
-<h3 id="without-argument_4">Without argument</h3>
+<h3 id="without-argument_4">Without argument<a class="headerlink" href="#without-argument_4" title="Permanent link"></a></h3>
 <pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
   &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 3, &quot;name&quot;: &quot;mango&quot;}]
 }'
@@ -740,5 +741,5 @@ app.run(debug=True)
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-02-19 15:03:51
+Build Date UTC : 2019-02-21 14:16:46
 -->

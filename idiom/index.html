@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Idioms - unrest Documentation</title>
+  <title>Idioms - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> unrest Documentation</a>
+        <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -69,25 +69,62 @@
                     
     <a class="" href="../coercers/">Serialization/Deserialization</a>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                <li class="">
+                    
     <a class="" href="../framework/">Frameworks</a>
-	    </li>
-          
-            <li class="toctree-l1 current">
-		
+                </li>
+                <li class=" current">
+                    
     <a class="current" href="./">Idioms</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#unrestidiom">unrest.idiom</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#idiom">Idiom</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#unrestidiomunrest">unrest.idiom.unrest</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#unrestidiom_1">UnRestIdiom</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#unrestidiomyaml">unrest.idiom.yaml</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#yamlidiom">YamlIdiom</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#unrestidiomjson_server">unrest.idiom.json_server</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#jsonserveridiom">JsonServerIdiom</a></li>
+        
+        </ul>
+    
+
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
+    <a class="" href="../util/">Util</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../generators/">Generators</a>
+                </li>
+    </ul>
 	    </li>
           
         </ul>
@@ -100,7 +137,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">unrest Documentation</a>
+        <a href="..">UnRest Documentation</a>
       </nav>
 
       
@@ -110,6 +147,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="..">Docs</a> &raquo;</li>
     
+      
+        
+          <li>API Documentation &raquo;</li>
+        
       
     
     <li>Idioms</li>
@@ -125,28 +166,93 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest.idiom.unrest">unrest.idiom.unrest</h1>
+                <h1 id="unrestidiom">unrest.idiom<a class="headerlink" href="#unrestidiom" title="Permanent link"></a></h1>
+<h2 id="idiom">Idiom<a class="headerlink" href="#idiom" title="Permanent link"></a></h2>
+<pre><code class="python">Idiom(self, rest)
+</code></pre>
 
-<h1 id="unrest.idiom.yaml">unrest.idiom.yaml</h1>
+<p>UnRest Idiom abstract class.</p>
+<p>Idioms are a way to alter how UnRest speaks with the rest of the world.
+The default implementation <a href="./#unrestidiom_1" title="unrest.idiom.unrest.UnRestIdiom"><code>UnRestIdiom</code></a> parses json
+from request and generates json from response.</p>
+<p>To implement an idiom you have to implement the <code>request_to_payload</code> and the
+<code>data_to_response</code> methods described below.</p>
+<p>You can also override the <code>alter_query</code> method to add functionality to the
+idiom based on the <code>request</code>.
+(i.e. implementing sort / filter query parameters)</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>rest</strong>: The current rest instance</li>
+</ul>
+<h3 id="request_to_payload">request_to_payload<a class="headerlink" href="#request_to_payload" title="Permanent link"></a></h3>
+<pre><code class="python">Idiom.request_to_payload(self, request)
+</code></pre>
 
-<h1 id="unrest.idiom.json_server">unrest.idiom.json_server</h1>
+<p>This method takes a <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a> <code>request</code> parameter and
+returns a payload dict.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>request</strong>: The <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a> request</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>A dict containing the request payload data.</p>
+<h3 id="data_to_response">data_to_response<a class="headerlink" href="#data_to_response" title="Permanent link"></a></h3>
+<pre><code class="python">Idiom.data_to_response(self, data, request, status=200)
+</code></pre>
 
-<h2 id="unrest.idiom.json_server.JsonServerIdiom">JsonServerIdiom</h2>
+<p>This method takes a data dict returned by the route and return
+a <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> object.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>data</strong>: The data dict returned by the route</li>
+<li><strong>request</strong>: The original <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a> request</li>
+<li><strong>status</strong>: The current status (500 if route raised an error)</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>An <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> response object.</p>
+<h3 id="alter_query">alter_query<a class="headerlink" href="#alter_query" title="Permanent link"></a></h3>
+<pre><code class="python">Idiom.alter_query(self, request, query)
+</code></pre>
 
+<p>This method takes the <code>request</code> and the current <code>query</code> and returns
+a modified <code>query</code> from the <code>request</code>.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>data</strong>: The data dict returned by the route</li>
+<li><strong>request</strong>: The original <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a> request</li>
+<li><strong>status</strong>: The current status (500 if route raised an error)</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>The modified <code>query</code>.</p>
+<h1 id="unrestidiomunrest">unrest.idiom.unrest<a class="headerlink" href="#unrestidiomunrest" title="Permanent link"></a></h1>
+<h2 id="unrestidiom_1">UnRestIdiom<a class="headerlink" href="#unrestidiom_1" title="Permanent link"></a></h2>
+<pre><code class="python">UnRestIdiom(self, rest)
+</code></pre>
+
+<p>The default UnRest implementation.</p>
+<p>Parses request payload as json.
+Serialize data as json.
+Can return a 404 on empty GET if <code>empty_get_as_404</code> is set as True in the
+Unrest instance.</p>
+<h1 id="unrestidiomyaml">unrest.idiom.yaml<a class="headerlink" href="#unrestidiomyaml" title="Permanent link"></a></h1>
+<h2 id="yamlidiom">YamlIdiom<a class="headerlink" href="#yamlidiom" title="Permanent link"></a></h2>
+<pre><code class="python">YamlIdiom(self, rest)
+</code></pre>
+
+<p>This is a very basic yaml implementation.</p>
+<p>It does the same thing as the <a href="./#unrestidiom_1" title="unrest.idiom.unrest.UnRestIdiom"><code>UnRestIdiom</code></a> but with
+yaml instead of json.</p>
+<p>Requires pyyaml to be installed.</p>
+<h1 id="unrestidiomjson_server">unrest.idiom.json_server<a class="headerlink" href="#unrestidiomjson_server" title="Permanent link"></a></h1>
+<h2 id="jsonserveridiom">JsonServerIdiom<a class="headerlink" href="#jsonserveridiom" title="Permanent link"></a></h2>
 <pre><code class="python">JsonServerIdiom(self, rest)
 </code></pre>
 
-<h3 id="unrest.idiom.json_server.JsonServerIdiom.PK_DELIM">PK_DELIM</h3>
-
-<p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p>
+<p>The <a href="https://github.com/typicode/json-server">JSON Server</a> idiom implementation.</p>
+<p>Currently support all basic queries and first-level (no nested props)
+filter, sort, pagination, slice, operators (<code>_gte</code>, <code>_lte</code>, <code>_ne</code>, <code>_like</code>)
+and <code>q</code> full-text search (which works better with
+<a href="https://sqlalchemy-searchable.readthedocs.io">SQLAlchemy-Searchable</a>)</p>
               
             </div>
           </div>
@@ -154,7 +260,7 @@ errors defaults to 'strict'.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../generators/" class="btn btn-neutral float-right" title="Generators">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../util/" class="btn btn-neutral float-right" title="Util">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../framework/" class="btn btn-neutral" title="Frameworks"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -188,7 +294,7 @@ errors defaults to 'strict'.</p>
         <span><a href="../framework/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../generators/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../util/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

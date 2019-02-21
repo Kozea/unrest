@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Frameworks - unrest Documentation</title>
+  <title>Frameworks - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> unrest Documentation</a>
+        <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -69,25 +69,62 @@
                     
     <a class="" href="../coercers/">Serialization/Deserialization</a>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1 current">
-		
+                <li class=" current">
+                    
     <a class="current" href="./">Frameworks</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#unrestframework">unrest.framework</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#framework">Framework</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#unrestframeworkhttp_server">unrest.framework.http_server</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#httpserverframework">HTTPServerFramework</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#unrestframeworkflask">unrest.framework.flask</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#flaskframework">FlaskFramework</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#unrestframeworktornado">unrest.framework.tornado</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#tornadoframework">TornadoFramework</a></li>
+        
+        </ul>
+    
+
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
     <a class="" href="../idiom/">Idioms</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
+    <a class="" href="../util/">Util</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../generators/">Generators</a>
+                </li>
+    </ul>
 	    </li>
           
         </ul>
@@ -100,7 +137,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">unrest Documentation</a>
+        <a href="..">UnRest Documentation</a>
       </nav>
 
       
@@ -110,6 +147,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="..">Docs</a> &raquo;</li>
     
+      
+        
+          <li>API Documentation &raquo;</li>
+        
       
     
     <li>Frameworks</li>
@@ -125,68 +166,64 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest.framework">unrest.framework</h1>
-
-<h2 id="unrest.framework.Framework">Framework</h2>
-
+                <h1 id="unrestframework">unrest.framework<a class="headerlink" href="#unrestframework" title="Permanent link"></a></h1>
+<h2 id="framework">Framework<a class="headerlink" href="#framework" title="Permanent link"></a></h2>
 <pre><code class="python">Framework(self, app, prefix)
 </code></pre>
 
-<p>UnRest Framework abstract class.
-Framework are instanciated with an {app} object which should be your
-framework instance and the {prefix} of this UnRest instance.</p>
+<p>UnRest Framework abstract class.</p>
+<p>Framework are instanciated with an <code>app</code> object which should be
+your framework instance and the <code>prefix</code> of this UnRest instance.</p>
 <p>You must implement the <code>register_route</code> method if you want to
 implement you own framework.</p>
-<h3 id="unrest.framework.Framework.url">url</h3>
-
-<p>Return the api url root
-<h3 id="unrest.framework.Framework.register_route">register_route</h3></p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>app</strong>: Your framework instance used in <code>register_route</code> to register
+        route.</li>
+<li><strong>prefix</strong>: The current UnRest url prefix ('api' by default)</li>
+</ul>
+<h3 id="url">url<a class="headerlink" href="#url" title="Permanent link"></a></h3>
+<p>A property returning the api url root.
+(Used in OPTIONS and openapi genration)</p>
+<h3 id="register_route">register_route<a class="headerlink" href="#register_route" title="Permanent link"></a></h3>
 <pre><code class="python">Framework.register_route(self, path, method, parameters, function)
 </code></pre>
 
-<p>This method is called by your rest endpoints for each {path} and
-each {method} that should respond with the {function}.
-The route should allow {optionally} the {parameters} within the
+<p>This method is called by your rest endpoints for each <code>path</code> and
+each <code>method</code> that should respond with the <code>function</code>.
+The route should allow optionally the <code>parameters</code> within the
 url. These parameters represent the primary keys.</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>path</strong>: The url of the endoint without arguments. ('/api/person')</li>
 <li><strong>method</strong>: The HTTP method to register the route on.</li>
 <li><strong>parameters</strong>: The primary keys of the model that can be given
-    after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
+        after the path. <code>PrimaryKey('id'), PrimaryKey('type')) -&gt; '/api/person/&lt;id&gt;/&lt;type&gt;'</code></li>
 <li><strong>function</strong>: The route function</li>
 </ul>
-<h1 id="unrest.framework.http_server">unrest.framework.http_server</h1>
-
-<h2 id="unrest.framework.http_server.HTTPServerFramework">HTTPServerFramework</h2>
-
+<h1 id="unrestframeworkhttp_server">unrest.framework.http_server<a class="headerlink" href="#unrestframeworkhttp_server" title="Permanent link"></a></h1>
+<h2 id="httpserverframework">HTTPServerFramework<a class="headerlink" href="#httpserverframework" title="Permanent link"></a></h2>
 <pre><code class="python">HTTPServerFramework(self, app, prefix)
 </code></pre>
 
-<p>Unrest <code>Framework</code> implementation for http.server.HTTPServer compatible app.
-This exemple implementation requires no external library.</p>
-<h1 id="unrest.framework.flask">unrest.framework.flask</h1>
-
-<h2 id="unrest.framework.flask.FlaskFramework">FlaskFramework</h2>
-
+<p>Unrest <a href="./#framework" title="unrest.framework.Framework"><code>Framework</code></a> implementation for
+<a href="https://docs.python.org/3/library/http.server.html">http.server.HTTPServer</a>
+compatible app.</p>
+<p>This exemple implementation requires no external library.</p>
+<h1 id="unrestframeworkflask">unrest.framework.flask<a class="headerlink" href="#unrestframeworkflask" title="Permanent link"></a></h1>
+<h2 id="flaskframework">FlaskFramework<a class="headerlink" href="#flaskframework" title="Permanent link"></a></h2>
 <pre><code class="python">FlaskFramework(self, app, prefix)
 </code></pre>
 
-<p>Unrest <code>Framework</code> implementation for Flask.
-Requires <code>flask</code> to be installed.
-<h3 id="unrest.framework.flask.FlaskFramework.url">url</h3></p>
-<p>Return the api url root</p>
-<h1 id="unrest.framework.tornado">unrest.framework.tornado</h1>
-
-<h2 id="unrest.framework.tornado.TornadoFramework">TornadoFramework</h2>
-
+<p>Unrest <a href="./#framework" title="unrest.framework.Framework"><code>Framework</code></a> implementation for Flask.</p>
+<p>Requires <a href="http://flask.pocoo.org/">flask</a> to be installed.</p>
+<h1 id="unrestframeworktornado">unrest.framework.tornado<a class="headerlink" href="#unrestframeworktornado" title="Permanent link"></a></h1>
+<h2 id="tornadoframework">TornadoFramework<a class="headerlink" href="#tornadoframework" title="Permanent link"></a></h2>
 <pre><code class="python">TornadoFramework(self, app, prefix)
 </code></pre>
 
-<p>Unrest <code>Framework</code> implementation for Tornado.
-Requires <code>tornado</code> to be installed.
-<h3 id="unrest.framework.tornado.TornadoFramework.url">url</h3></p>
-<p>Return the api url root</p>
+<p>Unrest <a href="./#framework" title="unrest.framework.Framework"><code>Framework</code></a> implementation for Tornado.</p>
+<p>Requires <a href="https://www.tornadoweb.org/">tornado</a> to be installed.</p>
               
             </div>
           </div>

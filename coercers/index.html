@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Serialization/Deserialization - unrest Documentation</title>
+  <title>Serialization/Deserialization - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> unrest Documentation</a>
+        <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -70,24 +70,38 @@
     <a class="current" href="./">Serialization/Deserialization</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#unrestcoercers">unrest.coercers</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#property">Property</a></li>
+        
+            <li><a class="toctree-l4" href="#serialize">Serialize</a></li>
+        
+            <li><a class="toctree-l4" href="#deserialize">Deserialize</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                <li class="">
+                    
     <a class="" href="../framework/">Frameworks</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
     <a class="" href="../idiom/">Idioms</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
+    <a class="" href="../util/">Util</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../generators/">Generators</a>
+                </li>
+    </ul>
 	    </li>
           
         </ul>
@@ -100,7 +114,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">unrest Documentation</a>
+        <a href="..">UnRest Documentation</a>
       </nav>
 
       
@@ -129,10 +143,20 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest.coercers">unrest.coercers</h1>
+                <h1 id="unrestcoercers">unrest.coercers<a class="headerlink" href="#unrestcoercers" title="Permanent link"></a></h1>
+<h2 id="property">Property<a class="headerlink" href="#property" title="Permanent link"></a></h2>
+<pre><code class="python">Property(self, name, type=None, formatter=None)
+</code></pre>
 
-<h2 id="unrest.coercers.Serialize">Serialize</h2>
-
+<p>A Property wrapper used instead of a string in a <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a>
+properties parameter.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>name</strong>: This property name</li>
+<li><strong>type</strong>: The sqlalchemy type used for type coercion</li>
+<li><strong>formatter</strong>: An optional function to transform the parameter as string</li>
+</ul>
+<h2 id="serialize">Serialize<a class="headerlink" href="#serialize" title="Permanent link"></a></h2>
 <pre><code class="python">Serialize(self, model, columns, properties, relationships)
 </code></pre>
 
@@ -161,18 +185,17 @@ rest = UnRest(app, session, SerializeClass=BetterSerialize)
 <li><strong>properties</strong>: The list of properties to serialize.</li>
 <li><strong>relationships</strong>: The list of relationships to serialize.</li>
 </ul>
-<h3 id="unrest.coercers.Serialize.dict">dict</h3>
-
+<h3 id="dict">dict<a class="headerlink" href="#dict" title="Permanent link"></a></h3>
 <pre><code class="python">Serialize.dict(self)
 </code></pre>
 
-<p>Serialize the given model to a JSON compatible dict
-<h2 id="unrest.coercers.Deserialize">Deserialize</h2></p>
+<p>Serialize the given model to a JSON compatible dict</p>
+<h2 id="deserialize">Deserialize<a class="headerlink" href="#deserialize" title="Permanent link"></a></h2>
 <pre><code class="python">Deserialize(self, payload, columns)
 </code></pre>
 
 <p>Base deserializer class</p>
-<p>Casts JSON data back to compatible python sqlalchemy type.</p>
+<p>Casts raw data back to compatible python sqlalchemy type.</p>
 <p>Not all types are implemented as of now and it's fairly easy to add:
 Just add a <code>deserialize_type</code> method for <code>type</code> and it shall work.</p>
 <p>The deserialize class can be configured with the rest function and
@@ -190,16 +213,15 @@ rest = UnRest(app, session, DeserializeClass=BetterDeserialize)
 
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>payload</strong>: The JSON payload to deserialize</li>
+<li><strong>payload</strong>: The payload to deserialize</li>
 <li><strong>columns</strong>: The list of columns to deserialize</li>
 </ul>
-<h3 id="unrest.coercers.Deserialize.merge">merge</h3>
-
+<h3 id="merge">merge<a class="headerlink" href="#merge" title="Permanent link"></a></h3>
 <pre><code class="python">Deserialize.merge(self, item, payload=None)
 </code></pre>
 
-<p>Deserialize the given payload into the existing sqlalchemy <code>item</code>
-<h3 id="unrest.coercers.Deserialize.create">create</h3></p>
+<p>Deserialize the given payload into the existing sqlalchemy <code>item</code></p>
+<h3 id="create">create<a class="headerlink" href="#create" title="Permanent link"></a></h3>
 <pre><code class="python">Deserialize.create(self, factory)
 </code></pre>
 

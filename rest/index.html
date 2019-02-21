@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Rest entry points - unrest Documentation</title>
+  <title>Rest entry points - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> unrest Documentation</a>
+        <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -66,28 +66,38 @@
     <a class="current" href="./">Rest entry points</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#unrestrest">unrest.rest</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#rest">Rest</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
                 <li class="">
                     
     <a class="" href="../coercers/">Serialization/Deserialization</a>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                <li class="">
+                    
     <a class="" href="../framework/">Frameworks</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
     <a class="" href="../idiom/">Idioms</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
+    <a class="" href="../util/">Util</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../generators/">Generators</a>
+                </li>
+    </ul>
 	    </li>
           
         </ul>
@@ -100,7 +110,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">unrest Documentation</a>
+        <a href="..">UnRest Documentation</a>
       </nav>
 
       
@@ -129,22 +139,8 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest.rest">unrest.rest</h1>
-
-<h2 id="unrest.rest.call_me_maybe">call_me_maybe</h2>
-
-<pre><code class="python">call_me_maybe(fun_or_value, *args, **kwargs)
-</code></pre>
-
-<p>Call first argument {fun_or_value} with {<em>args}, {</em>*kwargs}
-if it is callable, return it otherwise.</p>
-<h2 id="unrest.rest.identity">identity</h2>
-
-<pre><code class="python">identity(arg)
-</code></pre>
-
-<p>Identity function, return {arg}
-<h2 id="unrest.rest.Rest">Rest</h2></p>
+                <h1 id="unrestrest">unrest.rest<a class="headerlink" href="#unrestrest" title="Permanent link"></a></h1>
+<h2 id="rest">Rest<a class="headerlink" href="#rest" title="Permanent link"></a></h2>
 <pre><code class="python">Rest(self, unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, properties=None, relationships=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, validators=None, validation_error_code=500, primary_keys=None, defaults=None, fixed=None, IdiomClass=&lt;class 'unrest.idiom.unrest.UnRestIdiom'&gt;, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
 </code></pre>
 
@@ -187,9 +183,9 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 <li><strong>write_auth</strong>: A decorator that will be called on PUT, POST, DELETE
         and PATCH.</li>
 <li><strong>validators</strong>: A mapping of field names and validation functions.
-        A validator function takes a <code>Rest.Validatable</code> object as parameter
-        and must return the final value for the field or raise a
-        <code>rest.ValidationError(reason)</code> (where <code>rest = Unrest()</code>)</li>
+        A validator function takes a <a href="./#validatable" title="unrest.rest.Rest.Validatable"><code>Validatable</code></a>
+        object as parameter and must return the final value for the field
+        or raise a <code>rest.ValidationError(reason)</code> (where <code>rest = Unrest()</code>)</li>
 <li><strong>validation_error_code</strong>: The http return code when the validation fails.
         Defaults to 500</li>
 <li><strong>primary_keys</strong>: A list of column names to use as primary_keys
@@ -201,88 +197,110 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
 <li><strong>fixed</strong>: A mapping of column -&gt; values which replaces the values
         present or not in the payload. Can be a callable, in this case it
         will be called at runtime with the payload as argument.</li>
-<li><strong>SerializeClass</strong>: An alternative <code>Serialize</code> class.</li>
-<li><strong>DeserializeClass</strong>: An alternative <code>Deserialize</code> class.</li>
+<li><strong>SerializeClass</strong>: An alternative <a href="../coercers/#serialize" title="unrest.coercers.Serialize"><code>Serialize</code></a> class.</li>
+<li><strong>DeserializeClass</strong>: An alternative <a href="../coercers/#deserialize" title="unrest.coercers.Deserialize"><code>Deserialize</code></a> class.</li>
 </ul>
-<h3 id="unrest.rest.Rest.get">get</h3>
-
+<h3 id="columns">columns<a class="headerlink" href="#columns" title="Permanent link"></a></h3>
+<p>Gets all columns of this model <code>column_property</code> included.</p>
+<h3 id="mapper">mapper<a class="headerlink" href="#mapper" title="Permanent link"></a></h3>
+<p>Get the SQLAlchemy mapper of this Model.</p>
+<h3 id="name_parts">name_parts<a class="headerlink" href="#name_parts" title="Permanent link"></a></h3>
+<p>Returns a tuple containing optionally the schema of this table and its
+name.</p>
+<h3 id="path">path<a class="headerlink" href="#path" title="Permanent link"></a></h3>
+<p>Gets the root path of this endpoint.</p>
+<h3 id="primary_keys">primary_keys<a class="headerlink" href="#primary_keys" title="Permanent link"></a></h3>
+<p>This model primary keys names.</p>
+<h3 id="query">query<a class="headerlink" href="#query" title="Permanent link"></a></h3>
+<p>Gets the current query associated to this Model.</p>
+<h3 id="session">session<a class="headerlink" href="#session" title="Permanent link"></a></h3>
+<p>Shortcut property to the <a href="../unrest/#unrest" title="unrest.UnRest"><code>UnRest</code></a> session.</p>
+<h3 id="table">table<a class="headerlink" href="#table" title="Permanent link"></a></h3>
+<p>This Model table name.</p>
+<h3 id="undefered_query">undefered_query<a class="headerlink" href="#undefered_query" title="Permanent link"></a></h3>
+<p>Gets the query with all attributes undefered.</p>
+<h3 id="get">get<a class="headerlink" href="#get" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.get(self, payload, **pks)
 </code></pre>
 
 <p>The GET method</p>
-<p>No arguments: Returns all query elements. (/api/model/)
-Primary keys: Returns the element in query with the primary keys.
-    (/api/model/pk)</p>
+<ul>
+<li>With no arguments: Returns all query elements. (/api/model/)</li>
+<li>With primary keys: Returns the element in query with the primary keys.
+(/api/model/pk)</li>
+</ul>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>payload</strong>: The json request content ignored for GET.</li>
+<li><strong>payload</strong>: The request content ignored for GET.</li>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
-<h3 id="unrest.rest.Rest.put">put</h3>
-
+<h3 id="put">put<a class="headerlink" href="#put" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.put(self, payload, **pks)
 </code></pre>
 
 <p>The PUT method</p>
-<p>No arguments: If allow_batch set to true replace all the query elements
-    with the ones in the request payload.
-Primary keys: Create or replace the element associated
-    with the primary keys from the one in the request payload.</p>
+<ul>
+<li>With no arguments: If allow_batch set to true replace all the query elements
+    with the ones in the request payload.</li>
+<li>With primary keys: Create or replace the element associated
+    with the primary keys from the one in the request payload.</li>
+</ul>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>payload</strong>: The json request content containing new elements.</li>
+<li><strong>payload</strong>: The request content containing new elements.</li>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
-<h3 id="unrest.rest.Rest.post">post</h3>
-
+<h3 id="post">post<a class="headerlink" href="#post" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.post(self, payload, **pks)
 </code></pre>
 
 <p>The POST method</p>
-<p>No arguments: Add element from request payload.
-Primary keys: Correspond to new collection creation. Unused.</p>
+<ul>
+<li>With no arguments: Add element from request payload.</li>
+<li>With primary keys: Correspond to new collection creation. Unused.</li>
+</ul>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>payload</strong>: The json request content containing the new element.</li>
+<li><strong>payload</strong>: The request content containing the new element.</li>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
-<h3 id="unrest.rest.Rest.delete">delete</h3>
-
+<h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.delete(self, payload, **pks)
 </code></pre>
 
 <p>The DELETE method</p>
-<p>No arguments: If allow_batch set to true delete all query elements.
-Primary keys: Delete the element associated with the primary keys.</p>
+<ul>
+<li>With no arguments: If allow_batch set to true delete all query elements.</li>
+<li>With primary keys: Delete the element associated with the primary keys.</li>
+</ul>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>payload</strong>: The json request content ignored in DELETE.</li>
+<li><strong>payload</strong>: The request content ignored in DELETE.</li>
 <li><strong>pks</strong>: The primary keys of the element to delete.</li>
 </ul>
-<h3 id="unrest.rest.Rest.patch">patch</h3>
-
+<h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.patch(self, payload, **pks)
 </code></pre>
 
 <p>The PATCH method</p>
-<p>No arguments: If allow_batch set to true patch existing elements
-    with element attributes specified in the request payload.
-Primary keys: Patch only one</p>
+<ul>
+<li>With no arguments: If allow_batch set to true patch existing elements
+    with element attributes specified in the request payload.</li>
+<li>With primary keys: Patch only one</li>
+</ul>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>payload</strong>: The json request content containing
+<li><strong>payload</strong>: The request content containing
         a list of attributes to be patched.</li>
 <li><strong>pks</strong>: The primary keys of the element to patch.</li>
 </ul>
-<h3 id="unrest.rest.Rest.options">options</h3>
-
+<h3 id="options">options<a class="headerlink" href="#options" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.options(self, payload, **pks)
 </code></pre>
 
 <p>The OPTIONS method</p>
 <p>Returns a description of this rest endpoint.</p>
-<h3 id="unrest.rest.Rest.declare">declare</h3>
-
+<h3 id="declare">declare<a class="headerlink" href="#declare" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.declare(self, method, manual_commit=False)
 </code></pre>
 
@@ -306,13 +324,12 @@ def get(payload, fruit_id=None):
 <li><strong>method</strong>: The method to override ('GET' for exemple)</li>
 <li><strong>manual_commit</strong>: Don't auto commit after the method.</li>
 </ul>
-<h3 id="unrest.rest.Rest.sub">sub</h3>
-
+<h3 id="sub">sub<a class="headerlink" href="#sub" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.sub(self, query_factory, **kwargs)
 </code></pre>
 
 <p>This methods return a copy of the current rest endpoint and takes a
-{query_factory} argument to alter the current query.</p>
+<code>query_factory</code> argument to alter the current query.</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>query_factory</strong>: A function that takes the original query
@@ -320,31 +337,153 @@ def get(payload, fruit_id=None):
 <li><strong>**kwargs</strong>: Can be used to override Rest constructor arguments
         (query is not supported)</li>
 </ul>
-<h3 id="unrest.rest.Rest.parameters_to_pks">parameters_to_pks</h3>
-
+<p><strong>Returns</strong></p>
+<p>A <a href="./#rest" title="unrest.rest.Rest"><code>Rest</code></a> endpoint copied from this one</p>
+<h3 id="parameters_to_pks">parameters_to_pks<a class="headerlink" href="#parameters_to_pks" title="Permanent link"></a></h3>
 <pre><code class="python">Rest.parameters_to_pks(self, parameters)
 </code></pre>
 
 <p>Transform query parameters into primary keys mapping with
 deserialized values.</p>
-<h3 id="unrest.rest.Rest.serialize">serialize</h3>
-
-<pre><code class="python">Rest.serialize(self, items)
+<h3 id="deserialize">deserialize<a class="headerlink" href="#deserialize" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.deserialize(self, payload, item, blank_missing=True)
 </code></pre>
 
-<p>Serialize all items and return a mapping containing:
-- objects: The serialized objects
-- primary_keys: The list of primary keys defined for this rest endpoint
-- occurences: The number of total occurences (without limit)
-- offset if there's a query offset
-- limit if there's a query limit</p>
-<h3 id="unrest.rest.Rest.validate">validate</h3>
-
-<pre><code class="python">Rest.validate(self, item, existing=None, errors=None)
+<p>Deserialize the payload item in the provided item.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The payload containing the item object</li>
+<li><strong>item</strong>: An instance of the model to put values in</li>
+<li><strong>blank_missing</strong>: Set non-provided by payload item attributes at None</li>
+</ul>
+<h3 id="deserialize_all">deserialize_all<a class="headerlink" href="#deserialize_all" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.deserialize_all(self, payload)
 </code></pre>
 
-<p>Validates all validators columns against validators.
-Raise RestError if validation errors.</p>
+<p>Deserialize all the payload items.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The payload containing the item list</li>
+</ul>
+<h3 id="serialize">serialize<a class="headerlink" href="#serialize" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.serialize(self, item)
+</code></pre>
+
+<p>Serialize an <code>item</code> with the given <code>SerializeClass</code></p>
+<h3 id="serialize_all">serialize_all<a class="headerlink" href="#serialize_all" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.serialize_all(self, items)
+</code></pre>
+
+<p>Serialize all items and return a mapping containing:</p>
+<p><strong>Returns</strong></p>
+<p><code>A dict containing</code>:</p>
+<ul>
+<li>objects: The serialized objects</li>
+<li>primary_keys: The list of primary keys defined for this rest
+    endpoint</li>
+<li>occurences: The number of total occurences (without limit)</li>
+<li>offset if there's a query offset</li>
+<li>limit if there's a query limit</li>
+</ul>
+<h3 id="set_defaults">set_defaults<a class="headerlink" href="#set_defaults" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.set_defaults(self, payload, columns)
+</code></pre>
+
+<p>Sets in payload item all the fixed and defaults values</p>
+<h3 id="validatable">Validatable<a class="headerlink" href="#validatable" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.Validatable(self, value, name, item, ValidationError)
+</code></pre>
+
+<p>A validatable class that is used as validators argument.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>value</strong>: The current field value</li>
+<li><strong>name</strong>: The current field name</li>
+<li><strong>item</strong>: The current item</li>
+<li><strong>ValidationError</strong>: The <a href="../unrest/#validationerror" title="unrest.UnRest.ValidationError"><code>ValidationError</code></a> Exception
+        to raise on validation error.</li>
+</ul>
+<h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.validate(self, item, errors=None)
+</code></pre>
+
+<p>Validates all validators columns against validators.</p>
+<p>Raise RestError if validation errors.</p>
+<h3 id="validate_all">validate_all<a class="headerlink" href="#validate_all" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.validate_all(self, items)
+</code></pre>
+
+<p>Calls validate on all the <code>items</code> and raise an error if any does not
+validate.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>items</strong>: A list of item to validate</li>
+</ul>
+<p><strong>Raises</strong></p>
+<p>A <a href="../unrest/#resterror" title="unrest.UnRest.RestError"><code>RestError</code></a> on validation error</p>
+<h3 id="raise_error">raise_error<a class="headerlink" href="#raise_error" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.raise_error(self, status, message, extra=None)
+</code></pre>
+
+<p>Shortcut function to <a href="../unrest/#raise_error" title="unrest.UnRest.raise_error"><code>raise_error</code></a>.</p>
+<h3 id="wrap_route">wrap_route<a class="headerlink" href="#wrap_route" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.wrap_route(self, method, route, manual_commit=False)
+</code></pre>
+
+<p>Wrap a method route method ( <a href="#get"><code>get</code></a>, <a href="#post"><code>post</code></a>, <a href="#put"><code>put</code></a>, <a href="#delete"><code>delete</code></a>, <a href="#patch"><code>patch</code></a>, <a href="#options"><code>options</code></a> )
+with a function that takes a <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a> as parameters and:</p>
+<ul>
+<li>converts request parameters into primary keys values</li>
+<li>calls the current idiom <a href="../idiom/#request_to_payload" title="unrest.idiom.Idiom.request_to_payload"><code>request_to_payload</code></a></li>
+<li>checks auth with <code>read_auth</code>, <code>write_auth</code> and <code>auth</code> if defined</li>
+<li>calls the wrapped <code>method</code> with the previously obtained payload</li>
+<li>commits the session if <code>manual_commit</code> is False and method is amongst
+    modification ones</li>
+<li>and finally calls <a href="../idiom/#data_to_response" title="unrest.idiom.Idiom.data_to_response"><code>data_to_response</code></a> with the
+    return value of the wrapped function to return
+    the <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a></li>
+</ul>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>method</strong>: The current http method</li>
+<li><strong>route</strong>: The route associated with this http method</li>
+<li><strong>manual_commit</strong>: Set this to True to prevent auto commit after route call</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>The <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> of this request</p>
+<h3 id="register_method">register_method<a class="headerlink" href="#register_method" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.register_method(self, method, route=None, manual_commit=False)
+</code></pre>
+
+<p>Register a <code>route</code> function associated with the http <code>method</code>.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>method</strong>: The http method to register the route with</li>
+<li><strong>route</strong>: The route function, defaults to this rest.{method}</li>
+<li><strong>manual_commit</strong>: Set this to True to prevent auto commit after route call</li>
+</ul>
+<h3 id="has">has<a class="headerlink" href="#has" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.has(self, pks)
+</code></pre>
+
+<p>Returns whether the pks dict has values in it.</p>
+<h3 id="get_from_pk">get_from_pk<a class="headerlink" href="#get_from_pk" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.get_from_pk(self, query, **pks)
+</code></pre>
+
+<p>Get the item from <code>query</code> that has <code>**pks</code> or None if not found.</p>
+<h3 id="get_all_from_pks">get_all_from_pks<a class="headerlink" href="#get_all_from_pks" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.get_all_from_pks(self, query, items_pks)
+</code></pre>
+
+<p>Get all items from <code>query</code> correponding to the primary keys <code>items_pks</code>
+in one query.</p>
+<h3 id="query_request">query_request<a class="headerlink" href="#query_request" title="Permanent link"></a></h3>
+<pre><code class="python">Rest.query_request(self, request)
+</code></pre>
+
+<p>Context manager that sets the <code>_query_alterer</code> to the idiom alter_query
+and restore it to identity at exit.</p>
               
             </div>
           </div>

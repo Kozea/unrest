@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Util - unrest Documentation</title>
+  <title>Util - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> unrest Documentation</a>
+        <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -69,22 +69,32 @@
                     
     <a class="" href="../coercers/">Serialization/Deserialization</a>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                <li class="">
+                    
     <a class="" href="../framework/">Frameworks</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
     <a class="" href="../idiom/">Idioms</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Util</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#request">Request</a></li>
+    
+
+    <li class="toctree-l3"><a href="#response">Response</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
     <a class="" href="../generators/">Generators</a>
+                </li>
+    </ul>
 	    </li>
           
         </ul>
@@ -97,7 +107,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">unrest Documentation</a>
+        <a href="..">UnRest Documentation</a>
       </nav>
 
       
@@ -107,6 +117,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="..">Docs</a> &raquo;</li>
     
+      
+        
+          <li>API Documentation &raquo;</li>
+        
       
     
     <li>Util</li>
@@ -122,19 +136,44 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest.util.Request">Request</h1>
-
+                <h1 id="request">Request<a class="headerlink" href="#request" title="Permanent link"></a></h1>
 <pre><code class="python">Request(self, url, method, parameters, query, payload, headers)
 </code></pre>
 
-<h1 id="unrest.util.Response">Response</h1>
-
+<p>The unrest request object created in the <a href="../framework/#unrestframework" title="unrest.framework"><code>unrest.framework</code></a> route wrapper.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>url</strong>: The request url.</li>
+<li><strong>method</strong>: The request method.</li>
+<li><strong>parameters</strong>: The url parameters as dict.</li>
+<li><strong>query</strong>: The query string parameters as dict.</li>
+<li><strong>payload</strong>: The request body as bytes if any.</li>
+<li><strong>headers</strong>: A mapping of request headers.</li>
+</ul>
+<h1 id="response">Response<a class="headerlink" href="#response" title="Permanent link"></a></h1>
 <pre><code class="python">Response(self, payload, headers, status)
 </code></pre>
+
+<p>The unrest response object created by the <a href="../idiom/#unrestidiom" title="unrest.idiom"><code>unrest.idiom</code></a>.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>payload</strong>: The response body as string.</li>
+<li><strong>headers</strong>: A mapping of response headers.</li>
+<li><strong>status</strong>: The response status code.</li>
+</ul>
               
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../generators/" class="btn btn-neutral float-right" title="Generators">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../idiom/" class="btn btn-neutral" title="Idioms"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -160,6 +199,10 @@
           <a href="https://github.com/Kozea/unrest/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
+        <span><a href="../idiom/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../generators/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

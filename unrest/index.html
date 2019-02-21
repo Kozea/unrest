@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>UnRest - unrest Documentation</title>
+  <title>UnRest - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> unrest Documentation</a>
+        <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -62,6 +62,15 @@
     <a class="current" href="./">UnRest</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#unrest">unrest</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#unrest_1">UnRest</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -72,22 +81,23 @@
                     
     <a class="" href="../coercers/">Serialization/Deserialization</a>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                <li class="">
+                    
     <a class="" href="../framework/">Frameworks</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
     <a class="" href="../idiom/">Idioms</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
+    <a class="" href="../util/">Util</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../generators/">Generators</a>
+                </li>
+    </ul>
 	    </li>
           
         </ul>
@@ -100,7 +110,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">unrest Documentation</a>
+        <a href="..">UnRest Documentation</a>
       </nav>
 
       
@@ -129,10 +139,8 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest">unrest</h1>
-
-<h2 id="unrest.UnRest">UnRest</h2>
-
+                <h1 id="unrest">unrest<a class="headerlink" href="#unrest" title="Permanent link"></a></h1>
+<h2 id="unrest_1">UnRest<a class="headerlink" href="#unrest_1" title="Permanent link"></a></h2>
 <pre><code class="python">UnRest(self, app=None, session=None, path='/api', version='', framework=None, IdiomClass=None, SerializeClass=None, DeserializeClass=None, RestClass=&lt;class 'unrest.rest.Rest'&gt;, allow_options=True, serve_openapi_file=True, openapi_class=&lt;class 'unrest.generators.openapi.OpenApi'&gt;, options_class=&lt;class 'unrest.generators.options.Options'&gt;, empty_get_as_404=False, info={})
 </code></pre>
 
@@ -149,59 +157,69 @@ rest(Model2)
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>app</strong>: Your web application,
-        can be set afterwards using <code>UnRest.init_app</code></li>
+        can be set afterwards using <a href="#init_app"><code>init_app</code></a></li>
 <li><strong>session</strong>: Your sqlalchemy session,
-        can be set afterwards using <code>UnRest.init_session</code>
+        can be set afterwards using <a href="#init_session"><code>init_session</code></a>
         and <code>init_session</code> method.</li>
 <li><strong>path</strong>: Default '/api', sets the root url path for your endpoints</li>
 <li><strong>version</strong>: Adds a version to the root url path if specified
         (i.e. /api/v2)</li>
 <li><strong>framework</strong>: A specific framework class, defaults to auto detect.</li>
-<li><strong>IdiomClass</strong>: An idiom class, defaults to json unrest format.</li>
-<li><strong>SerializeClass</strong>: A global alternative for <code>Serialize</code> class.</li>
-<li><strong>DeserializeClass</strong>: A global alternative for <code>Deserialize</code> class.</li>
-<li><strong>RestClass</strong>: Replace the default <code>Rest</code> class.</li>
+<li><strong>IdiomClass</strong>: An idiom class, defaults to <a href="../idiom/#unrestidiomunrest" title="unrest.idiom.unrest"><code>unrest.idiom.unrest</code></a>.</li>
+<li><strong>SerializeClass</strong>: A global alternative for <a href="../coercers/#serialize" title="unrest.coercers.Serialize"><code>Serialize</code></a> class.</li>
+<li><strong>DeserializeClass</strong>: A global alternative for <a href="../coercers/#deserialize" title="unrest.coercers.Deserialize"><code>Deserialize</code></a> class.</li>
+<li><strong>RestClass</strong>: Replace the default <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a> class.</li>
 <li><strong>allow_options</strong>: Set it to False to disable OPTIONS requests.</li>
 <li><strong>serve_openapi_file</strong>: Set it to False to disable openapi file generation.</li>
 <li><strong>empty_get_as_404</strong>: If True return a 404 on get with id not found</li>
-<li><strong>info</strong>: Additional info for the openapi metadata.
-Unrest aims to be framework agnostic.
-It currently works with Flask out of the box, for another web framework
-you will have to implement your own Framework class.
-See <code>FlaskFramework</code> in <code>flask_framework.py</code></li>
+<li><strong>info</strong>: Additional info for the openapi metadata.</li>
 </ul>
-<h3 id="unrest.UnRest.all">all</h3>
-
+<p><strong>Frameworks</strong></p>
+<p>Unrest aims to be framework agnostic.
+It currently works with Flask out of the box and provides some other frameworks:
+Tornado and python http.server.
+See <a href="../framework/#framework" title="unrest.framework.Framework"><code>Framework</code></a></p>
+<h3 id="all">all<a class="headerlink" href="#all" title="Permanent link"></a></h3>
 <p>Return all supported methods. Useful for the rest
 <code>method</code> keyword argument.</p>
-<h3 id="unrest.UnRest.RestError">RestError</h3>
+<h3 id="root_path">root_path<a class="headerlink" href="#root_path" title="Permanent link"></a></h3>
+<p>Returns this API root path.</p>
+<h3 id="property">Property<a class="headerlink" href="#property" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.Property(self, name, type=None, formatter=None)
+</code></pre>
 
+<p>A Property wrapper used instead of a string in a <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a>
+properties parameter.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>name</strong>: This property name</li>
+<li><strong>type</strong>: The sqlalchemy type used for type coercion</li>
+<li><strong>formatter</strong>: An optional function to transform the parameter as string</li>
+</ul>
+<h3 id="resterror">RestError<a class="headerlink" href="#resterror" title="Permanent link"></a></h3>
 <pre><code class="python">UnRest.RestError(self, status, message, extra=None)
 </code></pre>
 
 <p>Exception raised by rest methods. It's catched by the REST method
 wrapper and will return a <code>status</code> http error with the specified
 <code>message</code>.</p>
-<h3 id="unrest.UnRest.ValidationError">ValidationError</h3>
-
+<h3 id="validationerror">ValidationError<a class="headerlink" href="#validationerror" title="Permanent link"></a></h3>
 <pre><code class="python">UnRest.ValidationError(self, message)
 </code></pre>
 
 <p>Exception raised by rest validation methods.</p>
-<h3 id="unrest.UnRest.init_app">init_app</h3>
-
+<h3 id="init_app">init_app<a class="headerlink" href="#init_app" title="Permanent link"></a></h3>
 <pre><code class="python">UnRest.init_app(self, app)
 </code></pre>
 
-<p>Sets the app on UnRest if it was missing during instantiation.
-<h3 id="unrest.UnRest.init_session">init_session</h3></p>
+<p>Sets the app on UnRest if it was missing during instantiation.</p>
+<h3 id="init_session">init_session<a class="headerlink" href="#init_session" title="Permanent link"></a></h3>
 <pre><code class="python">UnRest.init_session(self, session)
 </code></pre>
 
 <p>Sets the sqlalchemy session on UnRest
 if it was missing during instantiation.</p>
-<h3 id="unrest.UnRest.raise_error">raise_error</h3>
-
+<h3 id="raise_error">raise_error<a class="headerlink" href="#raise_error" title="Permanent link"></a></h3>
 <pre><code class="python">UnRest.raise_error(self, status, message, extra=None)
 </code></pre>
 
@@ -215,12 +233,52 @@ and message as content.</p>
 <li><strong>message</strong>: The message that will be returned in the json response</li>
 <li><strong>extra</strong>: Mapping of extra fields to return in json response</li>
 </ul>
-<h3 id="unrest.UnRest.__call__">__call__</h3>
+<h3 id="register_index">register_index<a class="headerlink" href="#register_index" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.register_index(self)
+</code></pre>
 
+<p>Register the API index GET route.</p>
+<h3 id="index">index<a class="headerlink" href="#index" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.index(self, request)
+</code></pre>
+
+<p>The API index GET route.</p>
+<h3 id="send_json">send_json<a class="headerlink" href="#send_json" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.send_json(self, data)
+</code></pre>
+
+<p>Send <code>data</code> as json.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>data</strong>: An object to send as json</li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>The <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> containing the json data</p>
+<h3 id="register_options">register_options<a class="headerlink" href="#register_options" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.register_options(self)
+</code></pre>
+
+<p>Register the API index OPTIONS route.</p>
+<h3 id="options">options<a class="headerlink" href="#options" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.options(self, request)
+</code></pre>
+
+<p>The API index OPTIONS route.</p>
+<h3 id="register_openapi">register_openapi<a class="headerlink" href="#register_openapi" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.register_openapi(self)
+</code></pre>
+
+<p>Register the openapi route.</p>
+<h3 id="openapi">openapi<a class="headerlink" href="#openapi" title="Permanent link"></a></h3>
+<pre><code class="python">UnRest.openapi(self, request)
+</code></pre>
+
+<p>The API openapi route.</p>
+<h3 id="call"><strong>call</strong><a class="headerlink" href="#call" title="Permanent link"></a></h3>
 <pre><code class="python">UnRest.__call__(self, *args, **kwargs)
 </code></pre>
 
-<p>Returns a <code>unrest.Rest</code> instance. See rest entry points.</p>
+<p>Returns a <a href="#unrest#rest"><code>Rest</code></a> instance. See rest entry points.</p>
               
             </div>
           </div>

@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Generators - unrest Documentation</title>
+  <title>Generators - UnRest Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -36,7 +36,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href=".." class="icon icon-home"> unrest Documentation</a>
+        <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
@@ -69,24 +69,43 @@
                     
     <a class="" href="../coercers/">Serialization/Deserialization</a>
                 </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                <li class="">
+                    
     <a class="" href="../framework/">Frameworks</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
+                </li>
+                <li class="">
+                    
     <a class="" href="../idiom/">Idioms</a>
-	    </li>
-          
-            <li class="toctree-l1 current">
-		
+                </li>
+                <li class="">
+                    
+    <a class="" href="../util/">Util</a>
+                </li>
+                <li class=" current">
+                    
     <a class="current" href="./">Generators</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#unrestgeneratorsopenapi">unrest.generators.openapi</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#openapi">OpenApi</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#unrestgeneratorsoptions">unrest.generators.options</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#options">Options</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
     </ul>
 	    </li>
           
@@ -100,7 +119,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="..">unrest Documentation</a>
+        <a href="..">UnRest Documentation</a>
       </nav>
 
       
@@ -110,6 +129,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="..">Docs</a> &raquo;</li>
     
+      
+        
+          <li>API Documentation &raquo;</li>
+        
       
     
     <li>Generators</li>
@@ -125,9 +148,20 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="unrest.generators.openapi">unrest.generators.openapi</h1>
+                <h1 id="unrestgeneratorsopenapi">unrest.generators.openapi<a class="headerlink" href="#unrestgeneratorsopenapi" title="Permanent link"></a></h1>
+<h2 id="openapi">OpenApi<a class="headerlink" href="#openapi" title="Permanent link"></a></h2>
+<pre><code class="python">OpenApi(self, unrest)
+</code></pre>
 
-<h1 id="unrest.generators.options">unrest.generators.options</h1>
+<p>This class generates an <a href="https://github.com/OAI/OpenAPI-Specification">openapi</a>
+v3.0.0 compatible object from the given <a href="../unrest/#unrestUnRest" title="unrest.UnRest"><code>unrest.UnRest</code></a> object.</p>
+<h1 id="unrestgeneratorsoptions">unrest.generators.options<a class="headerlink" href="#unrestgeneratorsoptions" title="Permanent link"></a></h1>
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link"></a></h2>
+<pre><code class="python">Options(self, unrest)
+</code></pre>
+
+<p>This generates an informative object on the <a href="../unrest/#unrestUnRest" title="unrest.UnRest"><code>unrest.UnRest</code></a> instance used
+as reply for http OPTIONS request on the unrest API index.</p>
               
             </div>
           </div>
@@ -136,7 +170,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="../idiom/" class="btn btn-neutral" title="Idioms"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../util/" class="btn btn-neutral" title="Util"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -164,7 +198,7 @@
           <a href="https://github.com/Kozea/unrest/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../idiom/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../util/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
     </span>
