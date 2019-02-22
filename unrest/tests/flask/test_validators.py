@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+from sqlalchemy.inspection import inspect
+
 from . import idsorted
 from ..model import Fruit, Tree
 
@@ -128,14 +130,14 @@ def test_post_tree_validation(rest, http):
 
 def test_put_fruit_dual_validation(rest, http):
     def color_validator(field):
-        if field.previous.color == 'brown':
+        if inspect(field.item).attrs.color.history.deleted[0] == 'brown':
             raise field.ValidationError(
                 'A brown fruit cannot become %s' % field.value
             )
         return field.value
 
     def size_validator(field):
-        if field.value > 48.9 and field.next.age < timedelta(weeks=2):
+        if field.value > 48.9 and field.item.age < timedelta(weeks=2):
             raise rest.ValidationError('Fruit too big for its age')
         return field.value
 
