@@ -38,6 +38,9 @@ class TornadoFramework(Framework):
         if not Handler:
             Handler = type(name + 'Handler', (RequestHandler,), {})
             self.router.add_rules([(path_with_params, Handler, {}, name)])
+        elif getattr(Handler, 'target', None):
+            # If Handler has been wrapper by a Rule
+            Handler = Handler.target
 
         log.info(
             'Registering route %s for %s for %s'
