@@ -4,8 +4,9 @@ from decimal import Decimal
 
 class OpenApi(object):
     """
-    This class generates an [openapi](https://github.com/OAI/OpenAPI-Specification)
-    v3.0.0 compatible object from the given #::unrest.UnRest object.
+    This class generates an
+    [openapi](https://github.com/OAI/OpenAPI-Specification) v3.0.0 compatible
+    object from the given #::unrest.UnRest object.
     """
 
     __version__ = '3.0.0'

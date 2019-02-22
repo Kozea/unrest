@@ -36,8 +36,10 @@ class UnRest(object):
             (i.e. /api/v2)
         framework: A specific framework class, defaults to auto detect.
         IdiomClass: An idiom class, defaults to #::unrest.idiom.unrest.
-        SerializeClass: A global alternative for #::unrest.coercers#Serialize class.
-        DeserializeClass: A global alternative for #::unrest.coercers#Deserialize class.
+        SerializeClass: A global alternative
+            for #::unrest.coercers#Serialize class.
+        DeserializeClass: A global alternative
+            for #::unrest.coercers#Deserialize class.
         RestClass: Replace the default #::unrest.rest#Rest class.
         allow_options: Set it to False to disable OPTIONS requests.
         serve_openapi_file: Set it to False to disable openapi file generation.
@@ -46,8 +48,8 @@ class UnRest(object):
 
     # Frameworks
     Unrest aims to be framework agnostic.
-    It currently works with Flask out of the box and provides some other frameworks:
-    Tornado and python http.server.
+    It currently works with Flask out of the box and provides some other
+    frameworks: Tornado and python http.server.
     See #::unrest.framework#Framework
     """
 

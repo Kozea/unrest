@@ -14,7 +14,8 @@ PK_DELIM = '___'
 
 class JsonServerIdiom(Idiom):
     """
-    The [JSON Server](https://github.com/typicode/json-server) idiom implementation.
+    The [JSON Server](https://github.com/typicode/json-server) idiom
+    implementation.
 
     Currently support all basic queries and first-level (no nested props)
     filter, sort, pagination, slice, operators (`_gte`, `_lte`, `_ne`, `_like`)

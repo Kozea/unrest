@@ -167,8 +167,8 @@ class Rest(object):
         The GET method
 
         - With no arguments: Returns all query elements. (/api/model/)
-        - With primary keys: Returns the element in query with the primary keys.
-        (/api/model/pk)
+        - With primary keys: Returns the element in query with the primary
+            keys. (/api/model/pk)
 
         # Arguments
             payload: The request content ignored for GET.
@@ -185,8 +185,8 @@ class Rest(object):
         """
         The PUT method
 
-        - With no arguments: If allow_batch set to true replace all the query elements
-            with the ones in the request payload.
+        - With no arguments: If allow_batch set to true replace all the
+            query elements with the ones in the request payload.
         - With primary keys: Create or replace the element associated
             with the primary keys from the one in the request payload.
 
@@ -263,8 +263,10 @@ class Rest(object):
         """
         The DELETE method
 
-        - With no arguments: If allow_batch set to true delete all query elements.
-        - With primary keys: Delete the element associated with the primary keys.
+        - With no arguments: If allow_batch set to true delete all query
+            elements.
+        - With primary keys: Delete the element associated with the primary
+            keys.
 
         # Arguments
             payload: The request content ignored in DELETE.
@@ -640,8 +642,9 @@ class Rest(object):
 
     def wrap_route(self, method, route, manual_commit=False):
         """
-        Wrap a method route method ( #get, #post, #put, #delete, #patch, #options )
-        with a function that takes a #::unrest.util#Request as parameters and:
+        Wrap a method route method ( #get, #post, #put, #delete,
+        #patch, #options ) with a function that takes a #::unrest.util#Request
+        as parameters and:
 
         - converts request parameters into primary keys values
         - calls the current idiom #::unrest.idiom.Idiom#request_to_payload
@@ -656,7 +659,8 @@ class Rest(object):
         # Arguments
             method: The current http method
             route: The route associated with this http method
-            manual_commit: Set this to True to prevent auto commit after route call
+            manual_commit: Set this to True to prevent auto commit after route
+                call
 
         # Returns
         The #::unrest.util#Response of this request
@@ -716,7 +720,8 @@ class Rest(object):
         # Arguments
             method: The http method to register the route with
             route: The route function, defaults to this rest.{method}
-            manual_commit: Set this to True to prevent auto commit after route call
+            manual_commit: Set this to True to prevent auto commit after route
+                call
         """
         if method != 'OPTIONS':
             assert method in self.unrest.all, 'Unknown method %s' % method

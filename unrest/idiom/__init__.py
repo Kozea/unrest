@@ -6,8 +6,8 @@ class Idiom(object):
     The default implementation #::unrest.idiom.unrest#UnRestIdiom+1 parses json
     from request and generates json from response.
 
-    To implement an idiom you have to implement the `request_to_payload` and the
-    `data_to_response` methods described below.
+    To implement an idiom you have to implement the `request_to_payload` and
+    the `data_to_response` methods described below.
 
     You can also override the `alter_query` method to add functionality to the
     idiom based on the `request`.
