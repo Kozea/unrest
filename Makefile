@@ -22,7 +22,7 @@ check-outdated:
 	$(PIP) list --outdated --format=columns
 
 check: lint
-	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS) -p no:warnings --cov unrest
+	$(PYTEST) $(PROJECT_NAME) $(PYTEST_ARGS) -p no:warnings --cov-report=html --cov unrest
 
 .PHONY: docs
 docs:
