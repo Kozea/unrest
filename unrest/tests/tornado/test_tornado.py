@@ -1,5 +1,4 @@
 import json as jsonlib
-import os
 from tempfile import NamedTemporaryFile
 
 from sqlalchemy.engine import create_engine
@@ -29,8 +28,6 @@ def make_app(make_unrest):
     Session.configure(bind=engine)
     session = scoped_session(Session)
 
-    if os.path.exists(db_url):
-        Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     fill_data(session)
     app._engine = engine

@@ -74,12 +74,8 @@ class Serialize(object):
 
     def dict(self):
         """Serialize the given model to a JSON compatible dict"""
-        if self.model is None:
-            return {}
 
         def enforce_iterable(it):
-            if it is None:
-                return ()
             try:
                 return iter(it)
             except TypeError:

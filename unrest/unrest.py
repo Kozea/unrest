@@ -35,7 +35,7 @@ class UnRest(object):
         version: Adds a version to the root url path if specified
             (i.e. /api/v2)
         framework: A specific framework class, defaults to auto detect.
-        IdiomClass: An idiom class, defaults to #::unrest.idiom.unrest.
+        idiom: An idiom class, defaults to #::unrest.idiom.unrest.
         SerializeClass: A global alternative
             for #::unrest.coercers#Serialize class.
         DeserializeClass: A global alternative
@@ -80,14 +80,14 @@ class UnRest(object):
         path='/api',
         version='',
         framework=None,
-        IdiomClass=None,
+        idiom=None,
         SerializeClass=None,
         DeserializeClass=None,
         RestClass=Rest,
         allow_options=True,
         serve_openapi_file=True,
-        openapi_class=OpenApi,
-        options_class=Options,
+        OpenApiClass=OpenApi,
+        OptionsClass=Options,
         empty_get_as_404=False,
         info={},
     ):
@@ -96,14 +96,14 @@ class UnRest(object):
         self.info = info
         self.version = version
         self._framework = framework
-        self.IdiomClass = IdiomClass
+        self.idiom = idiom
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
         self.RestClass = RestClass
         self.allow_options = allow_options
         self.serve_openapi_file = serve_openapi_file
-        self.OpenApi = openapi_class
-        self.Options = options_class
+        self.OpenApi = OpenApiClass
+        self.Options = OptionsClass
         self.empty_get_as_404 = empty_get_as_404
 
         if app is not None:
@@ -121,7 +121,7 @@ class UnRest(object):
             try:
                 from flask import Flask
             except ImportError:
-                pass
+                self.framework = None
             else:
                 if isinstance(app, Flask):
                     from .framework.flask import FlaskFramework
@@ -175,8 +175,8 @@ class UnRest(object):
     def __call__(self, *args, **kwargs):
         """Returns a #::unrest.rest#Rest instance. See rest entry points."""
 
-        if self.IdiomClass is not None:
-            kwargs.setdefault('IdiomClass', self.IdiomClass)
+        if self.idiom is not None:
+            kwargs.setdefault('idiom', self.idiom)
         if self.SerializeClass is not None:
             kwargs.setdefault('SerializeClass', self.SerializeClass)
         if self.DeserializeClass is not None:

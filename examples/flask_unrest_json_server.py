@@ -30,7 +30,7 @@ def home():
     return "A normal flask route!"
 
 
-rest = UnRest(app, db.session, IdiomClass=JsonServerIdiom)
+rest = UnRest(app, db.session, idiom=JsonServerIdiom)
 fruit = rest(
     Fruit, methods=rest.all, properties=[rest.Property('square_size', Float())]
 )

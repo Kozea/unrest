@@ -112,7 +112,7 @@ class Rest(object):
         primary_keys=None,
         defaults=None,
         fixed=None,
-        IdiomClass=UnRestIdiom,
+        idiom=UnRestIdiom,
         SerializeClass=Serialize,
         DeserializeClass=Deserialize,
     ):
@@ -145,7 +145,7 @@ class Rest(object):
         self.defaults = defaults or {}
         self.fixed = fixed or {}
 
-        self.idiom = IdiomClass(self)
+        self.idiom = idiom(self)
 
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass

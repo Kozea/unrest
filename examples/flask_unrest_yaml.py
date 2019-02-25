@@ -29,7 +29,7 @@ def home():
     return "A normal flask route!"
 
 
-rest = UnRest(app, db.session, IdiomClass=YamlIdiom)
+rest = UnRest(app, db.session, idiom=YamlIdiom)
 fruit = rest(
     Fruit, methods=rest.all, properties=[rest.Property('square_size', Float())]
 )

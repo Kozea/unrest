@@ -1,14 +1,34 @@
-from sqlalchemy.types import Float
+import sys
+
+from sqlalchemy.types import Float, String
 
 from unrest import UnRest, __about__
+from unrest.coercers import Deserialize, Serialize
 from unrest.framework.flask import FlaskFramework
 from unrest.rest import Rest
 
+from . import idsorted
 from ...framework import Framework
 from ...idiom import Idiom
 from ...util import Response
 from ..model import Fruit, Tree
 from .openapi_result import openapi
+
+
+def test_index(app, db, http):
+    rest = UnRest(app, db.session)
+    rest(Tree)
+    code, json = http.get('/api/')
+    assert code == 200
+    assert (
+        json['html']
+        == (
+            '<h1>unrest <small>api server</small></h1> version %s '
+            '<a href="https://github.com/Kozea/unrest">unrest</a> '
+            '<a href="/api/openapi.json">openapi.json</a>'
+        )
+        % __about__.__version__
+    )
 
 
 def test_normal(app, db, http):
@@ -307,7 +327,7 @@ def test_idiom(app, db, http):
             response = Response(payload, headers, status)
             return response
 
-    rest = UnRest(app, db.session, IdiomClass=FakeIdiom)
+    rest = UnRest(app, db.session, idiom=FakeIdiom)
     rest(Tree, methods=['GET', 'PUT'])
     code, json = http.get('/api/tree')
     assert code == 200
@@ -328,4 +348,63 @@ def test_wrong_framework(app, db, http):
     except NotImplementedError:
         pass
     else:
-        raise Exception('Should have raised')
+        raise Exception('Should have raised')  # pragma: no cover
+
+
+def test_no_framework(app, db, http):
+    flask = sys.modules['flask']
+    sys.modules['flask'] = None
+    try:
+        UnRest(app, db.session)
+    except NotImplementedError:
+        pass
+    else:
+        raise Exception('Should have raised')  # pragma: no cover
+    sys.modules['flask'] = flask
+
+
+def test_custom_serialization(app, db, http):
+    class UpperCaseStringSerialize(Serialize):
+        def serialize(self, name, column):
+            rv = super().serialize(name, column)
+            if isinstance(column.type, String):
+                return rv.upper()
+            return rv
+
+    rest = UnRest(app, db.session, SerializeClass=UpperCaseStringSerialize)
+    rest(Tree, methods=['GET', 'PUT'])
+
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 3
+    assert idsorted(json['objects']) == [
+        {'id': 1, 'name': 'PINE'},
+        {'id': 2, 'name': 'MAPLE'},
+        {'id': 3, 'name': 'OAK'},
+    ]
+
+
+def test_custom_deserialization(app, db, http):
+    class UpperCaseStringDeserialize(Deserialize):
+        def deserialize(self, name, column, payload=None):
+            rv = super().deserialize(name, column, payload)
+            if isinstance(column.type, String):
+                return rv.upper()
+            return rv
+
+    rest = UnRest(app, db.session, DeserializeClass=UpperCaseStringDeserialize)
+    rest(Tree, methods=['GET', 'PUT'])
+
+    code, json = http.put('/api/tree/1', json={'id': 1, 'name': 'cedar'})
+    assert code == 200
+    assert json['occurences'] == 1
+    assert idsorted(json['objects']) == [{'id': 1, 'name': 'CEDAR'}]
+
+    code, json = http.get('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 3
+    assert idsorted(json['objects']) == [
+        {'id': 1, 'name': 'CEDAR'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+    ]
