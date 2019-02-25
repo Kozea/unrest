@@ -4,6 +4,7 @@ from unrest import UnRest, __about__
 from unrest.framework.flask import FlaskFramework
 from unrest.rest import Rest
 
+from ...framework import Framework
 from ...idiom import Idiom
 from ...util import Response
 from ..model import Fruit, Tree
@@ -319,3 +320,12 @@ def test_idiom(app, db, http):
     code, json = http.get('/api/tree')
     assert code == 200
     assert json['html'] == 'Hello 3'
+
+
+def test_wrong_framework(app, db, http):
+    try:
+        UnRest(app, db.session, framework=Framework)
+    except NotImplementedError:
+        pass
+    else:
+        raise Exception('Should have raised')
