@@ -216,3 +216,40 @@ class TestTornadoPost(UnrestTornadoTestCase):
                 {'id': 4, 'name': 'cedar'},
             ],
         )
+
+
+class TestTornadoOptions(UnrestTornadoTestCase):
+    def make_unrest(self, app, session):
+        rest = UnRest(app, session, framework=TornadoFramework)
+        fruit = rest(Fruit)
+        rest(
+            Tree,
+            methods=rest.all,
+            relationships={'fruits': fruit},
+            properties=['fruit_colors'],
+            allow_batch=True,
+        )
+
+    def test_options(self):
+        code, json = self.json_fetch('/api/fruit', method='OPTIONS')
+        self.assertEqual(code, 200)
+        self.assertEqual(
+            json,
+            {
+                'model': 'Fruit',
+                'description': 'A bag of fruit',
+                'batch': False,
+                'parameters': ['fruit_id'],
+                'columns': {
+                    'age': 'timedelta',
+                    'color': 'str',
+                    'fruit_id': 'int',
+                    'size': 'Decimal',
+                    'tree_id': 'int',
+                    'double_size': 'Decimal',
+                },
+                'properties': {},
+                'relationships': {},
+                'methods': ['GET', 'OPTIONS'],
+            },
+        )
