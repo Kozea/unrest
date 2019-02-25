@@ -204,6 +204,9 @@ class Deserialize(object):
 
         return data
 
+    def deserialize_array(self, type, data):
+        return [self._deserialize(type.item_type, datum) for datum in data]
+
     def deserialize_datetime(self, type, data):
         return dateparse(data)
 

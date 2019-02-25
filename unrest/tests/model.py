@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -38,6 +38,11 @@ class Fruit(Base):
         return self.size * self.size
 
     double_size = column_property(2 * size)
+
+    @property
+    def birthday(self):
+        """Its birthday if we are the 2020-01-01"""
+        return datetime(2020, 1, 1, 0, 0, 0) - self.age
 
 
 def fill_data(session):

@@ -1,4 +1,4 @@
-from sqlalchemy.types import Float, Numeric
+from sqlalchemy.types import DateTime, Float, Numeric
 
 from . import idsorted
 from ..model import Fruit, Tree
@@ -146,3 +146,19 @@ def test_get_tree_pk_with_hybrid_property_as_primary_key(rest, http):
     assert json['primary_keys'] == ['square_size']
     print(json['objects'])
     assert idsorted(json['objects'], 'square_size') == [{'square_size': 0.25}]
+
+
+def test_datetime_properties(rest, http):
+    rest(
+        Fruit, only=[], properties=[rest.Property('birthday', type=DateTime())]
+    )
+    code, json = http.get('/api/fruit')
+    assert code == 200
+    assert json['occurences'] == 5
+    assert idsorted(json['objects'], 'fruit_id') == [
+        {'fruit_id': 1, 'birthday': '2019-12-19T22:45:00'},
+        {'fruit_id': 2, 'birthday': '2019-11-12T23:56:09.787000'},
+        {'fruit_id': 3, 'birthday': '2020-01-01T00:00:00'},
+        {'fruit_id': 4, 'birthday': '2019-12-31T23:20:00'},
+        {'fruit_id': 5, 'birthday': '2019-12-31T21:59:59.999988'},
+    ]
