@@ -61,7 +61,7 @@ class OpenApi(object):
         return info
 
     def get_servers(self):
-        return [{'url': self.unrest.framework.url}]
+        return [{'url': self.unrest.framework.external_url}]
 
     def get_path_url(self, rest, params):
         path = rest.path

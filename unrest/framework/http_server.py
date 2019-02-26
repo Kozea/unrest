@@ -18,8 +18,8 @@ class HTTPServerFramework(Framework):
     This exemple implementation requires no external library.
     """
 
-    def __init__(self, app, prefix):
-        super().__init__(app, prefix)
+    def __init__(self, app, url):
+        super().__init__(app, url)
         self.url_map = {}
         parent = self
 
@@ -34,8 +34,8 @@ class HTTPServerFramework(Framework):
                     method = name.replace('do_', '')
 
                     def do_METHOD(self):
-                        # Handle only requests starting with prefix
-                        if not self.path.startswith('/' + parent.prefix):
+                        # Handle only requests starting with url
+                        if not self.path.startswith(parent.url):
                             return getattr(super(), name)()
                         return self.handle_request(method)
 
@@ -56,7 +56,8 @@ class HTTPServerFramework(Framework):
                         )
                 return self.send(404, 'Not Found')
 
-            def send(self, status, message, headers):
+            def send(self, status, message, headers=None):
+                headers = headers or {}
                 self.send_response(status)
 
                 for name, value in headers.items():

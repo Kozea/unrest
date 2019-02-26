@@ -64,5 +64,5 @@ class FlaskFramework(Framework):
             )
 
     @property
-    def url(self):
+    def external_url(self):
         return url_for(self._name('index'), _external=True)

@@ -3,7 +3,7 @@ class Framework(object):
     UnRest Framework abstract class.
 
     Framework are instanciated with an `app` object which should be
-    your framework instance and the `prefix` of this UnRest instance.
+    your framework instance and the `url` of this UnRest instance.
 
     You must implement the `register_route` method if you want to
     implement you own framework.
@@ -11,12 +11,12 @@ class Framework(object):
     # Arguments
         app: Your framework instance used in `register_route` to register
             route.
-        prefix: The current UnRest url prefix ('api' by default)
+        url: The current UnRest url ('/api' by default)
     """
 
-    def __init__(self, app, prefix):
+    def __init__(self, app, url):
         self.app = app
-        self.prefix = prefix
+        self.url = url
 
     def register_route(self, path, method, parameters, function):
         """
@@ -38,16 +38,19 @@ class Framework(object):
         )
 
     @property
-    def url(self):
+    def external_url(self):
         """
-        A property returning the api url root.
+        A property returning the external api url root.
         (Used in OPTIONS and openapi genration)
         """
-        return '/' + self.prefix
+        return self.url
 
     def _name(self, name):
         """
         This helper generates a unique name for endpoint {name}
         that you can use in your implementation.
         """
-        return 'unrest__%s__%s' % (self.prefix, name)
+        return 'unrest__%s__%s' % (
+            self.url.lstrip('/').replace('/', '_'),
+            name,
+        )

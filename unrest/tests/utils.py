@@ -33,19 +33,27 @@ class UnRestTestCase(object):
     def tearDown(self):
         self.session.remove()
 
-    def json_fetch(self, *args, **kwargs):
+    def html_fetch(self, *args, **kwargs):
+        kwargs.setdefault('method', 'GET')
+        response = self.fetch(*args, **kwargs)
+        code = response.code
+        return code, response.body.decode('utf-8')
+
+    def fetch(self, *args, **kwargs):
         kwargs.setdefault('method', 'GET')
         json = kwargs.pop('json', '')
         if json:
             kwargs.setdefault('body', jsonlib.dumps(json))
             kwargs.setdefault('headers', {'Content-Type': 'application/json'})
 
-        response = self.fetch(*args, **kwargs)
+        response = super().fetch(*args, **kwargs)
         code = response.code
-        self.assertEqual(
-            response.headers.get('Content-Type'), 'application/json'
-        )
-        rv = jsonlib.loads(response.body.decode('utf-8'))
+        if response.body:
+            rv = response.body.decode('utf-8')
+            if response.headers.get('Content-Type') == 'application/json':
+                rv = jsonlib.loads(rv)
+        else:
+            rv = None
         return code, rv
 
 
@@ -54,15 +62,15 @@ class MiscTests(object):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree)
         rest(Fruit)
-        response = self.fetch('/')
-        self.assertEqual(response.code, 200)
-        self.assertEqual(response.body, b'A normal route!')
+        code, html = self.fetch('/')
+        self.assertEqual(code, 200)
+        self.assertEqual(html, 'A normal route!')
 
     def test_get(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree)
         rest(Fruit)
-        code, json = self.json_fetch('/api/tree')
+        code, json = self.fetch('/api/tree')
         self.assertEqual(code, 200)
         self.assertEqual(json['occurences'], 3)
         self.assertEqual(
@@ -78,7 +86,7 @@ class MiscTests(object):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, name='forest')
 
-        code, json = self.json_fetch('/api/forest')
+        code, json = self.fetch('/api/forest')
         self.assertEqual(code, 200)
         self.assertEqual(json['occurences'], 3)
         self.assertEqual(
@@ -94,7 +102,7 @@ class MiscTests(object):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree)
         rest(Fruit)
-        code, json = self.json_fetch('/api/fruit')
+        code, json = self.fetch('/api/fruit')
         self.assertEqual(code, 200)
         self.assertEqual(json['occurences'], 5)
         self.assertEqual(json['primary_keys'], ['fruit_id'])
@@ -147,7 +155,7 @@ class MiscTests(object):
     def test_post(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, methods=['GET', 'POST'])
-        code, json = self.json_fetch(
+        code, json = self.fetch(
             '/api/tree', method='POST', json={'name': 'cedar'}
         )
         self.assertEqual(code, 200)
@@ -156,7 +164,7 @@ class MiscTests(object):
             idsorted(json['objects']), [{'id': 4, 'name': 'cedar'}]
         )
 
-        code, json = self.json_fetch('/api/tree')
+        code, json = self.fetch('/api/tree')
         self.assertEqual(code, 200)
         self.assertEqual(json['occurences'], 4)
         self.assertEqual(
@@ -179,7 +187,7 @@ class MiscTests(object):
             properties=['fruit_colors'],
             allow_batch=True,
         )
-        code, json = self.json_fetch('/api/fruit', method='OPTIONS')
+        code, json = self.fetch('/api/fruit', method='OPTIONS')
         self.assertEqual(code, 200)
         self.assertEqual(
             json,

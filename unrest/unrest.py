@@ -96,6 +96,7 @@ class UnRest(object):
         self.info = info
         self.version = version
         self._framework = framework
+        self.framework = None
         self.idiom = idiom
         self.SerializeClass = SerializeClass
         self.DeserializeClass = DeserializeClass
@@ -105,7 +106,6 @@ class UnRest(object):
         self.OpenApi = OpenApiClass
         self.Options = OptionsClass
         self.empty_get_as_404 = empty_get_as_404
-
         if app is not None:
             self.init_app(app)
         if session is not None:
@@ -114,19 +114,18 @@ class UnRest(object):
     def init_app(self, app):
         """Sets the app on UnRest if it was missing during instantiation."""
         self.app = app
-        prefix = self.root_path.lstrip('/').replace('/', '_')
         if self._framework:
-            self.framework = self._framework(app, prefix=prefix)
+            self.framework = self._framework(app, url=self.root_path)
         else:
             try:
                 from flask import Flask
             except ImportError:
-                self.framework = None
+                pass
             else:
                 if isinstance(app, Flask):
                     from .framework.flask import FlaskFramework
 
-                    self.framework = FlaskFramework(app, prefix=prefix)
+                    self.framework = FlaskFramework(app, url=self.root_path)
         if not self.framework:
             raise NotImplementedError(
                 'Your framework %s is not recognized. '

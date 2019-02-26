@@ -16,12 +16,12 @@ class TornadoFramework(Framework):
     Requires [tornado](https://www.tornadoweb.org/) to be installed.
     """
 
-    def __init__(self, app, prefix):
-        super().__init__(app, prefix)
+    __RequestHandlerClass__ = RequestHandler
+
+    def __init__(self, app, url):
+        super().__init__(app, url)
         self.router = _ApplicationRouter(app)
-        self.app.default_router.add_rules(
-            [(r'/' + prefix + r'/(.*)', self.router)]
-        )
+        self.app.default_router.add_rules([(url + r'(.*)', self.router)])
 
     def register_route(self, path, method, parameters, function):
         name = self._name(function.__name__.replace(method + '_', ''))
@@ -29,15 +29,19 @@ class TornadoFramework(Framework):
             path
             + '(?:/'
             + '/'.join('(?P<%s>.+)' % param for param in parameters)
-            + ')?'
+            + ')?(?:/)?'
             if parameters
             else path
         )
 
-        Handler = self.router.named_rules.get(name)
+        Handler = self.router.named_rules.get(path_with_params)
         if not Handler:
-            Handler = type(name + 'Handler', (RequestHandler,), {})
-            self.router.add_rules([(path_with_params, Handler, {}, name)])
+            Handler = type(
+                name + 'Handler', (self.__RequestHandlerClass__,), {}
+            )
+            self.router.add_rules(
+                [(path_with_params, Handler, {}, path_with_params)]
+            )
         elif getattr(Handler, 'target', None):
             # If Handler has been wrapper by a Rule
             Handler = Handler.target
@@ -67,5 +71,5 @@ class TornadoFramework(Framework):
         setattr(Handler, method.lower(), tornado_fun)
 
     @property
-    def url(self):
-        return self.app.reverse_url(self._name('index'))
+    def external_url(self):
+        return self.app.reverse_url(self.url)

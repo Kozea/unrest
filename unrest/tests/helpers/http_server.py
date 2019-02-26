@@ -24,6 +24,7 @@ def patch_app(app):
             self.rfile.seek(0)
             self.wfile = BytesIO()
             self.handle_one_request()
+            self.finish()
 
         def log_request(self, code='-', size='-'):
             pass
@@ -39,11 +40,20 @@ class HTTPServerMixin(object):
         super().setUp()
 
     def get_app(self):
+        session = self.session
+
         class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             def do_GET(self):
+                if self.path != '/':
+                    self.send_response(404)
+                    self.end_headers()
+                    return
                 self.send_response(200)
                 self.end_headers()
                 self.wfile.write(b'A normal route!')
+
+            def finish(self):
+                session.remove()
 
         self.app = FakeApp(SimpleHTTPRequestHandler)
         return self.app
