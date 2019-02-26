@@ -1,35 +1,49 @@
-import json as jsonlib
 from http.server import BaseHTTPRequestHandler
 from io import BytesIO
-from tempfile import NamedTemporaryFile
 from unittest import TestCase
-
-from sqlalchemy.engine import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.types import Float
 
 from . import idsorted
 from ..framework.http_server import HTTPServerFramework
 from ..unrest import UnRest
-from .model import Base, Fruit, Tree, fill_data
-
-f = NamedTemporaryFile()
-db_url = 'sqlite:///%s' % f.name
-
-engine = create_engine(db_url)
-Session = sessionmaker()
-Session.configure(bind=engine)
-session = scoped_session(Session)
+from .model import Fruit, Tree
+from .utils import UnRestTestCase
 
 
-class UnrestHTTPServerTestCase(TestCase):
+class FakeApp(object):
+    def __init__(self, rhc):
+        self.RequestHandlerClass = rhc
+
+
+class FakeResponse(object):
+    def __init__(self, code, headers, body):
+        self.code = code
+        self.headers = headers
+        self.body = body
+
+
+def patch_app(app):
+    class FakeRequest(app.RequestHandlerClass):
+        def __init__(self, request):
+            self.rfile = BytesIO()
+            self.rfile.write(request)
+            self.rfile.seek(0)
+            self.wfile = BytesIO()
+            self.handle_one_request()
+
+        def log_request(self, code='-', size='-'):
+            pass
+
+    app.RequestHandlerClass = FakeRequest
+
+
+class UnrestHTTPServerTestCase(UnRestTestCase, TestCase):
+    __framework__ = HTTPServerFramework
+
     def setUp(self):
+        patch_app(self.get_app())
         super().setUp()
 
-        class FakeApp(object):
-            def __init__(self, rhc):
-                self.RequestHandlerClass = rhc
-
+    def get_app(self):
         class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             def do_GET(self):
                 self.send_response(200)
@@ -37,54 +51,9 @@ class UnrestHTTPServerTestCase(TestCase):
                 self.wfile.write(b'A normal simple http server route!')
 
         self.app = FakeApp(SimpleHTTPRequestHandler)
-
-        Base.metadata.drop_all(bind=engine)
-        Base.metadata.create_all(bind=engine)
-        fill_data(session)
-        self.engine = engine
-        self.session = session
-        self.make_unrest()
-
-        class FakeRequest(self.app.RequestHandlerClass):
-            def __init__(self, request):
-                self.rfile = BytesIO()
-                self.rfile.write(request)
-                self.rfile.seek(0)
-                self.wfile = BytesIO()
-                self.handle_one_request()
-
-            def log_request(self, code='-', size='-'):
-                pass
-
-        self.app.RequestHandlerClass = FakeRequest
-        self.rest = self.make_unrest()
-
-    def tearDown(self):
-        self.session.remove()
-
-    def make_unrest(self):
-        rest = UnRest(self.app, self.session, framework=HTTPServerFramework)
-        fruit = rest(
-            Fruit,
-            methods=rest.all,
-            properties=[rest.Property('square_size', Float())],
-        )
-        rest(
-            Tree,
-            methods=rest.all,
-            relationships={'fruits': fruit},
-            properties=['fruit_colors'],
-            allow_batch=True,
-        )
-        return rest
+        return self.app
 
     def fetch(self, url, method='GET', headers={}, body=None):
-        class FakeResponse(object):
-            def __init__(self, code, headers, body):
-                self.code = code
-                self.headers = headers
-                self.body = body
-
         if body:
             headers['Content-Length'] = len(body)
 
@@ -94,7 +63,6 @@ class UnrestHTTPServerTestCase(TestCase):
         )
         if body:
             request += '\r\n\r\n' + body
-        print(request)
 
         server = self.app.RequestHandlerClass(request.encode('iso-8859-1'))
         server.wfile.seek(0)
@@ -109,21 +77,6 @@ class UnrestHTTPServerTestCase(TestCase):
 
         return FakeResponse(int(code), headers, body.encode('utf-8'))
 
-    def json_fetch(self, *args, **kwargs):
-        kwargs.setdefault('method', 'GET')
-        json = kwargs.pop('json', '')
-        if json:
-            kwargs.setdefault('body', jsonlib.dumps(json))
-            kwargs.setdefault('headers', {'Content-Type': 'application/json'})
-
-        response = self.fetch(*args, **kwargs)
-        code = response.code
-        self.assertEqual(
-            response.headers.get('Content-Type'), 'application/json'
-        )
-        rv = jsonlib.loads(response.body.decode('utf-8'))
-        return code, rv
-
 
 class TestHTTPServerHome(UnrestHTTPServerTestCase):
     def test_homepage(self):
@@ -133,12 +86,6 @@ class TestHTTPServerHome(UnrestHTTPServerTestCase):
 
 
 class TestHTTPServerGet(UnrestHTTPServerTestCase):
-    def make_unrest(self):
-        rest = UnRest(self.app, self.session, framework=HTTPServerFramework)
-        rest(Tree)
-        rest(Fruit)
-        return rest
-
     def test_get(self):
         code, json = self.json_fetch('/api/tree')
         self.assertEqual(code, 200)
@@ -155,7 +102,7 @@ class TestHTTPServerGet(UnrestHTTPServerTestCase):
 
 class TestHTTPServerGetName(UnrestHTTPServerTestCase):
     def make_unrest(self):
-        rest = UnRest(self.app, self.session, framework=HTTPServerFramework)
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, name='forest')
         return rest
 
@@ -174,11 +121,6 @@ class TestHTTPServerGetName(UnrestHTTPServerTestCase):
 
 
 class TestHTTPServerGetFruits(UnrestHTTPServerTestCase):
-    def make_unrest(self):
-        rest = UnRest(self.app, self.session, framework=HTTPServerFramework)
-        rest(Fruit)
-        return rest
-
     def test_get_fruits(self):
         code, json = self.json_fetch('/api/fruit')
         self.assertEqual(code, 200)
@@ -233,7 +175,7 @@ class TestHTTPServerGetFruits(UnrestHTTPServerTestCase):
 
 class TestHTTPServerPost(UnrestHTTPServerTestCase):
     def make_unrest(self):
-        rest = UnRest(self.app, self.session, framework=HTTPServerFramework)
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, methods=['GET', 'POST'])
         return rest
 
@@ -263,7 +205,7 @@ class TestHTTPServerPost(UnrestHTTPServerTestCase):
 
 class TestHTTPServerOptions(UnrestHTTPServerTestCase):
     def make_unrest(self):
-        rest = UnRest(self.app, self.session, framework=HTTPServerFramework)
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
         fruit = rest(Fruit)
         rest(
             Tree,

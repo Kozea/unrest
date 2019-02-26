@@ -1,71 +1,25 @@
 import json as jsonlib
-from tempfile import NamedTemporaryFile
 
-from sqlalchemy.engine import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.types import Float
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application, RequestHandler
 
 from . import idsorted
 from ..framework.tornado import TornadoFramework
 from ..unrest import UnRest
-from .model import Base, Fruit, Tree, fill_data
+from .model import Fruit, Tree
+from .utils import UnRestTestCase
 
 
-def make_app(make_unrest):
-    class MainHandler(RequestHandler):
-        def get(self):
-            self.write("A normal tornado route!")
-
-    app = Application([(r"/", MainHandler)])
-
-    f = NamedTemporaryFile()
-    db_url = 'sqlite:///%s' % f.name
-
-    engine = create_engine(db_url)
-    Session = sessionmaker()
-    Session.configure(bind=engine)
-    session = scoped_session(Session)
-
-    Base.metadata.create_all(bind=engine)
-    fill_data(session)
-    app._engine = engine
-    app._session = session
-    make_unrest(app, session)
-
-    return app
-
-
-def make_default_unrest(app, session):
-    rest = UnRest(app, session, framework=TornadoFramework)
-    fruit = rest(
-        Fruit,
-        methods=rest.all,
-        properties=[rest.Property('square_size', Float())],
-    )
-    rest(
-        Tree,
-        methods=rest.all,
-        relationships={'fruits': fruit},
-        properties=['fruit_colors'],
-        allow_batch=True,
-    )
-    return rest
-
-
-class UnrestTornadoTestCase(AsyncHTTPTestCase):
-    def setUp(self):
-        super().setUp()
-        Base.metadata.drop_all(bind=self._app._engine)
-        Base.metadata.create_all(bind=self._app._engine)
-        fill_data(self._app._session)
+class UnrestTornadoTestCase(UnRestTestCase, AsyncHTTPTestCase):
+    __framework__ = TornadoFramework
 
     def get_app(self):
-        return make_app(self.make_unrest)
+        class MainHandler(RequestHandler):
+            def get(self):
+                self.write("A normal tornado route!")
 
-    def make_unrest(self, app, session):
-        return make_default_unrest(app, session)
+        self.app = Application([(r"/", MainHandler)])
+        return self.app
 
     def json_fetch(self, *args, **kwargs):
         kwargs.setdefault('method', 'GET')
@@ -91,11 +45,6 @@ class TestTornadoHome(UnrestTornadoTestCase):
 
 
 class TestTornadoGet(UnrestTornadoTestCase):
-    def make_unrest(self, app, session):
-        rest = UnRest(app, session, framework=TornadoFramework)
-        rest(Tree)
-        rest(Fruit)
-
     def test_get(self):
         code, json = self.json_fetch('/api/tree')
         self.assertEqual(code, 200)
@@ -111,8 +60,8 @@ class TestTornadoGet(UnrestTornadoTestCase):
 
 
 class TestTornadoGetName(UnrestTornadoTestCase):
-    def make_unrest(self, app, session):
-        rest = UnRest(app, session, framework=TornadoFramework)
+    def make_unrest(self):
+        rest = UnRest(self.app, self.session, framework=TornadoFramework)
         rest(Tree, name='forest')
 
     def test_get_name(self):
@@ -130,10 +79,6 @@ class TestTornadoGetName(UnrestTornadoTestCase):
 
 
 class TestTornadoGetFruits(UnrestTornadoTestCase):
-    def make_unrest(self, app, session):
-        rest = UnRest(app, session, framework=TornadoFramework)
-        rest(Fruit)
-
     def test_get_fruits(self):
         code, json = self.json_fetch('/api/fruit')
         self.assertEqual(code, 200)
@@ -187,8 +132,8 @@ class TestTornadoGetFruits(UnrestTornadoTestCase):
 
 
 class TestTornadoPost(UnrestTornadoTestCase):
-    def make_unrest(self, app, session):
-        rest = UnRest(app, session, framework=TornadoFramework)
+    def make_unrest(self):
+        rest = UnRest(self.app, self.session, framework=TornadoFramework)
         rest(Tree, methods=['GET', 'POST'])
 
     def test_post(self):
@@ -216,8 +161,8 @@ class TestTornadoPost(UnrestTornadoTestCase):
 
 
 class TestTornadoOptions(UnrestTornadoTestCase):
-    def make_unrest(self, app, session):
-        rest = UnRest(app, session, framework=TornadoFramework)
+    def make_unrest(self):
+        rest = UnRest(self.app, self.session, framework=TornadoFramework)
         fruit = rest(Fruit)
         rest(
             Tree,
