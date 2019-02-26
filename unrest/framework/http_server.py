@@ -56,9 +56,13 @@ class HTTPServerFramework(Framework):
                         )
                 return self.send(404, 'Not Found')
 
-            def send(self, status, message):
+            def send(self, status, message, headers):
                 self.send_response(status)
+
+                for name, value in headers.items():
+                    self.send_header(name, value)
                 self.end_headers()
+
                 self.wfile.write(message.encode('utf-8'))
 
             def respond(self, url, method, function, url_parameters):
@@ -82,10 +86,7 @@ class HTTPServerFramework(Framework):
                     log.exception('Error on ' + method + ' ' + self.path)
                     return self.send(500, 'Internal Server Error')
 
-                for name, value in response.headers.items():
-                    self.headers[name] = value
-
-                self.send(response.status, response.payload)
+                self.send(response.status, response.payload, response.headers)
 
         self.app.RequestHandlerClass = HTTPServerFrameworkHandlerClass
 

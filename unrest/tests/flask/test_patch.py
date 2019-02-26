@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from . import idsorted
+from .. import idsorted
 from ..model import Fruit, Tree
 
 

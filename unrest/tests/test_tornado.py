@@ -8,9 +8,9 @@ from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application, RequestHandler
 
 from . import idsorted
-from ...framework.tornado import TornadoFramework
-from ...unrest import UnRest
-from ..model import Base, Fruit, Tree, fill_data
+from ..framework.tornado import TornadoFramework
+from ..unrest import UnRest
+from .model import Base, Fruit, Tree, fill_data
 
 
 def make_app(make_unrest):

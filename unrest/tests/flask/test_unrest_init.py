@@ -7,7 +7,7 @@ from unrest.coercers import Deserialize, Serialize
 from unrest.framework.flask import FlaskFramework
 from unrest.rest import Rest
 
-from . import idsorted
+from .. import idsorted
 from ...framework import Framework
 from ...idiom import Idiom
 from ...util import Response
