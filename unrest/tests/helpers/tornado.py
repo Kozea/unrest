@@ -1,6 +1,8 @@
+from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application, RequestHandler
 
 from ...framework.tornado import TornadoFramework
+from ..utils import UnRestTestCase
 
 
 class SessionRemoverRequestHandler(RequestHandler):
@@ -13,7 +15,7 @@ class SessionRemoverTornadoFramework(TornadoFramework):
     __RequestHandlerClass__ = SessionRemoverRequestHandler
 
 
-class TornadoMixin(object):
+class TornadoMixin(UnRestTestCase, AsyncHTTPTestCase):
     __framework__ = SessionRemoverTornadoFramework
 
     def get_app(self):
@@ -24,3 +26,8 @@ class TornadoMixin(object):
         self.app = Application([(r"/", MainHandler)])
         self.app.session = self.session
         return self.app
+
+    def raw_fetch(self, *args, **kwargs):
+        # This gets the AsyncHTTPTestCase fetch
+        # (otherwise we get a stack overflow)
+        return super(UnRestTestCase, self).fetch(*args, **kwargs)

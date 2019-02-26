@@ -1,5 +1,3 @@
-from tornado.testing import AsyncHTTPTestCase
-
 from .crud.delete import DeleteTestCollection
 from .crud.delete_pk import DeletePkTestCollection
 from .crud.get import GetTestCollection
@@ -17,113 +15,67 @@ from .features.properties import PropertiesTestCollection
 from .features.relationships import RelationshipsTestCollection
 from .features.validators import ValidatorsTestCollection
 from .helpers.tornado import TornadoMixin
-from .utils import MiscTests, UnRestTestCase
 
 
-class TornadoTests(MiscTests, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase):
+class TornadoGetTests(GetTestCollection, TornadoMixin):
     pass
 
 
-class TornadoGetTests(
-    GetTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoGetPkTests(GetPkTestCollection, TornadoMixin):
     pass
 
 
-class TornadoGetPkTests(
-    GetPkTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoPostTests(PostTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPostTests(
-    PostTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoPostPkTests(PostPkTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPostPkTests(
-    PostPkTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoPutTests(PutTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPutTests(
-    PutTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoPutPkTests(PutPkTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPutPkTests(
-    PutPkTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoPatchTests(PatchTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPatchTests(
-    PatchTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoPatchPkTests(PatchPkTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPatchPkTests(
-    PatchPkTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoDeleteTests(DeleteTestCollection, TornadoMixin):
     pass
 
 
-class TornadoDeleteTests(
-    DeleteTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoDeletePkTests(DeletePkTestCollection, TornadoMixin):
     pass
 
 
-class TornadoDeletePkTests(
-    DeletePkTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoAuthDecoratorsTests(AuthDecoratorsTestCollection, TornadoMixin):
     pass
 
 
-class TornadoAuthDecoratorsTests(
-    AuthDecoratorsTestCollection,
-    UnRestTestCase,
-    TornadoMixin,
-    AsyncHTTPTestCase,
-):
+class TornadoPaginatedTests(PaginatedTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPaginatedTests(
-    PaginatedTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoPropertiesTests(PropertiesTestCollection, TornadoMixin):
     pass
 
 
-class TornadoPropertiesTests(
-    PropertiesTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
+class TornadoRelationshipsTests(RelationshipsTestCollection, TornadoMixin):
     pass
 
 
-class TornadoRelationshipsTests(
-    RelationshipsTestCollection,
-    UnRestTestCase,
-    TornadoMixin,
-    AsyncHTTPTestCase,
-):
+class TornadoValidatorsTests(ValidatorsTestCollection, TornadoMixin):
     pass
 
 
-class TornadoValidatorsTests(
-    ValidatorsTestCollection, UnRestTestCase, TornadoMixin, AsyncHTTPTestCase
-):
-    pass
-
-
-class TornadoMiscellaneousTests(
-    MiscellaneousTestCollection,
-    UnRestTestCase,
-    TornadoMixin,
-    AsyncHTTPTestCase,
-):
+class TornadoMiscellaneousTests(MiscellaneousTestCollection, TornadoMixin):
     pass

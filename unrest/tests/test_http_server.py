@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 from .crud.delete import DeleteTestCollection
 from .crud.delete_pk import DeletePkTestCollection
 from .crud.get import GetTestCollection
@@ -17,104 +15,73 @@ from .features.properties import PropertiesTestCollection
 from .features.relationships import RelationshipsTestCollection
 from .features.validators import ValidatorsTestCollection
 from .helpers.http_server import HTTPServerMixin
-from .utils import MiscTests, UnRestTestCase
 
 
-class HTTPServerTests(MiscTests, UnRestTestCase, HTTPServerMixin, TestCase):
+class HTTPServerGetTests(GetTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerGetTests(
-    GetTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerGetPkTests(GetPkTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerGetPkTests(
-    GetPkTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPostTests(PostTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerPostTests(
-    PostTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPostPkTests(PostPkTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerPostPkTests(
-    PostPkTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPutTests(PutTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerPutTests(
-    PutTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPutPkTests(PutPkTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerPutPkTests(
-    PutPkTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPatchTests(PatchTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerPatchTests(
-    PatchTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPatchPkTests(PatchPkTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerPatchPkTests(
-    PatchPkTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerDeleteTests(DeleteTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerDeleteTests(
-    DeleteTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
-    pass
-
-
-class HTTPServerDeletePkTests(
-    DeletePkTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerDeletePkTests(DeletePkTestCollection, HTTPServerMixin):
     pass
 
 
 class HTTPServerAuthDecoratorsTests(
-    AuthDecoratorsTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
+    AuthDecoratorsTestCollection, HTTPServerMixin
 ):
     pass
 
 
-class HTTPServerPaginatedTests(
-    PaginatedTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPaginatedTests(PaginatedTestCollection, HTTPServerMixin):
     pass
 
 
-class HTTPServerPropertiesTests(
-    PropertiesTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerPropertiesTests(PropertiesTestCollection, HTTPServerMixin):
     pass
 
 
 class HTTPServerRelationshipsTests(
-    RelationshipsTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
+    RelationshipsTestCollection, HTTPServerMixin
 ):
     pass
 
 
-class HTTPServerValidatorsTests(
-    ValidatorsTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
-):
+class HTTPServerValidatorsTests(ValidatorsTestCollection, HTTPServerMixin):
     pass
 
 
 class HTTPServerMiscellaneousTests(
-    MiscellaneousTestCollection, UnRestTestCase, HTTPServerMixin, TestCase
+    MiscellaneousTestCollection, HTTPServerMixin
 ):
     pass

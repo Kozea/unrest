@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 from .crud.delete import DeleteTestCollection
 from .crud.delete_pk import DeletePkTestCollection
 from .crud.get import GetTestCollection
@@ -17,98 +15,67 @@ from .features.properties import PropertiesTestCollection
 from .features.relationships import RelationshipsTestCollection
 from .features.validators import ValidatorsTestCollection
 from .helpers.flask import FlaskMixin
-from .utils import MiscTests, UnRestTestCase
 
 
-class FlaskTests(MiscTests, UnRestTestCase, FlaskMixin, TestCase):
+class FlaskGetTests(GetTestCollection, FlaskMixin):
     pass
 
 
-class FlaskGetTests(GetTestCollection, UnRestTestCase, FlaskMixin, TestCase):
+class FlaskGetPkTests(GetPkTestCollection, FlaskMixin):
     pass
 
 
-class FlaskGetPkTests(
-    GetPkTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskPostTests(PostTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPostTests(PostTestCollection, UnRestTestCase, FlaskMixin, TestCase):
+class FlaskPostPkTests(PostPkTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPostPkTests(
-    PostPkTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskPutTests(PutTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPutTests(PutTestCollection, UnRestTestCase, FlaskMixin, TestCase):
+class FlaskPutPkTests(PutPkTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPutPkTests(
-    PutPkTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskPatchTests(PatchTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPatchTests(
-    PatchTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskPatchPkTests(PatchPkTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPatchPkTests(
-    PatchPkTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskDeleteTests(DeleteTestCollection, FlaskMixin):
     pass
 
 
-class FlaskDeleteTests(
-    DeleteTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskDeletePkTests(DeletePkTestCollection, FlaskMixin):
     pass
 
 
-class FlaskDeletePkTests(
-    DeletePkTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskAuthDecoratorsTests(AuthDecoratorsTestCollection, FlaskMixin):
     pass
 
 
-class FlaskAuthDecoratorsTests(
-    AuthDecoratorsTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskPaginatedTests(PaginatedTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPaginatedTests(
-    PaginatedTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskPropertiesTests(PropertiesTestCollection, FlaskMixin):
     pass
 
 
-class FlaskPropertiesTests(
-    PropertiesTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskRelationshipsTests(RelationshipsTestCollection, FlaskMixin):
     pass
 
 
-class FlaskRelationshipsTests(
-    RelationshipsTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskValidatorsTests(ValidatorsTestCollection, FlaskMixin):
     pass
 
 
-class FlaskValidatorsTests(
-    ValidatorsTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
-    pass
-
-
-class FlaskMiscellaneousTests(
-    MiscellaneousTestCollection, UnRestTestCase, FlaskMixin, TestCase
-):
+class FlaskMiscellaneousTests(MiscellaneousTestCollection, FlaskMixin):
     pass

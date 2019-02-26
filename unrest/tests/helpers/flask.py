@@ -1,12 +1,14 @@
 from tempfile import NamedTemporaryFile
+from unittest import TestCase
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from ...framework.flask import FlaskFramework
+from ..utils import UnRestTestCase
 
 
-class FlaskMixin(object):
+class FlaskMixin(UnRestTestCase, TestCase):
     __framework__ = FlaskFramework
 
     @classmethod
@@ -34,7 +36,7 @@ class FlaskMixin(object):
         self.opener = app.test_client()
         return app
 
-    def fetch(self, url, method='GET', headers={}, body=None):
+    def raw_fetch(self, url, method='GET', headers={}, body=None):
         response = self.opener.open(
             url, method=method, headers=headers, data=body
         )
