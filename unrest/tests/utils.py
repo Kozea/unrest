@@ -8,20 +8,24 @@ from . import idsorted
 from ..unrest import UnRest
 from .model import Base, Fruit, Tree, fill_data
 
-f = NamedTemporaryFile()
-db_url = 'sqlite:///%s' % f.name
-
-engine = create_engine(db_url)
-Session = sessionmaker()
-Session.configure(bind=engine)
-session = scoped_session(Session)
-
 
 class UnRestTestCase(object):
+    @classmethod
+    def setUpClass(cls):
+        cls.db()
+
+    @classmethod
+    def db(cls):
+        f = NamedTemporaryFile()
+        cls.db_url = 'sqlite:///%s' % f.name
+
+        cls.engine = create_engine(cls.db_url)
+        Session = sessionmaker()
+        Session.configure(bind=cls.engine)
+        cls.session = scoped_session(Session)
+
     def setUp(self):
         super().setUp()
-        self.engine = engine
-        self.session = session
         Base.metadata.drop_all(bind=self.engine)
         Base.metadata.create_all(bind=self.engine)
         fill_data(self.session)

@@ -1,0 +1,43 @@
+from tempfile import NamedTemporaryFile
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from ...framework.flask import FlaskFramework
+
+
+class FlaskMixin(object):
+    __framework__ = FlaskFramework
+
+    @classmethod
+    def db(cls):
+        f = NamedTemporaryFile()
+        cls.db_url = 'sqlite:///%s' % f.name
+
+    def setUp(self):
+        self.get_app()
+        self.db = SQLAlchemy(self.app)
+        self.engine = self.db.engine
+        self.session = self.db.session
+        super().setUp()
+
+    def get_app(self):
+        app = Flask(__name__)
+
+        @app.route('/')
+        def index():
+            return 'A normal route!'
+
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        app.config['SQLALCHEMY_DATABASE_URI'] = self.db_url
+        self.app = app
+        self.opener = app.test_client()
+        return app
+
+    def fetch(self, url, method='GET', headers={}, body=None):
+        response = self.opener.open(
+            url, method=method, headers=headers, data=body
+        )
+        response.code = response.status_code
+        response.body = response.data
+        return response
