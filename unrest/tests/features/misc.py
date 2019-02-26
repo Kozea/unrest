@@ -434,3 +434,24 @@ This api expose the `Tree` and `Fruit` entity Rest methods.
             {'id': 2, 'name': 'maple'},
             {'id': 3, 'name': 'oak'},
         ]
+
+    def test_wrong_method(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree, methods=['GET', 'POST'])
+        code, html = self.fetch(
+            '/api/tree',
+            method="PUT",
+            json={
+                'objects': [
+                    {'id': 1, 'name': 'cedar'},
+                    {'id': 2, 'name': 'mango'},
+                ]
+            },
+        )
+        assert code == 405
+
+    def test_wrong_url(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree)
+        code, html = self.fetch('/apy/trea')
+        assert code == 404
