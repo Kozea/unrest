@@ -28,12 +28,12 @@ class UnRest(object):
 
     # Arguments
         app: Your web application,
-            can be set afterwards using #init_app
+            can be set afterwards using #init_app.
         session: Your sqlalchemy session,
             can be set afterwards using the #init_session method.
-        path: Default '/api', sets the root url path for your endpoints
+        path: Default '/api', sets the root url path for your endpoints.
         version: Adds a version to the root url path if specified
-            (i.e. /api/v2)
+            (i.e. /api/v2).
         framework: A specific framework class, defaults to auto detect.
         idiom: An idiom class, defaults to #::unrest.idiom.unrest.
         SerializeClass: A global alternative
@@ -43,14 +43,14 @@ class UnRest(object):
         RestClass: Replace the default #::unrest.rest#Rest class.
         allow_options: Set it to False to disable OPTIONS requests.
         serve_openapi_file: Set it to False to disable openapi file generation.
-        empty_get_as_404: If True return a 404 on get with id not found
+        empty_get_as_404: If True return a 404 on get with id not found.
         info: Additional info for the openapi metadata.
 
     # Frameworks
     Unrest aims to be framework agnostic.
     It currently works with Flask out of the box and provides some other
     frameworks: Tornado and python http.server.
-    See #::unrest.framework#Framework
+    See #::unrest.framework#Framework.
     """
 
     class RestError(Exception):
@@ -144,7 +144,7 @@ class UnRest(object):
 
     @property
     def root_path(self):
-        """Returns this API root path."""
+        """Return this API root path."""
         if self.version:
             return '/'.join((self.path, self.version))
         return self.path
@@ -164,15 +164,15 @@ class UnRest(object):
         and message as content.
 
         # Arguments
-            status: The http status code corresponding to the error
-                (404 for instance)
-            message: The message that will be returned in the json response
-            extra: Mapping of extra fields to return in json response
+            status: The HTTP status code corresponding to the error
+                (404 for instance).
+            message: The message that will be returned in the json response.
+            extra: Mapping of extra fields to return in json response.
         """
         raise self.RestError(status, message, extra)
 
     def __call__(self, *args, **kwargs):
-        """Returns a #::unrest.rest#Rest instance. See rest entry points."""
+        """Return a #::unrest.rest#Rest instance. See rest entry points."""
 
         if self.idiom is not None:
             kwargs.setdefault('idiom', self.idiom)
@@ -210,10 +210,10 @@ class UnRest(object):
         Send `data` as json.
 
         # Arguments
-            data: An object to send as json
+            data: An object to send as json.
 
         # Returns
-        The #::unrest.util#Response containing the json data
+        The #::unrest.util#Response containing the json data.
         """
         payload = json.dumps(data)
         headers = {'Content-Type': 'application/json'}
