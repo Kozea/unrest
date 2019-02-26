@@ -1,0 +1,73 @@
+from http.server import BaseHTTPRequestHandler
+from io import BytesIO
+
+from ...framework.http_server import HTTPServerFramework
+
+
+class FakeApp(object):
+    def __init__(self, rhc):
+        self.RequestHandlerClass = rhc
+
+
+class FakeResponse(object):
+    def __init__(self, code, headers, body):
+        self.code = code
+        self.headers = headers
+        self.body = body
+
+
+def patch_app(app):
+    class FakeRequest(app.RequestHandlerClass):
+        def __init__(self, request):
+            self.rfile = BytesIO()
+            self.rfile.write(request)
+            self.rfile.seek(0)
+            self.wfile = BytesIO()
+            self.handle_one_request()
+
+        def log_request(self, code='-', size='-'):
+            pass
+
+    app.RequestHandlerClass = FakeRequest
+
+
+class HTTPServerMixin(object):
+    __framework__ = HTTPServerFramework
+
+    def setUp(self):
+        patch_app(self.get_app())
+        super().setUp()
+
+    def get_app(self):
+        class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b'A normal route!')
+
+        self.app = FakeApp(SimpleHTTPRequestHandler)
+        return self.app
+
+    def fetch(self, url, method='GET', headers={}, body=None):
+        if body:
+            headers['Content-Length'] = len(body)
+
+        request = '\r\n'.join(
+            ['%s %s HTTP/1.1' % (method.upper(), url)]
+            + ['%s:%s' % (key, value) for key, value in headers.items()]
+        )
+        if body:
+            request += '\r\n\r\n' + body
+
+        server = self.app.RequestHandlerClass(request.encode('iso-8859-1'))
+        server.wfile.seek(0)
+        res = server.wfile.read().decode('iso-8859-1')
+        [head, body] = res.split('\r\n\r\n')
+        res_lines = head.split('\r\n')
+        [_, code, message] = res_lines[0].split(' ', 2)
+        headers = {
+            line.split(':')[0]: line.split(':')[1].strip()
+            for line in res_lines[1:]
+        }
+
+        return FakeResponse(int(code), headers, body.encode('utf-8'))
