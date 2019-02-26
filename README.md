@@ -10,7 +10,7 @@ rest = UnRest(app)
 rest(Person)
 ```
 
-This should provides you a `/api/person` and a `/api/person/<login>` route accessible in GET only.
+This should provide you a `/api/person` and a `/api/person/<login>` route accessible in GET only.
 
 To activate data modification, set the methods array like this:
 
@@ -18,7 +18,7 @@ To activate data modification, set the methods array like this:
 rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH']) # or simply methods=rest.all
 ```
 
-You will get both routes (collection and member) on the four methods. Please see [the wikipedia page](https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URI_and_HTTP_methods) for their signification.
+You will get both routes (collection and member) on the five methods. Please see [the wikipedia page](https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URI_and_HTTP_methods) for their signification.
 
 You can also override the default methods like this:
 
@@ -308,7 +308,7 @@ $ curl -s http://localhost:5000/api/tree
 }
 ```
 
-Check that when allow_batch is not set we can't put all:
+Check that when `allow_batch` is not set we can't put all:
 ```json
 $ curl -s http://localhost:5000/api/fruit -X PUT -H "Content-Type: application/json" -d '{
   "objects": [
@@ -572,7 +572,7 @@ $ curl -s http://localhost:5000/api/tree -X PATCH -H "Content-Type: application/
 ```
 
 
-Check that when allow_batch is not set we can't put all:
+Check that when `allow_batch` is not set we can't put all:
 ```json
 $ curl -s http://localhost:5000/api/fruit -X PATCH -H "Content-Type: application/json" -d '{
   "objects": [
