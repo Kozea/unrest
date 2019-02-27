@@ -42,6 +42,22 @@ class PatchPkTestCollection(object):
             {'id': 3, 'name': 'oak'},
         ]
 
+    def test_patch_tree_missing_tree(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree, methods=['GET', 'PATCH'], allow_batch=True)
+        code, json = self.fetch(
+            '/api/tree/9',
+            method="PATCH",
+            json={
+                'objects': [
+                    {'id': 1, 'name': 'cedar'},
+                    {'id': 8, 'name': 'mango'},
+                ]
+            },
+        )
+        assert code == 404
+        assert json['message'] == "tree({'id': 9}) not found"
+
     def test_patch_tree_with_another_id(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, methods=['GET', 'PATCH'])
