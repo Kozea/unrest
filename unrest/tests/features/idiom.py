@@ -1,3 +1,5 @@
+import sys
+
 from unrest import UnRest
 
 from .. import idsorted
@@ -151,6 +153,71 @@ objects:
 - id: 2
   name: mango
 occurences: 2
+primary_keys:
+- id
+'''
+        )
+
+    def test_yaml_idiom_put_bad_formed(self):
+        rest = UnRest(
+            self.app,
+            self.session,
+            idiom=YamlIdiom,
+            framework=self.__framework__,
+        )
+        rest(Tree, methods=['GET', 'PUT'], allow_batch=True)
+
+        code, yaml = self.fetch(
+            '/api/tree',
+            method="PUT",
+            body='''\
+objects: ][
+''',
+        )
+        assert code == 400
+        assert (
+            yaml
+            == '''message: "YAML Error in payload: while parsing a block node\
+\\nexpected the node content,\\\n  \\ but found \']\'\\n  in \
+\\"<unicode string>\\", line 1, column 10:\\n    objects: ][\\n\\\n  \
+\\             ^"
+'''
+        )
+
+    def test_yaml_idiom_no_yaml(self):
+        sys.modules['yaml'] = None
+        rest = UnRest(
+            self.app,
+            self.session,
+            idiom=YamlIdiom,
+            framework=self.__framework__,
+        )
+        try:
+            rest(Tree, methods=['GET', 'PUT'], allow_batch=True)
+        except ImportError:
+            pass
+        else:
+            raise Exception('Should have raised')  # pragma: no cover
+
+        del sys.modules['yaml']
+
+    def test_yaml_idiom_empty_get_pk_as_404(self):
+        rest = UnRest(
+            self.app,
+            self.session,
+            idiom=YamlIdiom,
+            framework=self.__framework__,
+            empty_get_as_404=True,
+        )
+        rest(Tree)
+        code, yaml = self.fetch('/api/tree/6')
+        assert code == 404
+        print(yaml)
+        assert (
+            yaml
+            == '''\
+objects: []
+occurences: 0
 primary_keys:
 - id
 '''

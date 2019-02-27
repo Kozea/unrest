@@ -1,8 +1,3 @@
-try:
-    import yaml
-except ImportError:
-    yaml = None
-
 from . import Idiom
 from ..util import Response
 
@@ -19,16 +14,19 @@ class YamlIdiom(Idiom):
 
     def __init__(self, rest):
         self.rest = rest
-        if yaml is None:
+        try:
+            import yaml
+        except ImportError:
             raise ImportError(
                 'You must have pyyaml installed to use this idiom'
             )
+        self.yaml = yaml
 
     def request_to_payload(self, request):
         if request.payload:
             try:
-                return yaml.load(request.payload.decode('utf-8'))
-            except yaml.JSONDecodeError as e:
+                return self.yaml.load(request.payload.decode('utf-8'))
+            except self.yaml.YAMLError as e:
                 self.rest.raise_error(400, 'YAML Error in payload: %s' % e)
 
     def data_to_response(self, data, request, status=200):
@@ -39,7 +37,7 @@ class YamlIdiom(Idiom):
             and data['occurences'] == 0
         ):
             status = 404
-        payload = yaml.dump(data, default_flow_style=False)
+        payload = self.yaml.dump(data, default_flow_style=False)
         headers = {'Content-Type': 'text/yaml'}
         response = Response(payload, headers, status)
         return response
