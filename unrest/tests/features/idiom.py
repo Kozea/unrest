@@ -3,6 +3,7 @@ from unrest import UnRest
 from .. import idsorted
 from ...idiom import Idiom
 from ...idiom.unrest import UnRestIdiom
+from ...idiom.yaml import YamlIdiom
 from ...util import Response
 from ..model import Tree
 
@@ -77,3 +78,80 @@ class IdiomTestCollection(object):
         ]
 
         assert tree.query.count() == 3
+
+    def test_yaml_idiom_get(self):
+        rest = UnRest(
+            self.app,
+            self.session,
+            idiom=YamlIdiom,
+            framework=self.__framework__,
+        )
+        rest(Tree)
+
+        code, yaml = self.fetch('/api/tree')
+        assert code == 200
+        assert (
+            yaml
+            == '''\
+objects:
+- id: 1
+  name: pine
+- id: 2
+  name: maple
+- id: 3
+  name: oak
+occurences: 3
+primary_keys:
+- id
+'''
+        )
+
+    def test_yaml_idiom_put(self):
+        rest = UnRest(
+            self.app,
+            self.session,
+            idiom=YamlIdiom,
+            framework=self.__framework__,
+        )
+        rest(Tree, methods=['GET', 'PUT'], allow_batch=True)
+
+        code, yaml = self.fetch(
+            '/api/tree',
+            method="PUT",
+            body='''\
+objects:
+- id: 1
+  name: cedar
+- id: 2
+  name: mango
+''',
+        )
+        assert (
+            yaml
+            == '''\
+objects:
+- id: 1
+  name: cedar
+- id: 2
+  name: mango
+occurences: 2
+primary_keys:
+- id
+'''
+        )
+
+        code, yaml = self.fetch('/api/tree')
+        assert code == 200
+        assert (
+            yaml
+            == '''\
+objects:
+- id: 1
+  name: cedar
+- id: 2
+  name: mango
+occurences: 2
+primary_keys:
+- id
+'''
+        )
