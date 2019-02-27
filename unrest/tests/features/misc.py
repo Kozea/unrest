@@ -331,6 +331,12 @@ This api expose the `Tree` and `Fruit` entity Rest methods.
         else:
             raise Exception('Should have raised')  # pragma: no cover
 
+    def test_auto_framework(self):
+        if 'Flask' not in self.__framework__.__name__:
+            return
+        rest = UnRest(self.app, self.session)
+        assert isinstance(rest.framework, FlaskFramework)
+
     def test_no_framework(self):
         if 'Flask' not in self.__framework__.__name__:
             return
