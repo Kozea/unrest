@@ -11,11 +11,6 @@ from .coercers import Deserialize, Serialize
 from .generators.options import Options
 from .idiom.unrest import UnRestIdiom
 
-try:
-    from json import JSONDecodeError
-except ImportError:
-    JSONDecodeError = Exception
-
 log = logging.getLogger(__name__)
 
 

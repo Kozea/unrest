@@ -8,8 +8,7 @@ from unrest.rest import Rest
 
 from .. import idsorted
 from ...framework import Framework
-from ...idiom import Idiom
-from ...util import Response
+from ...framework.flask import FlaskFramework
 from ..model import Fruit, Tree
 from ..static.openapi_result import openapi
 
@@ -323,39 +322,6 @@ This api expose the `Tree` and `Fruit` entity Rest methods.
         subfruit = fruit.sub(lambda q: q.filter(Fruit.age == 2.0))
         for key in ['defaults', 'fixed']:
             assert getattr(subfruit, key) == getattr(fruit, key)
-
-    def test_idiom(self):
-        class FakeIdiom(Idiom):
-            def request_to_payload(self, request):
-                if request.method == 'PUT':
-                    return {'name': 'sth'}
-
-            def data_to_response(self, data, method, status=200):
-                payload = 'Hello %d' % data['occurences']
-                headers = {'Content-Type': 'text/plain'}
-                response = Response(payload, headers, status)
-                return response
-
-        rest = UnRest(
-            self.app,
-            self.session,
-            idiom=FakeIdiom,
-            framework=self.__framework__,
-        )
-        rest(Tree, methods=['GET', 'PUT'])
-        code, html = self.fetch('/api/tree')
-        assert code == 200
-        assert html == 'Hello 3'
-
-        code, html = self.fetch(
-            '/api/tree/1', method="PUT", json={'id': 1, 'name': 'cedar'}
-        )
-        assert code == 200
-        assert html == 'Hello 1'
-
-        code, html = self.fetch('/api/tree')
-        assert code == 200
-        assert html == 'Hello 3'
 
     def test_wrong_framework(self):
         try:

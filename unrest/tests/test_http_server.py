@@ -9,6 +9,7 @@ from .crud.post_pk import PostPkTestCollection
 from .crud.put import PutTestCollection
 from .crud.put_pk import PutPkTestCollection
 from .features.auth_decorators import AuthDecoratorsTestCollection
+from .features.idiom import IdiomTestCollection
 from .features.misc import MiscellaneousTestCollection
 from .features.paginated import PaginatedTestCollection
 from .features.properties import PropertiesTestCollection
@@ -84,4 +85,8 @@ class HTTPServerValidatorsTests(ValidatorsTestCollection, HTTPServerMixin):
 class HTTPServerMiscellaneousTests(
     MiscellaneousTestCollection, HTTPServerMixin
 ):
+    pass
+
+
+class HTTPServerIdiomTests(IdiomTestCollection, HTTPServerMixin):
     pass
