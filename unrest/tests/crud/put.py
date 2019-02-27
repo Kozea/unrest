@@ -12,6 +12,13 @@ class PutTestCollection(object):
         )
         assert code == 406
 
+    def test_put_empty_payload(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree, methods=['GET', 'PUT'])
+        code, json = self.fetch('/api/tree', method="PUT", json={})
+        assert code == 400
+        assert json['message'] == 'You must provide a payload'
+
     def test_put_tree(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, methods=['GET', 'PUT'], allow_batch=True)

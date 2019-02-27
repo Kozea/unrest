@@ -14,6 +14,13 @@ from ..static.openapi_result import openapi
 
 
 class MiscellaneousTestCollection(object):
+    def test_other_url(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree)
+        code, html = self.fetch('/')
+        assert code == 200
+        assert html == 'A normal route!'
+
     def test_index(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree)

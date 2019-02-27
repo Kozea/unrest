@@ -33,8 +33,8 @@ class UnRestTestCase(object):
 
     def fetch(self, *args, **kwargs):
         kwargs.setdefault('method', 'GET')
-        json = kwargs.pop('json', '')
-        if json:
+        json = kwargs.pop('json', None)
+        if json is not None:
             kwargs.setdefault('body', jsonlib.dumps(json))
             kwargs.setdefault('headers', {'Content-Type': 'application/json'})
 
