@@ -225,6 +225,27 @@ class MiscellaneousTestCollection(object):
             'methods': ['GET', 'OPTIONS'],
         }
 
+    def test_endpoint_options_no_methods(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree, methods=[])
+        code, json = self.fetch('/api/tree', method="OPTIONS")
+        assert code == 404
+
+    def test_endpoint_options_no_methods_but_declare(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        tree = rest(Tree, methods=[])
+
+        @tree.declare('GET')
+        def get(payload, id=None):
+            return {'Hey': 'Overridden'}
+
+        @tree.declare('POST')
+        def post(payload, id=None):
+            return {'Hey': 'Overridden'}
+
+        code, json = self.fetch('/api/tree', method="OPTIONS")
+        assert code == 200
+
     def test_openapi(self):
         rest = UnRest(
             self.app,

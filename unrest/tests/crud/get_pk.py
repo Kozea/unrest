@@ -160,3 +160,19 @@ class GetPkTestCollection(object):
                 'tree_id': 2,
             }
         ]
+
+    def test_declare_without_method(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        tree = rest(Tree)
+
+        @tree.declare('POST')
+        def post(payload, id=None):
+            return {'Hey': 'Overridden'}
+
+        assert post is not None
+
+        code, json = self.fetch(
+            '/api/tree', method="POST", json={'name': 'cedar'}
+        )
+        assert code == 200
+        assert json == {'Hey': 'Overridden'}
