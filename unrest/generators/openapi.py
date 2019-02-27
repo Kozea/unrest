@@ -77,10 +77,10 @@ class OpenApi(object):
         except NotImplementedError:
             type = str
         # TODO bytea b64
-        if issubclass(type, int):
-            return {'type': 'integer', 'format': 'int64'}
         if issubclass(type, bool):
             return {'type': 'boolean'}
+        if issubclass(type, int):
+            return {'type': 'integer', 'format': 'int64'}
         if issubclass(type, (float, Decimal)):
             return {'type': 'number', 'format': 'double'}
         if issubclass(type, timedelta):
