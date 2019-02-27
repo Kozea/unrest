@@ -57,7 +57,10 @@ class TornadoFramework(Framework):
                 self.request.path,
                 self.request.method,
                 url_parameters,
-                self.request.query_arguments,
+                {
+                    key: [val.decode('utf-8') for val in values]
+                    for key, values in self.request.query_arguments.items()
+                },
                 self.request.body,
                 self.request.headers,
             )
