@@ -1,6 +1,7 @@
 import sys
 
-from sqlalchemy.types import Float, String
+from sqlalchemy.dialects.postgresql import INET
+from sqlalchemy.types import Boolean, Float, String
 
 from unrest import UnRest, __about__
 from unrest.coercers import Deserialize, Serialize
@@ -284,6 +285,26 @@ This api expose the `Tree` and `Fruit` entity Rest methods.
             res = openapi
         assert code == 200
         assert json == res
+
+    def test_openapi_other_type(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(
+            Tree,
+            properties=[
+                rest.Property('fake_prop_1', type=Boolean()),
+                rest.Property('fake_prop_2', type=INET()),
+            ],
+        )
+        code, json = self.fetch('/api/openapi.json')
+        assert code == 200
+        assert json['paths']['/tree']['get']['responses']['200']['content'][
+            'application/json'
+        ]['schema']['properties']['objects']['items']['properties'] == {
+            'fake_prop_1': {'type': 'boolean'},
+            'fake_prop_2': {'type': 'string'},
+            'id': {'format': 'int64', 'type': 'integer'},
+            'name': {'type': 'string'},
+        }
 
     def test_sub(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
