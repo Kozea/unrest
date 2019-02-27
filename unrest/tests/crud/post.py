@@ -24,6 +24,13 @@ class PostTestCollection(object):
             {'id': 4, 'name': 'cedar'},
         ]
 
+    def test_post_empty_payload(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree, methods=['GET', 'POST'])
+        code, json = self.fetch('/api/tree', method="POST", json={})
+        assert code == 400
+        assert json['message'] == 'You must provide a payload'
+
     def test_post_tree_with_id(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, methods=['GET', 'POST'])

@@ -14,6 +14,13 @@ class PatchTestCollection(object):
         )
         assert code == 406
 
+    def test_patch_empty_payload(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree, methods=['GET', 'PATCH'])
+        code, json = self.fetch('/api/tree', method="PATCH", json={})
+        assert code == 400
+        assert json['message'] == 'You must provide a payload'
+
     def test_patch_tree(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, methods=['GET', 'PATCH'], allow_batch=True)
