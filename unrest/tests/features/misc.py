@@ -53,6 +53,19 @@ class MiscellaneousTestCollection(object):
         assert code == 200
         assert json['occurences'] == 3
 
+    def test_schema(self):
+        Tree.__table__.schema = 'forest'
+
+        def reset_schema(query):
+            Tree.__table__.schema = None
+            return query
+
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(Tree, query=reset_schema)
+        code, json = self.fetch('/api/forest/tree')
+        assert code == 200
+        assert json['occurences'] == 3
+
     def test_version(self):
         rest = UnRest(
             self.app,
