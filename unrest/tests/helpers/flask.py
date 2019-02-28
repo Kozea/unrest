@@ -1,14 +1,13 @@
 from tempfile import NamedTemporaryFile
-from unittest import TestCase
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from ...framework.flask import FlaskFramework
-from ..utils import UnRestTestCase
+from .unrest_client import UnRestClient
 
 
-class FlaskMixin(UnRestTestCase, TestCase):
+class FlaskClient(UnRestClient):
     __framework__ = FlaskFramework
 
     @classmethod

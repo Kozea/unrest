@@ -2,7 +2,7 @@ from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application, RequestHandler
 
 from ...framework.tornado import TornadoFramework
-from ..utils import UnRestTestCase
+from .unrest_client import UnRestClient
 
 
 class SessionRemoverRequestHandler(RequestHandler):
@@ -15,8 +15,26 @@ class SessionRemoverTornadoFramework(TornadoFramework):
     __RequestHandlerClass__ = SessionRemoverRequestHandler
 
 
-class TornadoMixin(UnRestTestCase, AsyncHTTPTestCase):
+class TornadoAsyncClient(AsyncHTTPTestCase):
+    def __init__(self, get_app_fun):
+        super().__init__()
+        self.get_app_fun = get_app_fun
+
+    def get_app(self):
+        return self.get_app_fun()
+
+    def runTest(self):
+        pass  # pragma: no cover
+
+
+class TornadoClient(UnRestClient):
     __framework__ = SessionRemoverTornadoFramework
+
+    def setUp(self):
+
+        self.http_client = TornadoAsyncClient(self.get_app)
+        self.http_client.setUp()
+        super().setUp()
 
     def get_app(self):
         class MainHandler(SessionRemoverRequestHandler):
@@ -30,4 +48,7 @@ class TornadoMixin(UnRestTestCase, AsyncHTTPTestCase):
     def raw_fetch(self, *args, **kwargs):
         # This gets the AsyncHTTPTestCase fetch
         # (otherwise we get a stack overflow)
-        return super(UnRestTestCase, self).fetch(*args, **kwargs)
+        return self.http_client.fetch(*args, **kwargs)
+
+    def tearDown(self):
+        self.http_client.tearDown()

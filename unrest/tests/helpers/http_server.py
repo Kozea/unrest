@@ -1,9 +1,8 @@
 from http.server import BaseHTTPRequestHandler
 from io import BytesIO
-from unittest import TestCase
 
 from ...framework.http_server import HTTPServerFramework
-from ..utils import UnRestTestCase
+from .unrest_client import UnRestClient
 
 
 class FakeApp(object):
@@ -34,11 +33,11 @@ def patch_app(app):
     app.RequestHandlerClass = FakeRequest
 
 
-class HTTPServerMixin(UnRestTestCase, TestCase):
+class HTTPServerClient(UnRestClient):
     __framework__ = HTTPServerFramework
 
     def setUp(self):
-        patch_app(self.get_app())
+        self.get_app()
         super().setUp()
 
     def get_app(self):
@@ -58,6 +57,7 @@ class HTTPServerMixin(UnRestTestCase, TestCase):
                 session.remove()
 
         self.app = FakeApp(SimpleHTTPRequestHandler)
+        patch_app(self.app)
         return self.app
 
     def raw_fetch(self, url, method='GET', headers={}, body=None):

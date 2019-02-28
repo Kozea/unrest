@@ -4,13 +4,17 @@ from tempfile import NamedTemporaryFile
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from .model import Base, fill_data
+from ..model import Base, fill_data
 
 
-class UnRestTestCase(object):
+class UnRestClient(object):
     @classmethod
     def setUpClass(cls):
         cls.db()
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
     @classmethod
     def db(cls):
@@ -23,7 +27,6 @@ class UnRestTestCase(object):
         cls.session = scoped_session(Session)
 
     def setUp(self):
-        super().setUp()
         Base.metadata.drop_all(bind=self.engine)
         Base.metadata.create_all(bind=self.engine)
         fill_data(self.session)
