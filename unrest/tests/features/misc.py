@@ -239,6 +239,28 @@ class MiscellaneousTestCollection(object):
             'methods': ['GET', 'OPTIONS'],
         }
 
+    def test_endpoint_options_other_type(self):
+        rest = UnRest(self.app, self.session, framework=self.__framework__)
+        rest(
+            Tree,
+            properties=[
+                rest.Property('fake_prop_1', type=Boolean()),
+                rest.Property('fake_prop_2', type=INET()),
+            ],
+        )
+        code, json = self.fetch('/api/tree', method="OPTIONS")
+        assert code == 200
+        assert {
+            'model': 'Tree',
+            'description': "Where money doesn't grow",
+            'parameters': ['id'],
+            'columns': {'id': 'int', 'name': 'str'},
+            'properties': {'fake_prop_1': 'bool', 'fake_prop_2': 'INET'},
+            'relationships': {},
+            'methods': ['GET', 'OPTIONS'],
+            'batch': False,
+        }
+
     def test_endpoint_options_no_methods(self):
         rest = UnRest(self.app, self.session, framework=self.__framework__)
         rest(Tree, methods=[])
@@ -256,6 +278,11 @@ class MiscellaneousTestCollection(object):
         @tree.declare('POST')
         def post(payload, id=None):
             return {'Hey': 'Overridden'}
+
+        code, json = self.fetch('/api/tree', method="GET")
+        assert code == 200
+        code, json = self.fetch('/api/tree', method="POST", json={})
+        assert code == 200
 
         code, json = self.fetch('/api/tree', method="OPTIONS")
         assert code == 200
