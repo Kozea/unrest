@@ -26,10 +26,12 @@ class JsonServerIdiom(Idiom):
     def request_to_payload(self, request):
         if request.payload:
             try:
-                return json.loads(request.payload.decode('utf-8'))
-
+                data = json.loads(request.payload.decode('utf-8'))
             except json.JSONDecodeError as e:
                 self.rest.raise_error(400, 'JSON Error in payload: %s' % e)
+            if isinstance(data, list):
+                return {'objects': data}
+            return data
 
     def data_to_response(self, data, request, status=200):
         if (
