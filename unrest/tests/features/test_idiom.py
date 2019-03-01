@@ -6,10 +6,11 @@ from unrest import UnRest
 
 from .. import idsorted
 from ...idiom import Idiom
+from ...idiom.json_server import JsonServerIdiom
 from ...idiom.unrest import UnRestIdiom
 from ...idiom.yaml import YamlIdiom
 from ...util import Response
-from ..model import Tree
+from ..model import Fruit, Tree
 
 
 def test_idiom(client):
@@ -87,9 +88,7 @@ def test_idiom_alter_query(client):
 def test_idiom_partial_implementation(client):
     class FakeIdiom(Idiom):
         def request_to_payload(client, request):
-            if request.method == 'PUT':
-                return {'name': 'sth'}
-
+            pass
 
     rest = UnRest(
         client.app,
@@ -101,19 +100,10 @@ def test_idiom_partial_implementation(client):
     code, html = client.fetch('/api/tree')
     assert code == 500
 
-def test_idiom_partial_implementation_bis(client):
-    class FakeIdiom(Idiom):
-        def data_to_response(client, data, method, status=200):
-            payload = 'Hello %d' % data['occurences']
-            headers = {'Content-Type': 'text/plain'}
-            response = Response(payload, headers, status)
-            return response
 
+def test_idiom_no_implementation(client):
     rest = UnRest(
-        client.app,
-        client.session,
-        idiom=FakeIdiom,
-        framework=client.__framework__,
+        client.app, client.session, idiom=Idiom, framework=client.__framework__
     )
     rest(Tree, methods=['GET', 'PUT'])
     code, html = client.fetch('/api/tree')
@@ -261,3 +251,72 @@ primary_keys:
 - id
 '''
     )
+
+
+def test_json_server_get_tree(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree)
+    rest(Fruit)
+    code, json = client.fetch('/api/tree')
+    assert code == 200
+    assert idsorted(json) == [
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+    ]
+
+
+def test_json_server_post_tree(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree, methods=['GET', 'POST'])
+    code, json = client.fetch(
+        '/api/tree', method="POST", json={'name': 'cedar'}
+    )
+    assert code == 200
+    assert json == {'id': 4, 'name': 'cedar'}
+
+    code, json = client.fetch('/api/tree')
+    assert code == 200
+    assert idsorted(json) == [
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+        {'id': 4, 'name': 'cedar'},
+    ]
+
+
+def test_json_server_put_tree(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree, methods=['GET', 'PUT'], allow_batch=True)
+    code, json = client.fetch(
+        '/api/tree',
+        method="PUT",
+        json=[{'id': 1, 'name': 'cedar'}, {'id': 2, 'name': 'mango'}],
+    )
+    assert code == 200
+    assert idsorted(json) == [
+        {'id': 1, 'name': 'cedar'},
+        {'id': 2, 'name': 'mango'},
+    ]
+
+    code, json = client.fetch('/api/tree')
+    assert code == 200
+    assert idsorted(json) == [
+        {'id': 1, 'name': 'cedar'},
+        {'id': 2, 'name': 'mango'},
+    ]
