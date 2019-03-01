@@ -84,6 +84,42 @@ def test_idiom_alter_query(client):
     assert tree.query.count() == 3
 
 
+def test_idiom_partial_implementation(client):
+    class FakeIdiom(Idiom):
+        def request_to_payload(client, request):
+            if request.method == 'PUT':
+                return {'name': 'sth'}
+
+
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=FakeIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree, methods=['GET', 'PUT'])
+    code, html = client.fetch('/api/tree')
+    assert code == 500
+
+def test_idiom_partial_implementation_bis(client):
+    class FakeIdiom(Idiom):
+        def data_to_response(client, data, method, status=200):
+            payload = 'Hello %d' % data['occurences']
+            headers = {'Content-Type': 'text/plain'}
+            response = Response(payload, headers, status)
+            return response
+
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=FakeIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree, methods=['GET', 'PUT'])
+    code, html = client.fetch('/api/tree')
+    assert code == 500
+
+
 def test_yaml_idiom_get(client):
     rest = UnRest(
         client.app,
