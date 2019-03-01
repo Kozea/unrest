@@ -139,6 +139,20 @@ def test_empty_get_pk_as_404(client):
     assert json['objects'] == []
 
 
+def test_bad_json(client):
+    rest = UnRest(client.app, client.session, framework=client.__framework__)
+    rest(Tree, methods=['GET', 'POST'])
+    code, json = client.fetch(
+        '/api/tree', method="POST", body="{'name'; 'cedar'}"
+    )
+    assert code == 400
+    assert (
+        json['message'] == 'JSON Error in payload: '
+        'Expecting property name enclosed in double quotes: '
+        'line 1 column 2 (char 1)'
+    )
+
+
 def test_empty_explicit_framework(client):
     class FakeUnRest(object):
         def __init__(client, app, url):
