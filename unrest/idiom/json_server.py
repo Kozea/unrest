@@ -2,7 +2,7 @@ import json
 from collections import defaultdict
 from itertools import zip_longest
 
-from sqlalchemy import asc, desc, or_
+from sqlalchemy import asc, desc, func, or_
 from sqlalchemy.sql.expression import cast
 from sqlalchemy.types import String
 
@@ -10,6 +10,18 @@ from . import Idiom
 from ..util import Response
 
 PK_DELIM = '___'
+
+
+def universal_re(attr, value, query):
+    dbtype = query.session.bind.dialect.__module__.split('.')[2]
+    if dbtype == 'postgresql':
+        return attr.op('~')(value)  # pragma: no cover
+    if dbtype == 'oracle':
+        return func.REGEXP_LIKE(attr, value)  # pragma: no cover
+    if dbtype in ['sqlite', 'mysql', 'sybase']:
+        return attr.op('REGEXP')(value)
+    # Hope that a regexp fun exists
+    return func.regexp(attr, value)  # pragma: no cover
 
 
 class JsonServerIdiom(Idiom):
@@ -105,9 +117,11 @@ class JsonServerIdiom(Idiom):
                     elif key.endswith('_ne'):
                         cond = getattr(Model, key[: -len('_ne')]) != value
                     elif key.endswith('_like'):
-                        cond = cast(
-                            getattr(Model, key[: -len('_like')]), String
-                        ).op('~')(value)
+                        cond = universal_re(
+                            cast(getattr(Model, key[: -len('_like')]), String),
+                            value,
+                            query,
+                        )
                     else:
                         cond = getattr(Model, key) == value
                     query = query.filter(cond)
@@ -123,8 +137,10 @@ class JsonServerIdiom(Idiom):
                 query = query.filter(
                     or_(
                         *[
-                            cast(getattr(Model, column), String).op('~')(
-                                params['q']
+                            universal_re(
+                                cast(getattr(Model, column), String),
+                                params['q'],
+                                query,
                             )
                             for column in self.rest.columns
                         ]
