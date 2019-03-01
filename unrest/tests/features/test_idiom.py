@@ -653,3 +653,107 @@ def test_json_server_filter_fruits_q(client):
             'tree_id': 1,
         },
     ]
+
+
+def test_json_server_sort(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree)
+    code, json = client.fetch('/api/tree?_sort=name')
+    assert code == 200
+    assert json == [
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+        {'id': 1, 'name': 'pine'},
+    ]
+
+
+def test_json_server_sort_desc(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree)
+    code, json = client.fetch('/api/tree?_sort=name&_order=desc')
+    assert code == 200
+    assert json == [
+        {'id': 1, 'name': 'pine'},
+        {'id': 3, 'name': 'oak'},
+        {'id': 2, 'name': 'maple'},
+    ]
+
+
+def test_json_server_sort_multiple(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree, methods=['GET', 'POST'])
+    client.fetch('/api/tree', method="POST", json={'name': 'pine'})
+    client.fetch('/api/tree', method="POST", json={'name': 'oak'})
+    client.fetch('/api/tree', method="POST", json={'name': 'oak'})
+
+    code, json = client.fetch('/api/tree?_sort=name,id&_order=asc,desc')
+    assert code == 200
+    assert json == [
+        {'id': 2, 'name': 'maple'},
+        {'id': 6, 'name': 'oak'},
+        {'id': 5, 'name': 'oak'},
+        {'id': 3, 'name': 'oak'},
+        {'id': 4, 'name': 'pine'},
+        {'id': 1, 'name': 'pine'},
+    ]
+
+
+def test_json_server_sort_rel_hack(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree, query=lambda q: q.join(Fruit))
+    code, json = client.fetch('/api/tree?_sort=fruit.size')
+    assert code == 200
+    assert json == [{'id': 2, 'name': 'maple'}, {'id': 1, 'name': 'pine'}]
+
+
+def test_json_server_slice(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit, only=['color'])
+    code, json = client.fetch('/api/fruit?_start=1&_end=3')
+    assert code == 200
+    assert json == [
+        {'fruit_id': 2, 'color': 'darkgrey'},
+        {'fruit_id': 3, 'color': 'brown'},
+    ]
+
+
+def test_json_server_paginate(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit, only=['color'])
+    code, json = client.fetch('/api/fruit?_page=2&_limit=2')
+    assert code == 200
+    print(json)
+    assert json == [
+        {'fruit_id': 3, 'color': 'brown'},
+        {'fruit_id': 4, 'color': 'red'},
+    ]
