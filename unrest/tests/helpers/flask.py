@@ -1,5 +1,3 @@
-from tempfile import NamedTemporaryFile
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -12,8 +10,7 @@ class FlaskClient(UnRestClient):
 
     @classmethod
     def db(cls):
-        f = NamedTemporaryFile()
-        cls.db_url = 'sqlite:///%s' % f.name
+        cls.db_url = 'sqlite://'
 
     def setUp(self):
         self.get_app()

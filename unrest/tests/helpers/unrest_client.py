@@ -1,6 +1,5 @@
 import json as jsonlib
 import re
-from tempfile import NamedTemporaryFile
 
 from sqlalchemy import event
 from sqlalchemy.engine import create_engine
@@ -30,8 +29,7 @@ class UnRestClient(object):
 
     @classmethod
     def db(cls):
-        f = NamedTemporaryFile()
-        cls.db_url = 'sqlite:///%s' % f.name
+        cls.db_url = 'sqlite://'
 
         cls.engine = create_engine(cls.db_url)
         implement_sqlite_regexp(cls.engine)
