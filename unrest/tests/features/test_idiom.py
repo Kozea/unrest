@@ -302,6 +302,29 @@ def test_json_server_put_tree(client):
         idiom=JsonServerIdiom,
         framework=client.__framework__,
     )
+    rest(Tree, methods=['GET', 'PUT'])
+    code, json = client.fetch(
+        '/api/tree/1', method="PUT", json={'name': 'cedar'}
+    )
+    assert code == 200
+    assert json == {'id': 1, 'name': 'cedar'}
+
+    code, json = client.fetch('/api/tree')
+    assert code == 200
+    assert idsorted(json) == [
+        {'id': 1, 'name': 'cedar'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+    ]
+
+
+def test_json_server_put_trees(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
     rest(Tree, methods=['GET', 'PUT'], allow_batch=True)
     code, json = client.fetch(
         '/api/tree',
@@ -320,3 +343,97 @@ def test_json_server_put_tree(client):
         {'id': 1, 'name': 'cedar'},
         {'id': 2, 'name': 'mango'},
     ]
+
+
+def test_json_server_delete_trees(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        empty_get_as_404=True,
+        framework=client.__framework__,
+    )
+    rest(Tree, methods=['GET', 'DELETE'], allow_batch=True)
+    code, json = client.fetch('/api/tree', method="DELETE")
+    assert code == 200
+    assert idsorted(json) == [
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+    ]
+
+    code, json = client.fetch('/api/tree')
+    assert code == 404
+
+
+def test_json_server_get_tree_with_relationship(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    fruit = rest(Fruit, methods=[], only=['color'])
+
+    rest(Tree, relationships={'fruits': fruit})
+    code, json = client.fetch('/api/tree')
+    assert code == 200
+    assert idsorted(json) == [
+        {'id': 1, 'name': 'pine', 'fruits': [1, 2, 3]},
+        {'id': 2, 'name': 'maple', 'fruits': [4, 5]},
+        {'id': 3, 'name': 'oak', 'fruits': []},
+    ]
+    code, json = client.fetch('/api/fruit')
+    assert code == 404
+
+
+def test_json_server_get_tree_with_relationship_with_multi_pk(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    fruit = rest(Fruit, methods=[], primary_keys=['color', 'age'])
+
+    rest(Tree, relationships={'fruits': fruit})
+    code, json = client.fetch('/api/tree')
+    assert code == 200
+    assert idsorted(json) == [
+        {
+            'id': 1,
+            'name': 'pine',
+            'fruits': [
+                'grey___1041300.0',
+                'darkgrey___4233830.213',
+                'brown___0.0',
+            ],
+        },
+        {
+            'id': 2,
+            'name': 'maple',
+            'fruits': ['red___2400.0', 'orangered___7200.000012'],
+        },
+        {'id': 3, 'name': 'oak', 'fruits': []},
+    ]
+    code, json = client.fetch('/api/fruit')
+    assert code == 404
+
+
+def test_json_server_bad_json(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Tree, methods=['GET', 'POST'])
+    code, json = client.fetch(
+        '/api/tree', method="POST", body="{'name'; 'cedar'}"
+    )
+    assert code == 400
+    assert (
+        json['message'] == 'JSON Error in payload: '
+        'Expecting property name enclosed in double quotes: '
+        'line 1 column 2 (char 1)'
+    )
