@@ -437,3 +437,219 @@ def test_json_server_bad_json(client):
         'Expecting property name enclosed in double quotes: '
         'line 1 column 2 (char 1)'
     )
+
+
+def test_json_server_filter_fruits(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit)
+    code, json = client.fetch('/api/fruit?color=red')
+    assert code == 200
+    assert idsorted(json, 'fruit_id') == [
+        {
+            'fruit_id': 4,
+            'color': 'red',
+            'size': 0.5,
+            'double_size': 1.0,
+            'age': 2400.0,
+            'tree_id': 2,
+        }
+    ]
+    code, json = client.fetch('/api/fruit?color=red&color=brown')
+    assert code == 200
+    assert idsorted(json, 'fruit_id') == [
+        {
+            'fruit_id': 3,
+            'color': 'brown',
+            'size': 2.12,
+            'double_size': 4.24,
+            'age': 0.0,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 4,
+            'color': 'red',
+            'size': 0.5,
+            'double_size': 1.0,
+            'age': 2400.0,
+            'tree_id': 2,
+        },
+    ]
+
+
+def test_json_server_filter_fruits_gte(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit)
+    code, json = client.fetch('/api/fruit?color_gte=forestgreen')
+    assert code == 200
+    assert idsorted(json, 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'grey',
+            'size': 12.0,
+            'double_size': 24.0,
+            'age': 1_041_300.0,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 4,
+            'color': 'red',
+            'size': 0.5,
+            'double_size': 1.0,
+            'age': 2400.0,
+            'tree_id': 2,
+        },
+        {
+            'fruit_id': 5,
+            'color': 'orangered',
+            'size': 100.0,
+            'double_size': 200.0,
+            'age': 7200.000_012,
+            'tree_id': 2,
+        },
+    ]
+
+
+def test_json_server_filter_fruits_lte(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit)
+    code, json = client.fetch('/api/fruit?size_lte=4')
+    assert code == 200
+    assert idsorted(json, 'fruit_id') == [
+        {
+            'fruit_id': 3,
+            'color': 'brown',
+            'size': 2.12,
+            'double_size': 4.24,
+            'age': 0.0,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 4,
+            'color': 'red',
+            'size': 0.5,
+            'double_size': 1.0,
+            'age': 2400.0,
+            'tree_id': 2,
+        },
+    ]
+
+
+def test_json_server_filter_fruits_ne(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit)
+    code, json = client.fetch('/api/fruit?age_ne=1970-01-01%2000:40:00.000000')
+    assert code == 200
+    assert idsorted(json, 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'grey',
+            'size': 12.0,
+            'double_size': 24.0,
+            'age': 1_041_300.0,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 2,
+            'color': 'darkgrey',
+            'size': 23.0,
+            'double_size': 46.0,
+            'age': 4_233_830.213,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 3,
+            'color': 'brown',
+            'size': 2.12,
+            'double_size': 4.24,
+            'age': 0.0,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 5,
+            'color': 'orangered',
+            'size': 100.0,
+            'double_size': 200.0,
+            'age': 7200.000_012,
+            'tree_id': 2,
+        },
+    ]
+
+
+def test_json_server_filter_fruits_like(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit)
+    code, json = client.fetch('/api/fruit?color_like=gre')
+    assert code == 200
+    assert idsorted(json, 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'grey',
+            'size': 12.0,
+            'double_size': 24.0,
+            'age': 1_041_300.0,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 2,
+            'color': 'darkgrey',
+            'size': 23.0,
+            'double_size': 46.0,
+            'age': 4_233_830.213,
+            'tree_id': 1,
+        },
+    ]
+
+
+def test_json_server_filter_fruits_q(client):
+    rest = UnRest(
+        client.app,
+        client.session,
+        idiom=JsonServerIdiom,
+        framework=client.__framework__,
+    )
+    rest(Fruit)
+    code, json = client.fetch('/api/fruit?q=gre')
+    assert code == 200
+    assert idsorted(json, 'fruit_id') == [
+        {
+            'fruit_id': 1,
+            'color': 'grey',
+            'size': 12.0,
+            'double_size': 24.0,
+            'age': 1_041_300.0,
+            'tree_id': 1,
+        },
+        {
+            'fruit_id': 2,
+            'color': 'darkgrey',
+            'size': 23.0,
+            'double_size': 46.0,
+            'age': 4_233_830.213,
+            'tree_id': 1,
+        },
+    ]
