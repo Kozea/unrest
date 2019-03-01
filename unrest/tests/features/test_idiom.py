@@ -1,5 +1,7 @@
 import sys
 
+from pytest import raises
+
 from unrest import UnRest
 
 from .. import idsorted
@@ -196,12 +198,9 @@ def test_yaml_idiom_no_yaml(client):
         idiom=YamlIdiom,
         framework=client.__framework__,
     )
-    try:
+
+    with raises(ImportError):
         rest(Tree, methods=['GET', 'PUT'], allow_batch=True)
-    except ImportError:
-        pass
-    else:
-        raise Exception('Should have raised')  # pragma: no cover
 
     del sys.modules['yaml']
 

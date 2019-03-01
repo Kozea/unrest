@@ -1,5 +1,6 @@
 import sys
 
+from pytest import raises
 from sqlalchemy.dialects.postgresql import INET
 from sqlalchemy.types import Boolean, Float, String
 
@@ -439,12 +440,8 @@ def test_sub_fixed(client):
 
 
 def test_wrong_framework(client):
-    try:
+    with raises(NotImplementedError):
         UnRest(client.app, client.session, framework=Framework)
-    except NotImplementedError:
-        pass
-    else:
-        raise Exception('Should have raised')  # pragma: no cover
 
 
 def test_auto_framework(client):
@@ -459,12 +456,10 @@ def test_no_framework(client):
         return
     flask = sys.modules['flask']
     sys.modules['flask'] = None
-    try:
+
+    with raises(NotImplementedError):
         UnRest(client.app, client.session)
-    except NotImplementedError:
-        pass
-    else:
-        raise Exception('Should have raised')  # pragma: no cover
+
     sys.modules['flask'] = flask
 
 
