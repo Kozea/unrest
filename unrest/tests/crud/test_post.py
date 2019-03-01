@@ -24,6 +24,25 @@ def test_post_tree(client):
     ]
 
 
+def test_post_tree_null_value(client):
+    rest = UnRest(client.app, client.session, framework=client.__framework__)
+    rest(Tree, methods=['GET', 'POST'])
+    code, json = client.fetch('/api/tree', method="POST", json={'name': None})
+    assert code == 200
+    assert json['occurences'] == 1
+    assert idsorted(json['objects']) == [{'id': 4, 'name': None}]
+
+    code, json = client.fetch('/api/tree')
+    assert code == 200
+    assert json['occurences'] == 4
+    assert idsorted(json['objects']) == [
+        {'id': 1, 'name': 'pine'},
+        {'id': 2, 'name': 'maple'},
+        {'id': 3, 'name': 'oak'},
+        {'id': 4, 'name': None},
+    ]
+
+
 def test_post_empty_payload(client):
     rest = UnRest(client.app, client.session, framework=client.__framework__)
     rest(Tree, methods=['GET', 'POST'])
