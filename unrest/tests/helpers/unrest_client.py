@@ -1,10 +1,22 @@
 import json as jsonlib
+import re
 from tempfile import NamedTemporaryFile
 
+from sqlalchemy import event
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from ..model import Base, fill_data
+
+
+def implement_sqlite_regexp(engine):
+    def re_fn(expr, item):
+        reg = re.compile(expr, re.I)
+        return reg.search(item) is not None
+
+    @event.listens_for(engine, "begin")
+    def do_begin(conn):
+        conn.connection.create_function('REGEXP', 2, re_fn)
 
 
 class UnRestClient(object):
@@ -22,6 +34,7 @@ class UnRestClient(object):
         cls.db_url = 'sqlite:///%s' % f.name
 
         cls.engine = create_engine(cls.db_url)
+        implement_sqlite_regexp(cls.engine)
         Session = sessionmaker()
         Session.configure(bind=cls.engine)
         cls.session = scoped_session(Session)

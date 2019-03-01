@@ -4,7 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from ...framework.flask import FlaskFramework
-from .unrest_client import UnRestClient
+from .unrest_client import UnRestClient, implement_sqlite_regexp
 
 
 class FlaskClient(UnRestClient):
@@ -19,6 +19,7 @@ class FlaskClient(UnRestClient):
         self.get_app()
         self.db = SQLAlchemy(self.app)
         self.engine = self.db.engine
+        implement_sqlite_regexp(self.engine)
         self.session = self.db.session
         super().setUp()
 
