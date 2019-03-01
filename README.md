@@ -1,5 +1,7 @@
 # UnRest - <small>Simple sqlalchemy rest api generation.</small>
 
+[![Build Status](https://travis-ci.org/Kozea/unrest.svg?branch=master)](https://travis-ci.org/Kozea/unrest)
+[![Coverage Status](https://coveralls.io/repos/github/Kozea/unrest/badge.svg?branch=master)](https://coveralls.io/github/Kozea/unrest?branch=master)
 
 ```python
 from unrest import UnRest
