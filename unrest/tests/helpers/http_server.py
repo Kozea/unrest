@@ -27,8 +27,8 @@ def patch_app(app):
             self.handle_one_request()
             self.finish()
 
-        def log_request(self, code='-', size='-'):
-            pass
+        def log_message(self, *args):
+            print(*args)
 
     app.RequestHandlerClass = FakeRequest
 
