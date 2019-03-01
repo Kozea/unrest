@@ -18,7 +18,8 @@ class JsonServerIdiom(Idiom):
     implementation.
 
     Currently support all basic queries and first-level (no nested props)
-    filter, sort, pagination, slice, operators (`_gte`, `_lte`, `_ne`, `_like`)
+    filter, sort, pagination, slice, operators
+    (`_gte`, `_lte`, `_ne`, `_like`)
     and `q` full-text search (which works better with
     [SQLAlchemy-Searchable](https://sqlalchemy-searchable.readthedocs.io))
     """
@@ -42,21 +43,37 @@ class JsonServerIdiom(Idiom):
         ):
             status = 404
 
-        objects = data['objects']
-        for object in objects:
-            for key, relationship in self.rest.relationships.items():
-                object[key] = [
-                    PK_DELIM.join(ref[pk] for pk in relationship.primary_keys)
-                    for ref in object[key]
-                ]
-        # When there's parameter it applies on a unique object except from POST
-        if (
-            request.parameters
-            and all(value is not None for value in request.parameters.values())
-            or request.method == 'POST'
-        ):
-            objects = objects[0]
-        payload = json.dumps(objects)
+        if 'objects' in data:
+            objects = data['objects']
+            for object in objects:
+                for key, relationship in self.rest.relationships.items():
+                    object[key] = (
+                        [
+                            PK_DELIM.join(
+                                str(ref[pk])
+                                for pk in relationship.primary_keys
+                            )
+                            for ref in object[key]
+                        ]
+                        if len(relationship.primary_keys) > 1
+                        else [
+                            ref[relationship.primary_keys[0]]
+                            for ref in object[key]
+                        ]
+                    )
+            # When there's parameter it applies on a unique object
+            # except from POST
+            if (
+                request.parameters
+                and all(
+                    value is not None for value in request.parameters.values()
+                )
+                or request.method == 'POST'
+            ):
+                objects = objects[0]
+            payload = json.dumps(objects)
+        else:
+            payload = json.dumps(data)
         headers = {'Content-Type': 'application/json'}
         if 'occurences' in data:
             headers['X-Total-Count'] = data['occurences']
