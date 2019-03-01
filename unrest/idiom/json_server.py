@@ -168,8 +168,12 @@ class JsonServerIdiom(Idiom):
 
         # Offset / Limit
         offset = int(params['start'] or 0)
-        step = params['limit']
-        if params['end']:
+
+        if params['page']:
+            step = int(params['limit'] or 10)
+            offset = max(int(params['page']) - 1, 0) * step
+
+        elif params['end']:
             step = int(params['end']) - offset
         else:
             step = int(params['limit']) if params['limit'] else None
