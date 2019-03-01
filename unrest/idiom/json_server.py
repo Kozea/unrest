@@ -132,7 +132,7 @@ class JsonServerIdiom(Idiom):
         # Search
         if params['q']:
             if hasattr(query, 'search'):
-                query = query.search(params['q'])
+                query = query.search(params['q'])  # pragma: no cover
             else:
                 query = query.filter(
                     or_(
