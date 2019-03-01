@@ -47,7 +47,12 @@ class JsonServerIdiom(Idiom):
                     PK_DELIM.join(ref[pk] for pk in relationship.primary_keys)
                     for ref in object[key]
                 ]
-        if request.parameters:
+        # When there's parameter it applies on a unique object except from POST
+        if (
+            request.parameters
+            and all(value is not None for value in request.parameters.values())
+            or request.method == 'POST'
+        ):
             objects = objects[0]
         payload = json.dumps(objects)
         headers = {'Content-Type': 'application/json'}

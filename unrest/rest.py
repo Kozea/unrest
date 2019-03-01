@@ -459,7 +459,9 @@ class Rest(object):
         Transform query parameters into primary keys mapping with
         deserialized values.
         """
-        if not parameters:
+        if not parameters or all(
+            value is None for value in parameters.values()
+        ):
             return {}
 
         # In case of column_property or hybrid_property
