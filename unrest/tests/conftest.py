@@ -2,6 +2,7 @@ import pytest
 
 from .helpers.flask import FlaskClient
 from .helpers.http_server import HTTPServerClient
+from .helpers.sanic import SanicClient
 from .helpers.tornado import TornadoClient
 
 
@@ -11,6 +12,7 @@ from .helpers.tornado import TornadoClient
         pytest.param(FlaskClient, marks=pytest.mark.flask),
         pytest.param(HTTPServerClient, marks=pytest.mark.http_server),
         pytest.param(TornadoClient, marks=pytest.mark.tornado),
+        pytest.param(SanicClient, marks=pytest.mark.sanic),
     ],
 )
 def client_class(request):
