@@ -32,9 +32,20 @@ session = scoped_session(Session)
 if not os.path.exists(sqlite_db):
     Base.metadata.create_all(bind=engine)
     fill_data(session)
+    session.remove()
 
 
-rest = UnRest(app, session, framework=TornadoFramework)
+class SessionRemoverRequestHandler(RequestHandler):
+    def on_finish(self):
+        super().on_finish()
+        self.application.session.remove()
+
+
+class SessionRemoverTornadoFramework(TornadoFramework):
+    __RequestHandlerClass__ = SessionRemoverRequestHandler
+
+
+rest = UnRest(app, session, framework=SessionRemoverTornadoFramework)
 fruit = rest(
     Fruit, methods=rest.all, properties=[rest.Property('square_size', Float())]
 )

@@ -31,6 +31,7 @@ session = scoped_session(Session)
 if not os.path.exists(sqlite_db):
     Base.metadata.create_all(bind=engine)
     fill_data(session)
+    session.remove()
 
 
 rest = UnRest(httpd, session, framework=HTTPServerFramework)
