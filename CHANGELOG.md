@@ -4,6 +4,7 @@
 * **Framework API now requires only a register route but the rest function now takes a `Request` and must return a `Response`.**
 * **`Property` property `sqlalchemy_type` has been renamed to `type` for compat with columns.**
 * **`column_property` are now considered as normal columns.**
+* **Overriding existing routes no longer works. (except when using @declare)**
 
 <hr />
 
@@ -13,9 +14,12 @@
 * Add a `json_server` idiom (`JsonServerIdiom`).
 * Add a native python framework implementation (`HTTPServerFramework`).
 * Add a tornado framework implementation (`TornadoFramework`).
+* Add a sanic implementation (`TornadoFramework`).
 * Add cleaner examples.
 * Expire items after add/edit to refresh `column_property` and externally dependent columns (i.e. FDW).
 * Properties can now be used in `primary_keys`.
+* Routes are not registered directly anymore which allows late route overriding
+  with declare without having the framework to handle route override (most forbid that)
 
 
 ## [0.7.8](https://github.com/Kozea/unrest/compare/0.7.7...0.7.8)
