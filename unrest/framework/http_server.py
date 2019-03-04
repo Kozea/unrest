@@ -84,7 +84,7 @@ class HTTPServerFramework(Framework):
                 try:
                     response = function(request)
                 except Exception:
-                    log.exception('Error on ' + method + ' ' + self.path)
+                    log.exception(f'Error on {method} {self.path}')
                     return self.send(500, 'Internal Server Error')
 
                 self.send(response.status, response.payload, response.headers)
@@ -94,25 +94,23 @@ class HTTPServerFramework(Framework):
     def register_route(self, path, method, parameters, function):
         name = self._name(function.__name__.replace(method + '_', ''))
         # Creating an url regex that accept parameters
-        path_with_params = (
-            path
-            + '(?:/'
-            + '/'.join('(?P<%s>.+)' % param for param in parameters)
-            + ')?'
-            if parameters
-            else path
-        )
+        if parameters:
+            params = '/'.join(f'(?P<{param}>.+)' for param in parameters)
+            path_with_params = f'{path}(?:/{params})?'
+        else:
+            path_with_params = path
 
         # If this is the first method for path, initialize method mapping
         if path_with_params not in self.url_map:
             self.url_map[path_with_params] = {}
 
         if method in self.url_map[path_with_params]:
-            log.info('Overriding route %s' % name)
+            raise KeyError(
+                f'Method {method} is already registered for path {path}'
+            )
 
         log.info(
-            'Registering route %s for %s for %s'
-            % (name, path_with_params, method)
+            f'Registering route {name} for {path_with_params} for {method}'
         )
 
         # Associate UnRest function with path and method

@@ -540,3 +540,11 @@ def test_wrong_url(client):
     rest(Tree)
     code, html = client.fetch('/apy/trea')
     assert code == 404
+
+
+def test_duplicate_rest(client):
+    rest = UnRest(client.app, client.session, framework=client.__framework__)
+    rest(Tree)
+
+    with raises(Exception):
+        rest(Tree)

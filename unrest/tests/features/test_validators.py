@@ -52,6 +52,7 @@ def test_put_tree_validation(client):
     ]
     rest(
         Tree,
+        name='second_tree',
         methods=['GET', 'PUT'],
         validators={'name': name_validator},
         allow_batch=True,
@@ -198,6 +199,7 @@ def test_put_fruit_dual_validation(client):
 
     rest(
         Fruit,
+        name='second_fruit',
         methods=['GET', 'PUT'],
         validators={
             'color': color_validator,

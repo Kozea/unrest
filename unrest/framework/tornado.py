@@ -25,14 +25,12 @@ class TornadoFramework(Framework):
 
     def register_route(self, path, method, parameters, function):
         name = self._name(function.__name__.replace(method + '_', ''))
-        path_with_params = (
-            path
-            + '(?:/'
-            + '/'.join('(?P<%s>.+)' % param for param in parameters)
-            + ')?(?:/)?'
-            if parameters
-            else path
-        )
+        # Creating an url regex that accept parameters
+        if parameters:
+            params = '/'.join(f'(?P<{param}>.+)' for param in parameters)
+            path_with_params = f'{path}(?:/{params})?'
+        else:
+            path_with_params = path
 
         Handler = self.router.named_rules.get(path_with_params)
         if not Handler:
@@ -46,9 +44,15 @@ class TornadoFramework(Framework):
             # If Handler has been wrapper by a Rule
             Handler = Handler.target
 
+        if hasattr(Handler, method.lower()) and hasattr(
+            getattr(Handler, method.lower()), '__wrapped__'
+        ):
+            raise KeyError(
+                f'Method {method} is already registered for path {path}'
+            )
+
         log.info(
-            'Registering route %s for %s for %s'
-            % (name, path_with_params, method)
+            f'Registering route {name} for {path_with_params} for {method}'
         )
 
         @wraps(function)

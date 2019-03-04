@@ -1,6 +1,6 @@
 import logging
 from contextlib import contextmanager
-from functools import partial, wraps
+from functools import partial
 
 from sqlalchemy import and_, or_
 from sqlalchemy.inspection import inspect
@@ -115,7 +115,7 @@ class Rest(object):
         self.unrest.rests.append(self)
         self.Model = Model
 
-        self.methods = methods[:]
+        self.methods = tuple(methods)
         self.name = name or self.table.name
         self.only = only
         self.exclude = exclude
@@ -147,12 +147,7 @@ class Rest(object):
 
         self._query_alterer = _identity
 
-        if (
-            self.unrest.allow_options
-            and self.methods
-            and 'OPTIONS' not in self.methods
-        ):
-            self.methods.append('OPTIONS')
+        self.overrides = {}
 
         for method in self.methods:
             self.register_method(method)
@@ -404,16 +399,17 @@ class Rest(object):
 
         # Arguments
             method: The method to override ('GET' for exemple)
-            manual_commit: Don't auto commit after the method.
+            manual_commit: Set this to True to prevent auto commit after route
+                call
         """
 
-        def register_fun(fun):
-            if self.unrest.allow_options and not self.methods:
-                self.register_method('OPTIONS')
-            self.register_method(method, fun, manual_commit)
-            return fun
+        def register_function(function):
+            self.overrides[method] = (function, manual_commit)
+            if method not in self.methods:
+                self.register_method(method)
+            return function
 
-        return register_fun
+        return register_function
 
     def sub(self, query_factory, **kwargs):
         """
@@ -637,98 +633,107 @@ class Rest(object):
         """Shortcut function to #::unrest.UnRest#raise_error."""
         self.unrest.raise_error(status, message, extra)
 
-    def wrap_route(self, method, route, manual_commit=False):
+    def route(self, method, request):
         """
-        Wrap a method route method ( #get, #post, #put, #delete,
-        #patch, #options ) with a function that takes a #::unrest.util#Request
-        as parameters and:
+        This is the entry point for any route method ( #get, #post, #put,
+        #delete, #patch, #options ), it takes the #::unrest.util#Request and
+        returns the #::unrest.util#Response.
 
+        Exhaustively it
         - converts request parameters into primary keys values
         - calls the current idiom #::unrest.idiom.Idiom#request_to_payload
         - checks auth with `read_auth`, `write_auth` and `auth` if defined
-        - calls the wrapped `method` with the previously obtained payload
-        - commits the session if `manual_commit` is False and method is amongst
-            modification ones
+        - calls the route associated with the HTTP `method`, either by default
+            or overidden with #declare, with the previously obtained payload
+        - commits the session if `manual_commit` is `False` and method is
+            amongst modification ones
         - and finally calls #::unrest.idiom.Idiom#data_to_response with the
             return value of the wrapped function to return
             the #::unrest.util#Response
 
         # Arguments
-            method: The current http method
-            route: The route associated with this http method
-            manual_commit: Set this to True to prevent auto commit after route
-                call
+            method: The HTTP method which is curried in a partial
+            request: The current #::unrest.util#Request
 
         # Returns
         The #::unrest.util#Response of this request
         """
 
-        @wraps(route)
-        def wrapped(request):
-            try:
-                pks = self.parameters_to_pks(request.parameters)
-                payload = self.idiom.request_to_payload(request)
+        try:
+            pks = self.parameters_to_pks(request.parameters)
+            payload = self.idiom.request_to_payload(request)
 
-                decorated = route
-                if method == 'GET' and self.read_auth:
-                    decorated = self.read_auth(decorated)
-                if (
-                    method in ['PUT', 'POST', 'DELETE', 'PATCH']
-                    and self.write_auth
-                ):
-                    decorated = self.write_auth(decorated)
-                if self.auth:
-                    decorated = self.auth(decorated)
+            route = getattr(self, method.lower())
+            manual_commit = False
+            if method in self.overrides:
+                route, manual_commit = self.overrides[method]
 
-                with self.query_request(request):
-                    data = decorated(payload, **pks)
+            if method == 'GET' and self.read_auth:
+                route = self.read_auth(route)
+            if (
+                method in ['PUT', 'POST', 'DELETE', 'PATCH']
+                and self.write_auth
+            ):
+                route = self.write_auth(route)
+            if self.auth:
+                route = self.auth(route)
 
-                if not manual_commit and method in [
-                    'PUT',
-                    'POST',
-                    'DELETE',
-                    'PATCH',
-                ]:
-                    self.session.commit()
-            except self.unrest.RestError as e:
-                return self.idiom.data_to_response(
-                    dict(message=e.message, **e.extra), request, e.status
-                )
+            with self.query_request(request):
+                data = route(payload, **pks)
 
-            log.info(
-                '%s %s%s'
-                % (
-                    method,
-                    self.path,
-                    ': %d occurences' % data['occurences']
-                    if 'occurences' in data
-                    else '',
-                )
+            if not manual_commit and method in [
+                'PUT',
+                'POST',
+                'DELETE',
+                'PATCH',
+            ]:
+                self.session.commit()
+        except self.unrest.RestError as e:
+            return self.idiom.data_to_response(
+                dict(message=e.message, **e.extra), request, e.status
             )
 
-            return self.idiom.data_to_response(data, request)
+        log.info(
+            '%s %s%s'
+            % (
+                method,
+                self.path,
+                ': %d occurences' % data['occurences']
+                if 'occurences' in data
+                else '',
+            )
+        )
 
-        return wrapped
+        return self.idiom.data_to_response(data, request)
 
-    def register_method(self, method, route=None, manual_commit=False):
+    def register_method(self, method):
         """
-        Register a `route` function associated with the http `method`.
+        Tells the framework to register the #route function or an overidden one
+        associated with the http `method`.
 
         # Arguments
             method: The http method to register the route with
-            route: The route function, defaults to this rest.{method}
-            manual_commit: Set this to True to prevent auto commit after route
-                call
         """
         if method != 'OPTIONS':
             assert method in self.unrest.all, 'Unknown method %s' % method
-        route = route or getattr(self, method.lower())
-        route = self.wrap_route(method, route, manual_commit)
-        # str() for python 2 compat
-        route.__name__ = str('_'.join((method,) + self.name_parts))
+
+        if method not in self.methods:
+            # Add method to the methods array for cohesiveness
+            self.methods = (*self.methods, method)
+
+        route = partial(self.route, method)
+        route.__name__ = '_'.join((method,) + self.name_parts)
         self.unrest.framework.register_route(
             self.path, method, self.primary_keys, route
         )
+
+        # Register options as soon as a route is registered
+        if (
+            self.unrest.allow_options
+            and method != 'OPTIONS'
+            and 'OPTIONS' not in self.methods
+        ):
+            self.register_method('OPTIONS')
 
     def has(self, pks):
         """Returns whether the pks dict has values in it."""

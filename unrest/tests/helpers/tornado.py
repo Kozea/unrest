@@ -31,7 +31,6 @@ class TornadoClient(UnRestClient):
     __framework__ = SessionRemoverTornadoFramework
 
     def setUp(self):
-
         self.http_client = TornadoAsyncClient(self.get_app)
         self.http_client.setUp()
         super().setUp()
@@ -46,8 +45,6 @@ class TornadoClient(UnRestClient):
         return self.app
 
     def raw_fetch(self, *args, **kwargs):
-        # This gets the AsyncHTTPTestCase fetch
-        # (otherwise we get a stack overflow)
         return self.http_client.fetch(*args, **kwargs)
 
     def tearDown(self):

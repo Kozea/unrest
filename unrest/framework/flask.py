@@ -42,26 +42,19 @@ class FlaskFramework(Framework):
                 headers=response.headers,
             )
 
-        if self.app.view_functions.pop(name, None):
-            log.info('Overriding route %s' % name)
-
         self.app.add_url_rule(path, name, unrest_fun, methods=[method])
         if parameters:
-            path_with_params = (
-                path + '/' + '/'.join('<%s>' % param for param in parameters)
-            )
+            params = '/'.join(f'<{param}>' for param in parameters)
+            path_with_params = f'{path}/{params}'
 
             log.info(
-                'Registering route %s for %s for %s'
-                % (name, path_with_params, method)
+                f'Registering route {name} for {path_with_params} for {method}'
             )
             self.app.add_url_rule(
                 path_with_params, name, unrest_fun, methods=[method]
             )
         else:
-            log.info(
-                'Registering route %s for %s for %s' % (name, path, method)
-            )
+            log.info(f'Registering route {name} for {path} for {method}')
 
     @property
     def external_url(self):
