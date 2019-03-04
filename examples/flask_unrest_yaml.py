@@ -14,7 +14,7 @@ sqlite_db = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'unrest-test.db'
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % sqlite_db
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{sqlite_db}'
 
 db = SQLAlchemy(app)
 

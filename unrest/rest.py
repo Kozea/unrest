@@ -191,8 +191,8 @@ class Rest(object):
             for pk, val in pks.items():
                 if pk in payload:
                     assert payload[pk] == val, (
-                        'Incoherent primary_key (%s) in payload (%r) '
-                        'and url (%r) for PUT' % (pk, payload[pk], val)
+                        f'Incoherent primary_key ({pk}) in payload '
+                        f'({payload[pk]!r}) and url ({val!r}) for PUT'
                     )
                 else:
                     payload[pk] = val
@@ -265,7 +265,7 @@ class Rest(object):
         if self.has(pks):
             item = self.get_from_pk(self.undefered_query, **pks)
             if item is None:
-                self.raise_error(404, '%s(%r) not found' % (self.name, pks))
+                self.raise_error(404, f'{self.name}({pks!r}) not found')
 
             self.session.delete(item)
             self.session.flush()
@@ -303,14 +303,14 @@ class Rest(object):
             for pk, val in pks.items():
                 if pk in payload:
                     assert payload[pk] == val, (
-                        'Incoherent primary_key (%s) in payload (%r) '
-                        'and url (%r) for PATCH' % (pk, payload[pk], val)
+                        f'Incoherent primary_key ({pk}) in payload '
+                        f'({payload[pk]!r}) and url ({val!r}) for PATCH'
                     )
                 else:
                     payload[pk] = val
             item = self.get_from_pk(self.query, **pks)
             if item is None:
-                self.raise_error(404, '%s(%r) not found' % (self.name, pks))
+                self.raise_error(404, f'{self.name}({pks!r}) not found')
             self.deserialize(payload, item, blank_missing=False)
             self.validate(item)
             self.session.flush()
@@ -343,18 +343,13 @@ class Rest(object):
                     )
                     == 0
                 ):
-                    self.raise_error(
-                        404,
-                        '%s(%r) not found'
-                        % (
-                            self.name,
-                            {
-                                key: val
-                                for key, val in patch.items()
-                                if key in self.primary_keys
-                            },
-                        ),
-                    )
+                    patch = {
+                        key: val
+                        for key, val in patch.items()
+                        if key in self.primary_keys
+                    }
+                    self.raise_error(404, f'{self.name}({patch}) not found')
+
         for patch in patches:
             # Get the patch item
             item = [
@@ -693,16 +688,12 @@ class Rest(object):
                 dict(message=e.message, **e.extra), request, e.status
             )
 
-        log.info(
-            '%s %s%s'
-            % (
-                method,
-                self.path,
-                ': %d occurences' % data['occurences']
-                if 'occurences' in data
-                else '',
-            )
+        occurences = (
+            f": {data['occurences']} occurences"
+            if 'occurences' in data
+            else ''
         )
+        log.info(f'{method} {self.path}{occurences}')
 
         return self.idiom.data_to_response(data, request)
 
@@ -715,7 +706,7 @@ class Rest(object):
             method: The http method to register the route with
         """
         if method != 'OPTIONS':
-            assert method in self.unrest.all, 'Unknown method %s' % method
+            assert method in self.unrest.all, f'Unknown method {method}'
 
         if method not in self.methods:
             # Add method to the methods array for cohesiveness

@@ -15,7 +15,7 @@ sqlite_db = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'unrest-test.db'
 )
 
-db_url = 'sqlite:///%s' % sqlite_db
+db_url = f'sqlite:///{sqlite_db}'
 
 
 engine = create_engine(db_url)

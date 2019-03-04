@@ -7,4 +7,4 @@ __author__ = "Florian Mounier"
 __email__ = "florian.mounier@kozea.fr"
 
 __license__ = "GNU LGPL v3+"
-__copyright__ = "Copyright 2017 %s" % __author__
+__copyright__ = f"Copyright 2017 {__author__}"

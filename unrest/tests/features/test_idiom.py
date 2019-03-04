@@ -20,7 +20,7 @@ def test_idiom(client):
                 return {'name': 'sth'}
 
         def data_to_response(client, data, method, status=200):
-            payload = 'Hello %d' % data['occurences']
+            payload = f"Hello {data['occurences']}"
             headers = {'Content-Type': 'text/plain'}
             response = Response(payload, headers, status)
             return response

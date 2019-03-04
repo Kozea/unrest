@@ -143,7 +143,7 @@ def test_put_fruit_dual_validation(client):
     def color_validator(field):
         if inspect(field.item).attrs.color.history.deleted[0] == 'brown':
             raise field.ValidationError(
-                'A brown fruit cannot become %s' % field.value
+                f'A brown fruit cannot become {field.value}'
             )
         return field.value
 

@@ -128,8 +128,8 @@ class UnRest(object):
                     self.framework = FlaskFramework(app, url=self.root_path)
         if not self.framework:
             raise NotImplementedError(
-                'Your framework %s is not recognized. '
-                'Please provide a framework argument to UnRest' % type(app)
+                f'Your framework {type(app)} is not recognized. '
+                'Please provide a framework argument to UnRest'
             )
         self.register_index()
         self.allow_options and self.register_options()
@@ -194,11 +194,10 @@ class UnRest(object):
         """The API index GET route."""
         return Response(
             (
-                '<h1>unrest <small>api server</small></h1> version %s '
-                '<a href="%s">unrest</a>'
+                '<h1>unrest <small>api server</small></h1> version '
+                f'{__version__} <a href="{__uri__}">unrest</a>'
             )
-            % (__version__, __uri__)
-            + (' <a href="%s/openapi.json">openapi.json</a>' % self.root_path)
+            + (f' <a href="{self.root_path}/openapi.json">openapi.json</a>')
             if self.serve_openapi_file
             else '',
             {'Content-Type': 'text/html'},

@@ -107,12 +107,12 @@ class Serialize(object):
     def _serialize(self, type, data):
         if data is None:
             return
-        method_name = 'serialize_%s' % type.__class__.__name__.lower()
+        method_name = f'serialize_{type.__class__.__name__.lower()}'
 
         if hasattr(self, method_name):
             return getattr(self, method_name)(type, data)
 
-        log.debug('Missing method for type serialization %s' % method_name)
+        log.debug(f'Missing method for type serialization {method_name}')
 
         return data
 
@@ -195,12 +195,12 @@ class Deserialize(object):
     def _deserialize(self, type, data):
         if data is None:
             return
-        method_name = 'deserialize_%s' % type.__class__.__name__.lower()
+        method_name = f'deserialize_{type.__class__.__name__.lower()}'
 
         if hasattr(self, method_name):
             return getattr(self, method_name)(type, data)
 
-        log.debug('Missing method for type deserialization %s' % method_name)
+        log.debug(f'Missing method for type deserialization {method_name}')
 
         return data
 

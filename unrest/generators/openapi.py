@@ -68,7 +68,7 @@ class OpenApi(object):
         if path.startswith(self.unrest.root_path):
             path = path[len(self.unrest.root_path) :]  # noqa
         if params:
-            path += '/' + '/'.join('{%s}' % pk for pk in rest.primary_keys)
+            path += '/' + '/'.join(f'{{{pk}}}' for pk in rest.primary_keys)
         return path
 
     def get_property(self, type):

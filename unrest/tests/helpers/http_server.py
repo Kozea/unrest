@@ -65,8 +65,8 @@ class HTTPServerClient(UnRestClient):
             headers['Content-Length'] = len(body)
 
         request = '\r\n'.join(
-            ['%s %s HTTP/1.1' % (method.upper(), url)]
-            + ['%s:%s' % (key, value) for key, value in headers.items()]
+            [f'{method.upper()} {url} HTTP/1.1']
+            + [f'{key}:{value}' for key, value in headers.items()]
         )
         if body:
             request += '\r\n\r\n' + body

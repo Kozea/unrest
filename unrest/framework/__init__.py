@@ -50,7 +50,4 @@ class Framework(object):
         This helper generates a unique name for endpoint {name}
         that you can use in your implementation.
         """
-        return 'unrest__%s__%s' % (
-            self.url.lstrip('/').replace('/', '_'),
-            name,
-        )
+        return f"unrest__{self.url.lstrip('/').replace('/', '_')}__{name}"

@@ -28,14 +28,11 @@ def test_index(client):
     rest(Tree)
     code, html = client.fetch('/api/')
     assert code == 200
-    assert (
-        html
-        == (
-            '<h1>unrest <small>api server</small></h1> version %s '
-            '<a href="https://github.com/Kozea/unrest">unrest</a> '
-            '<a href="/api/openapi.json">openapi.json</a>'
-        )
-        % __about__.__version__
+    assert html == (
+        '<h1>unrest <small>api server</small></h1> version '
+        f'{__about__.__version__} '
+        '<a href="https://github.com/Kozea/unrest">unrest</a> '
+        '<a href="/api/openapi.json">openapi.json</a>'
     )
 
 
