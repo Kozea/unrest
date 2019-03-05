@@ -653,40 +653,51 @@ class Rest(object):
         # Returns
         The #::unrest.util#Response of this request
         """
-
         try:
             pks = self.parameters_to_pks(request.parameters)
             payload = self.idiom.request_to_payload(request)
-
-            route = getattr(self, method.lower())
-            manual_commit = False
-            if method in self.overrides:
-                route, manual_commit = self.overrides[method]
-
-            if method == 'GET' and self.read_auth:
-                route = self.read_auth(route)
-            if (
-                method in ['PUT', 'POST', 'DELETE', 'PATCH']
-                and self.write_auth
-            ):
-                route = self.write_auth(route)
-            if self.auth:
-                route = self.auth(route)
-
-            with self.query_request(request):
-                data = route(payload, **pks)
-
-            if not manual_commit and method in [
-                'PUT',
-                'POST',
-                'DELETE',
-                'PATCH',
-            ]:
-                self.session.commit()
+            return self.wrap_auth_route(method, self.inner_route)(
+                request, payload, **pks
+            )
         except self.unrest.RestError as e:
             return self.idiom.data_to_response(
                 dict(message=e.message, **e.extra), request, e.status
             )
+
+    def wrap_auth_route(self, method, route):
+        """This takes a route and apply auth wrappers around it."""
+        if method == 'GET' and self.read_auth:
+            route = self.read_auth(route)
+        if method in ['PUT', 'POST', 'DELETE', 'PATCH'] and self.write_auth:
+            route = self.write_auth(route)
+        if self.auth:
+            route = self.auth(route)
+        return route
+
+    def inner_route(self, request, payload, **pks):
+        """
+        This is the inner route wrapped by the auth wrappers.
+        It takes the request and the deserialized payload/primary keys.
+
+        # Arguments
+            request: The current #::unrest.util#Request
+            payload: The deserialized payload of this request
+            **pks: The deserialized primary keys if any
+
+        # Returns
+        The #::unrest.util#Response of this request
+        """
+        method = request.method
+        route = getattr(self, method.lower())
+        manual_commit = False
+        if method in self.overrides:
+            route, manual_commit = self.overrides[method]
+
+        with self.query_request(request):
+            data = route(payload, **pks)
+
+        if not manual_commit and method in ['PUT', 'POST', 'DELETE', 'PATCH']:
+            self.session.commit()
 
         occurences = (
             f": {data['occurences']} occurences"

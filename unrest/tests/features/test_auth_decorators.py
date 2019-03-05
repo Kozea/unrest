@@ -9,10 +9,10 @@ def test_auth_decorator(client):
 
     def raise_if_id_is_2(fun):
         @wraps(fun)
-        def wrapped(payload, id=None):
+        def wrapped(request, payload, id=None):
             if id == 2:
                 rest.raise_error(403, 'is is 2')
-            return fun(payload, id=id)
+            return fun(request, payload, id=id)
 
         return wrapped
 
@@ -48,19 +48,19 @@ def test_read_write_decorator(client):
 
     def raise_if_id_is_1(fun):
         @wraps(fun)
-        def wrapped(payload, id=None):
+        def wrapped(request, payload, id=None):
             if id == 1:
                 rest.raise_error(403, 'is is 1')
-            return fun(payload, id=id)
+            return fun(request, payload, id=id)
 
         return wrapped
 
     def raise_if_id_is_2(fun):
         @wraps(fun)
-        def wrapped(payload, id=None):
+        def wrapped(request, payload, id=None):
             if id == 2:
                 rest.raise_error(403, 'is is 2')
-            return fun(payload, id=id)
+            return fun(request, payload, id=id)
 
         return wrapped
 
@@ -101,28 +101,28 @@ def test_all_decorator(client):
 
     def raise_if_id_is_1(fun):
         @wraps(fun)
-        def wrapped(payload, id=None):
+        def wrapped(request, payload, id=None):
             if id == 1:
                 rest.raise_error(403, 'is is 1')
-            return fun(payload, id=id)
+            return fun(request, payload, id=id)
 
         return wrapped
 
     def raise_if_id_is_2(fun):
         @wraps(fun)
-        def wrapped(payload, id=None):
+        def wrapped(request, payload, id=None):
             if id == 2:
                 rest.raise_error(403, 'is is 2')
-            return fun(payload, id=id)
+            return fun(request, payload, id=id)
 
         return wrapped
 
     def raise_if_id_is_3(fun):
         @wraps(fun)
-        def wrapped(payload, id=None):
+        def wrapped(request, payload, id=None):
             if id == 3:
                 rest.raise_error(403, 'is is 3')
-            return fun(payload, id=id)
+            return fun(request, payload, id=id)
 
         return wrapped
 

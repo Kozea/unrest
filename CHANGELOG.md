@@ -5,6 +5,7 @@
 * **`Property` property `sqlalchemy_type` has been renamed to `type` for compat with columns.**
 * **`column_property` are now considered as normal columns.**
 * **Overriding existing routes no longer works. (except when using @declare)**
+* Auth wrappers now take the request, the payload, and the primary keys as arguments and return the response (so you can alter the response headers).
 
 <hr />
 
