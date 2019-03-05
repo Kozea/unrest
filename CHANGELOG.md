@@ -20,7 +20,7 @@
 * Properties can now be used in `primary_keys`.
 * Routes are not registered directly anymore which allows late route overriding
   with declare without having the framework to handle route override (most forbid that)
-
+* Add a rest.virtual() method that behaves like rest() but force no HTTP method registration. Useful for relationships.
 
 ## [0.7.8](https://github.com/Kozea/unrest/compare/0.7.7...0.7.8)
 

@@ -238,4 +238,12 @@ class UnRest(object):
         """The API openapi route."""
         return self.send_json(self.OpenApi(self).all())
 
+    def virtual(self, *args, **kwargs):
+        if len(args) > 1:
+            args = list(args)
+            args[1] = []
+        else:
+            kwargs['methods'] = []
+        return self(*args, **kwargs)
+
     Property = Property
