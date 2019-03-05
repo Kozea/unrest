@@ -35,10 +35,12 @@ run:
 	FLASK_DEBUG=1 FLASK_APP=unrest/tests/flask/demo.py $(VENV)/bin/flask run -h localhost -p 9996
 
 release: check docs
+	rm -fr dist
 	git pull
 	$(eval VERSION := $(shell PROJECT_NAME=$(PROJECT_NAME) $(VENV)/bin/devcore bump $(LEVEL)))
 	git commit -am "Bump $(VERSION)"
 	git tag $(VERSION)
-	$(PYTHON) setup.py sdist bdist_wheel upload
+	$(PYTHON) setup.py sdist bdist_wheel --universal
+	twine upload dist/*
 	git push
 	git push --tags
