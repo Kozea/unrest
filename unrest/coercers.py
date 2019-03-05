@@ -95,6 +95,7 @@ class Serialize(object):
                     key: [
                         relationship_rest.serialize(item)
                         for item in enforce_iterable(getattr(self.model, key))
+                        if item is not None
                     ]
                     for key, relationship_rest in self.relationships.items()
                 },
