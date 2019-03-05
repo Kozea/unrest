@@ -135,7 +135,7 @@ def test_no_method(client):
     assert code == 404
 
 
-def test_get_custom(client):
+def test_get_pk_custom(client):
     rest = UnRest(client.app, client.session, framework=client.__framework__)
     fruit = rest(Fruit)
 
@@ -150,7 +150,7 @@ def test_get_custom(client):
     assert json == {'Hey': 'Overridden'}
 
 
-def test_get_custom_extend(client):
+def test_get_pk_custom_extend(client):
     rest = UnRest(client.app, client.session, framework=client.__framework__)
     fruit = rest(Fruit)
 
@@ -169,7 +169,7 @@ def test_get_custom_extend(client):
             'size': 100.0,
             'double_size': 200.0,
             'age': 7200.000_012,
-            'tree_id': 2,
+            'tree_id': None,
         }
     ]
 

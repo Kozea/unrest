@@ -134,6 +134,6 @@ def test_put_fruit(client):
             'size': 100.0,
             'double_size': 200.0,
             'age': 7200.000_012,
-            'tree_id': 2,
+            'tree_id': None,
         },
     ]

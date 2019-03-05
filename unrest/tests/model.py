@@ -19,7 +19,8 @@ class Tree(Base):
     @property
     def fruit_colors(self):
         """The color of fruits"""
-        return ', '.join([fruit.color for fruit in self.fruits])
+        if self.fruits:
+            return ', '.join([fruit.color for fruit in self.fruits])
 
 
 class Fruit(Base):
@@ -78,7 +79,6 @@ def fill_data(session):
             color='orangered',
             size=100,
             age=timedelta(hours=2, microseconds=12),
-            tree=maple,
         )
     )
 

@@ -47,7 +47,7 @@ results = [
         'size': 100.0,
         'double_size': 200.0,
         'age': 7200.000_012,
-        'tree_id': 2,
+        'tree_id': None,
         'square_size': 10000.0,
     },
 ]
@@ -61,8 +61,8 @@ def test_get_tree_with_property(client):
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
         {'id': 1, 'name': 'pine', 'fruit_colors': 'grey, darkgrey, brown'},
-        {'id': 2, 'name': 'maple', 'fruit_colors': 'red, orangered'},
-        {'id': 3, 'name': 'oak', 'fruit_colors': ''},
+        {'id': 2, 'name': 'maple', 'fruit_colors': 'red'},
+        {'id': 3, 'name': 'oak', 'fruit_colors': None},
     ]
 
 
@@ -74,8 +74,8 @@ def test_get_tree_with_object_property(client):
     assert json['occurences'] == 3
     assert idsorted(json['objects']) == [
         {'id': 1, 'name': 'pine', 'fruit_colors': 'grey, darkgrey, brown'},
-        {'id': 2, 'name': 'maple', 'fruit_colors': 'red, orangered'},
-        {'id': 3, 'name': 'oak', 'fruit_colors': ''},
+        {'id': 2, 'name': 'maple', 'fruit_colors': 'red'},
+        {'id': 3, 'name': 'oak', 'fruit_colors': None},
     ]
 
 

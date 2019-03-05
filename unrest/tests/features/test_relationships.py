@@ -24,10 +24,7 @@ def test_get_tree_with_relationship(client):
         {
             'id': 2,
             'name': 'maple',
-            'fruits': [
-                {'fruit_id': 4, 'color': 'red'},
-                {'fruit_id': 5, 'color': 'orangered'},
-            ],
+            'fruits': [{'fruit_id': 4, 'color': 'red'}],
         },
         {'id': 3, 'name': 'oak', 'fruits': []},
     ]
@@ -52,11 +49,7 @@ def test_get_fruit_with_relationship(client):
         },
         {'fruit_id': 3, 'color': 'brown', 'tree': [{'id': 1, 'name': 'pine'}]},
         {'fruit_id': 4, 'color': 'red', 'tree': [{'id': 2, 'name': 'maple'}]},
-        {
-            'fruit_id': 5,
-            'color': 'orangered',
-            'tree': [{'id': 2, 'name': 'maple'}],
-        },
+        {'fruit_id': 5, 'color': 'orangered', 'tree': []},
     ]
     code, json = client.fetch('/api/tree')
     assert code == 404
@@ -82,10 +75,7 @@ def test_virtual(client):
         {
             'id': 2,
             'name': 'maple',
-            'fruits': [
-                {'fruit_id': 4, 'color': 'red'},
-                {'fruit_id': 5, 'color': 'orangered'},
-            ],
+            'fruits': [{'fruit_id': 4, 'color': 'red'}],
         },
         {'id': 3, 'name': 'oak', 'fruits': []},
     ]

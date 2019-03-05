@@ -380,7 +380,7 @@ def test_json_server_get_tree_with_relationship(client):
     assert code == 200
     assert idsorted(json) == [
         {'id': 1, 'name': 'pine', 'fruits': [1, 2, 3]},
-        {'id': 2, 'name': 'maple', 'fruits': [4, 5]},
+        {'id': 2, 'name': 'maple', 'fruits': [4]},
         {'id': 3, 'name': 'oak', 'fruits': []},
     ]
     code, json = client.fetch('/api/fruit')
@@ -409,11 +409,7 @@ def test_json_server_get_tree_with_relationship_with_multi_pk(client):
                 'brown___0.0',
             ],
         },
-        {
-            'id': 2,
-            'name': 'maple',
-            'fruits': ['red___2400.0', 'orangered___7200.000012'],
-        },
+        {'id': 2, 'name': 'maple', 'fruits': ['red___2400.0']},
         {'id': 3, 'name': 'oak', 'fruits': []},
     ]
     code, json = client.fetch('/api/fruit')
@@ -514,7 +510,7 @@ def test_json_server_filter_fruits_gte(client):
             'size': 100.0,
             'double_size': 200.0,
             'age': 7200.000_012,
-            'tree_id': 2,
+            'tree_id': None,
         },
     ]
 
@@ -590,7 +586,7 @@ def test_json_server_filter_fruits_ne(client):
             'size': 100.0,
             'double_size': 200.0,
             'age': 7200.000_012,
-            'tree_id': 2,
+            'tree_id': None,
         },
     ]
 

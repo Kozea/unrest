@@ -103,7 +103,7 @@ def test_get_fruits(client):
             'size': 100.0,
             'double_size': 200.0,
             'age': 7200.000_012,
-            'tree_id': 2,
+            'tree_id': None,
         },
     ]
 
@@ -134,7 +134,7 @@ def test_get_fruits_exclude(client):
         {'fruit_id': 2, 'size': 23.0, 'tree_id': 1},
         {'fruit_id': 3, 'size': 2.12, 'tree_id': 1},
         {'fruit_id': 4, 'size': 0.5, 'tree_id': 2},
-        {'fruit_id': 5, 'size': 100.0, 'tree_id': 2},
+        {'fruit_id': 5, 'size': 100.0, 'tree_id': None},
     ]
 
 
