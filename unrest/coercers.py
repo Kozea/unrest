@@ -138,6 +138,9 @@ class Serialize(object):
     def serialize_largebinary(self, type, data):
         return b64encode(data).decode('utf-8')
 
+    def serialize_integer(self, type, data):
+        return int(data)
+
 
 class Deserialize(object):
     """
