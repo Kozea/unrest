@@ -10,6 +10,8 @@ from ..model import Base, fill_data
 
 def implement_sqlite_regexp(engine):
     def re_fn(expr, item):
+        if not item:
+            return
         reg = re.compile(expr, re.I)
         return reg.search(item) is not None
 
