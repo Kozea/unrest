@@ -1,6 +1,6 @@
-from .. import idsorted
 from ...idiom.unrest import UnRestIdiom
 from ...unrest import UnRest
+from .. import idsorted
 from ..model import Tree
 
 

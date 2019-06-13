@@ -3,8 +3,8 @@ from functools import wraps
 
 from tornado.web import RequestHandler, _ApplicationRouter
 
-from . import Framework
 from ..util import Request
+from . import Framework
 
 log = logging.getLogger(__name__)
 

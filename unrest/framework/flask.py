@@ -4,8 +4,8 @@ from functools import wraps
 from flask import request as flask_request
 from flask import url_for
 
-from . import Framework
 from ..util import Request
+from . import Framework
 
 log = logging.getLogger(__name__)
 

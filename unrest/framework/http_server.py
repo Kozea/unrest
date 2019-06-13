@@ -3,8 +3,8 @@ import re
 from types import MethodType
 from urllib.parse import parse_qs, urlparse
 
-from . import Framework
 from ..util import Request
+from . import Framework
 
 log = logging.getLogger(__name__)
 

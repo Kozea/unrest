@@ -2,8 +2,8 @@ from datetime import timedelta
 
 from sqlalchemy.inspection import inspect
 
-from .. import idsorted
 from ...unrest import UnRest
+from .. import idsorted
 from ..model import Fruit, Tree
 
 

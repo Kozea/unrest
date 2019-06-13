@@ -1,5 +1,5 @@
-from . import Idiom
 from ..util import Response
+from . import Idiom
 
 
 class YamlIdiom(Idiom):

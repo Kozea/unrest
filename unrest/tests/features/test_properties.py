@@ -1,7 +1,7 @@
 from sqlalchemy.types import DateTime, Float, Numeric
 
-from .. import idsorted
 from ...unrest import UnRest
+from .. import idsorted
 from ..model import Fruit, Tree
 
 results = [

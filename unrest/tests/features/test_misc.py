@@ -8,9 +8,9 @@ from unrest import UnRest, __about__
 from unrest.coercers import Deserialize, Serialize
 from unrest.rest import Rest
 
-from .. import idsorted
 from ...framework import Framework
 from ...framework.flask import FlaskFramework
+from .. import idsorted
 from ..model import Fruit, Tree
 from ..static.openapi_result import openapi
 

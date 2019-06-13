@@ -4,12 +4,12 @@ from pytest import raises
 
 from unrest import UnRest
 
-from .. import idsorted
 from ...idiom import Idiom
 from ...idiom.json_server import JsonServerIdiom
 from ...idiom.unrest import UnRestIdiom
 from ...idiom.yaml import YamlIdiom
 from ...util import Response
+from .. import idsorted
 from ..model import Fruit, Tree
 
 

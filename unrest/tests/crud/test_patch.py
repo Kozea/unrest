@@ -1,7 +1,7 @@
 from datetime import timedelta
 
-from .. import idsorted
 from ...unrest import UnRest
+from .. import idsorted
 from ..model import Fruit, Tree
 
 

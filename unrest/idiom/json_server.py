@@ -6,8 +6,8 @@ from sqlalchemy import asc, desc, func, or_
 from sqlalchemy.sql.expression import cast
 from sqlalchemy.types import String
 
-from . import Idiom
 from ..util import Response
+from . import Idiom
 
 PK_DELIM = '___'
 
