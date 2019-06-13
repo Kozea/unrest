@@ -24,8 +24,8 @@ Session.configure(bind=engine)
 session = scoped_session(Session)
 
 if not os.path.exists(sqlite_db):
-    Base.metadata.create_all(bind=db.engine)
-    fill_data(db.session)
+    Base.metadata.create_all(bind=engine)
+    fill_data(session)
     session.remove()
 
 
