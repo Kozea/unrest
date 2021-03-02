@@ -7,3 +7,6 @@ build
 pip-wheel-metadata
 examples/unrest-test.db
 htmlcov
+__pycache__
+unrest.egg-info
+.python-version
