@@ -30,7 +30,7 @@ with open(
     exec(f.read(), about)
 
 tests_requirements = [
-    'flake8==3.6.0',
+    'flake8',
     'pytest-runner',
     'pytest-cov',
     'pytest-flake8',
