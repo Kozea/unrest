@@ -25,7 +25,10 @@ class YamlIdiom(Idiom):
     def request_to_payload(self, request):
         if request.payload:
             try:
-                return self.yaml.load(request.payload.decode('utf-8'))
+                return self.yaml.load(
+                    request.payload.decode('utf-8'),
+                    Loader=self.yaml.SafeLoader
+                )
             except self.yaml.YAMLError as e:
                 self.rest.raise_error(400, f'YAML Error in payload: {e}')
 
