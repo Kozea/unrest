@@ -1,3 +1,5 @@
+import uuid
+
 from sanic import Sanic, response
 
 from ...framework.sanic import SanicFramework
@@ -12,7 +14,7 @@ class SanicClient(UnRestClient):
         super().setUp()
 
     def get_app(self):
-        self.app = Sanic()
+        self.app = Sanic(str(uuid.uuid4()))
 
         @self.app.route("/")
         async def home(request):
@@ -26,8 +28,12 @@ class SanicClient(UnRestClient):
         return self.app
 
     def raw_fetch(self, url, method='GET', headers={}, body=None):
+        if method in ('GET', 'DELETE', 'OPTIONS'):
+            data = {}
+        else:
+            data = {'data': body}
         req, res = getattr(self.app.test_client, method.lower())(
-            url, headers=headers, data=body
+            url, headers=headers, **data
         )
         res.code = res.status
         return res
