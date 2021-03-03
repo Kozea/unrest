@@ -1,18 +1,27 @@
 [tool.black]
 line-length = 79
 skip-string-normalization = true
-py36 = true
 include = '\.py$'
 exclude = '''
 /(
     \.git
-  | \.hg
-  | \.mypy_cache
   | \.tox
   | \.venv
   | _build
-  | buck-out
   | build
-  | dist
 )/
 '''
+
+[tool.isort]
+multi_line_output=5
+
+[tool.pytest.ini_options]
+norecursedirs = ".git build *.egg-info .eggs venv"
+flake8-ignore = "* W503 unrest/tests/static/openapi_result.py E501"
+
+markers = [
+  "flask",
+  "http_server",
+  "tornado",
+  "sanic",
+]
