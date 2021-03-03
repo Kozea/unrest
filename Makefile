@@ -12,7 +12,7 @@ clean:
 	rm -fr *.egg-info
 
 fix:
-	blac,
+	$(BLACK) unrest
 
 lint:
 	$(PYTEST) --flake8 -m flake8 $(PROJECT_NAME)
