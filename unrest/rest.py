@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 def _call_me_maybe(fun_or_value, *args, **kwargs):
     """Call first argument `fun_or_value` with `*args, **kwargs`
-        if it is callable, return it otherwise.
+    if it is callable, return it otherwise.
     """
     if callable(fun_or_value):
         return fun_or_value(*args, **kwargs)
