@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="None">
   
+  
   <link rel="shortcut icon" href="img/favicon.ico">
-  <title>Home - UnRest Documentation</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <title>UnRest Documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -24,7 +25,7 @@
   
   <script src="js/jquery-2.1.1.min.js" defer></script>
   <script src="js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -35,6 +36,7 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href="." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
@@ -45,76 +47,75 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1 current">
-		
-    <a class="current" href=".">Home</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#unrest-simple-sqlalchemy-rest-api-generation">UnRest - Simple sqlalchemy rest api generation.</a></li>
-    
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example">Example</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get">GET</a>
         <ul>
-        
-            <li><a class="toctree-l3" href="#documentation">Documentation</a></li>
-        
-            <li><a class="toctree-l3" href="#example">Example</a></li>
-        
-            <li><a class="toctree-l3" href="#get">GET</a></li>
-        
-            <li><a class="toctree-l3" href="#put">PUT</a></li>
-        
-            <li><a class="toctree-l3" href="#post">POST</a></li>
-        
-            <li><a class="toctree-l3" href="#delete">DELETE</a></li>
-        
-            <li><a class="toctree-l3" href="#patch">PATCH</a></li>
-        
+    <li class="toctree-l3"><a class="reference internal" href="#with-primary-keys-arguments">With primary keys arguments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#without-argument">Without argument</a>
+    </li>
         </ul>
-    
-
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">API Documentation</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="unrest/">UnRest</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="rest/">Rest entry points</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="coercers/">Serialization/Deserialization</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="framework/">Frameworks</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="idiom/">Idioms</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="util/">Util</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="generators/">Generators</a>
-                </li>
-    </ul>
-	    </li>
-          
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#put">PUT</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#with-primary-keys-arguments_1">With primary keys arguments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#without-argument_1">Without argument</a>
+    </li>
         </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#post">POST</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#with-primary-keys-arguments_2">With primary keys arguments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#without-argument_2">Without argument</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#delete">DELETE</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#with-primary-keys-arguments_3">With primary keys arguments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#without-argument_3">Without argument</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#patch">PATCH</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#with-primary-keys-arguments_4">With primary keys arguments</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#without-argument_4">Without argument</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API Documentation</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="unrest/">UnRest</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="rest/">Rest entry points</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="coercers/">Serialization/Deserialization</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="framework/">Frameworks</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="idiom/">Idioms</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="util/">Util</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="generators/">Generators</a>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -142,28 +143,29 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
           <div role="main">
             <div class="section">
               
                 <h1 id="unrest-simple-sqlalchemy-rest-api-generation">UnRest - <small>Simple sqlalchemy rest api generation.</small><a class="headerlink" href="#unrest-simple-sqlalchemy-rest-api-generation" title="Permanent link"></a></h1>
-<pre><code class="python">from unrest import UnRest
+<p><a href="https://travis-ci.org/Kozea/unrest"><img alt="Build Status" src="https://travis-ci.org/Kozea/unrest.svg?branch=master" /></a>
+<a href="https://coveralls.io/github/Kozea/unrest?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/Kozea/unrest/badge.svg?branch=master" /></a></p>
+<pre><code class="language-python">from unrest import UnRest
 # First, initialize UnRest with your web application
 rest = UnRest(app)
 
 # Then declare your endpoint
 rest(Person)
 </code></pre>
-
-<p>This should provides you a <code>/api/person</code> and a <code>/api/person/&lt;login&gt;</code> route accessible in GET only.</p>
+<p>This should provide you a <code>/api/person</code> and a <code>/api/person/&lt;login&gt;</code> route accessible in GET only.</p>
 <p>To activate data modification, set the methods array like this:</p>
-<pre><code class="python">rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH']) # or simply methods=rest.all
+<pre><code class="language-python">rest(Person, only=['name', 'sex', 'age'], methods=['GET', 'PUT', 'POST', 'DELETE', 'PATCH']) # or simply methods=rest.all
 </code></pre>
-
-<p>You will get both routes (collection and member) on the four methods. Please see <a href="https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URI_and_HTTP_methods">the wikipedia page</a> for their signification.</p>
+<p>You will get both routes (collection and member) on the five methods. Please see <a href="https://en.wikipedia.org/wiki/Representational_state_transfer#Relationship_between_URI_and_HTTP_methods">the wikipedia page</a> for their signification.</p>
 <p>You can also override the default methods like this:</p>
-<pre><code class="python">person = rest(Person)
+<pre><code class="language-python">person = rest(Person)
 
 @person.declare('GET')
 def get(payload, login=None):
@@ -179,12 +181,11 @@ def get(payload, login=None):
         ]
     }
 </code></pre>
-
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link"></a></h2>
 <p>Full documentation can be found at <a href="https://kozea.github.io/unrest/">kozea.github.io/unrest</a></p>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link"></a></h2>
 <p>Consider this simple web application:</p>
-<pre><code class="python">from datetime import timedelta
+<pre><code class="language-python">from datetime import timedelta
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -252,11 +253,10 @@ rest(Fruit, methods=rest.all)
 # Run the app
 app.run(debug=True)
 </code></pre>
-
 <p>You will now have:</p>
 <h2 id="get">GET<a class="headerlink" href="#get" title="Permanent link"></a></h2>
 <h3 id="with-primary-keys-arguments">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree/1
 
 200 OK
 {
@@ -269,8 +269,7 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit/1
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit/1
 
 200 OK
 {
@@ -286,9 +285,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <h3 id="without-argument">Without argument<a class="headerlink" href="#without-argument" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree
 
 200 OK
 {
@@ -309,8 +307,7 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit
 
 200 OK
 {
@@ -354,10 +351,9 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <h2 id="put">PUT<a class="headerlink" href="#put" title="Permanent link"></a></h2>
 <h3 id="with-primary-keys-arguments_1">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_1" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X PUT -H &quot;Content-Type: application/json&quot; -d '{
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree/1 -X PUT -H &quot;Content-Type: application/json&quot; -d '{
   &quot;name&quot;: &quot;cedar&quot;
 }'
 
@@ -372,9 +368,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <p>Get it again to be sure:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree/1
 
 200 OK
 {
@@ -387,9 +382,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <h3 id="without-argument_1">Without argument<a class="headerlink" href="#without-argument_1" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PUT -H &quot;Content-Type: application/json&quot; -d '{
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree -X PUT -H &quot;Content-Type: application/json&quot; -d '{
   &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 22, &quot;name&quot;: &quot;mango&quot;}]
 }'
 
@@ -408,9 +402,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <p>Get it again to be sure:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree
 
 200 OK
 {
@@ -427,9 +420,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
-<p>Check that when allow_batch is not set we can't put all:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X PUT -H &quot;Content-Type: application/json&quot; -d '{
+<p>Check that when <code>allow_batch</code> is not set we can't put all:</p>
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit -X PUT -H &quot;Content-Type: application/json&quot; -d '{
   &quot;objects&quot;: [
     {&quot;fruit_id&quot;: 2, &quot;color&quot;: &quot;red&quot;},
     {&quot;fruit_id&quot;: 22, &quot;color&quot;: &quot;blue&quot;}
@@ -441,19 +433,17 @@ app.run(debug=True)
   &quot;message&quot;: &quot;You must set allow_batch to True if you want to use batch methods.&quot;
 }
 </code></pre>
-
 <h2 id="post">POST<a class="headerlink" href="#post" title="Permanent link"></a></h2>
 <h3 id="with-primary-keys-arguments_2">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_2" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree/1 -X POST -H &quot;Content-Type: application/json&quot;
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree/1 -X POST -H &quot;Content-Type: application/json&quot;
 
 501 Not Implemented
 {
   &quot;message&quot;: &quot;POST on id corresponds to collection creation. It's not implemented by default. If you want to update an item use the PUT method instead&quot;
 }
 </code></pre>
-
 <h3 id="without-argument_2">Without argument<a class="headerlink" href="#without-argument_2" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X POST -H &quot;Content-Type: application/json&quot; -d '{
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit -X POST -H &quot;Content-Type: application/json&quot; -d '{
   &quot;color&quot;: &quot;forestgreen&quot;, &quot;size&quot;: 3.14, &quot;age&quot;: 1.5926, &quot;tree_id&quot;: 3
 }'
 
@@ -471,9 +461,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <p>Now we should have a total of 6 fruits:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit
 
 200 OK
 {
@@ -524,10 +513,9 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <h2 id="delete">DELETE<a class="headerlink" href="#delete" title="Permanent link"></a></h2>
 <h3 id="with-primary-keys-arguments_3">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_3" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit/3 -X DELETE
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit/3 -X DELETE
 
 200 OK
 {
@@ -543,9 +531,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <p>Now we should have only 5 fruits remaining:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit
 
 200 OK
 {
@@ -589,19 +576,17 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <h3 id="without-argument_3">Without argument<a class="headerlink" href="#without-argument_3" title="Permanent link"></a></h3>
 <p>Batch delete is not allowed on fruit:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X DELETE
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit -X DELETE
 
 501 Not Implemented
 {
   &quot;message&quot;: &quot;You must set allow_batch to True if you want to use batch methods.&quot;
 }
 </code></pre>
-
 <p>But is on tree:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X DELETE
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree -X DELETE
 
 200 OK
 {
@@ -622,8 +607,7 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree
 
 200 OK
 {
@@ -631,10 +615,9 @@ app.run(debug=True)
     &quot;objects&quot;: []
 }
 </code></pre>
-
 <h2 id="patch">PATCH<a class="headerlink" href="#patch" title="Permanent link"></a></h2>
 <h3 id="with-primary-keys-arguments_4">With primary keys arguments<a class="headerlink" href="#with-primary-keys-arguments_4" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit/1 -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit/1 -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
   &quot;color&quot;: &quot;blue&quot;
 }'
 
@@ -652,9 +635,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
 <h3 id="without-argument_4">Without argument<a class="headerlink" href="#without-argument_4" title="Permanent link"></a></h3>
-<pre><code class="json">$ curl -s http://localhost:5000/api/tree -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/tree -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
   &quot;objects&quot;: [{&quot;id&quot;: 2, &quot;name&quot;: &quot;cedar&quot;}, {&quot;id&quot;: 3, &quot;name&quot;: &quot;mango&quot;}]
 }'
 
@@ -673,9 +655,8 @@ app.run(debug=True)
     ]
 }
 </code></pre>
-
-<p>Check that when allow_batch is not set we can't put all:</p>
-<pre><code class="json">$ curl -s http://localhost:5000/api/fruit -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
+<p>Check that when <code>allow_batch</code> is not set we can't put all:</p>
+<pre><code class="language-json">$ curl -s http://localhost:5000/api/fruit -X PATCH -H &quot;Content-Type: application/json&quot; -d '{
   &quot;objects&quot;: [
     {&quot;fruit_id&quot;: 1, &quot;color&quot;: &quot;blue&quot;},
     {&quot;fruit_id&quot;: 3, &quot;age&quot;: 1038540.0},
@@ -689,7 +670,6 @@ app.run(debug=True)
   &quot;message&quot;: &quot;You must set allow_batch to True if you want to use batch methods.&quot;
 }
 </code></pre>
-
 <p>otherwise all the specified attributes would have been patched.</p>
               
             </div>
@@ -711,7 +691,7 @@ app.run(debug=True)
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -721,7 +701,7 @@ app.run(debug=True)
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/Kozea/unrest/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -735,11 +715,16 @@ app.run(debug=True)
     <script>var base_url = '.';</script>
     <script src="js/theme.js" defer></script>
       <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>
 
 <!--
-MkDocs version : 1.0.4
-Build Date UTC : 2019-02-21 14:46:32
+MkDocs version : 1.1.2
+Build Date UTC : 2021-03-08 11:31:54.715409+00:00
 -->

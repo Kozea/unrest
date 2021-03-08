@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
+  
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>UnRest - UnRest Documentation</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -24,7 +25,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -35,6 +36,7 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
@@ -45,64 +47,67 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="..">Home</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">API Documentation</span>
-    <ul class="subnav">
-                <li class=" current">
-                    
-    <a class="current" href="./">UnRest</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#unrest">unrest</a></li>
-    
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API Documentation</span></p>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">UnRest</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#unrest_1">UnRest</a>
         <ul>
-        
-            <li><a class="toctree-l4" href="#unrest_1">UnRest</a></li>
-        
+    <li class="toctree-l3"><a class="reference internal" href="#all">all</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#root_path">root_path</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#property">Property</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#resterror">RestError</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#validationerror">ValidationError</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#init_app">init_app</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#init_session">init_session</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#raise_error">raise_error</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#register_index">register_index</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#index">index</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#send_json">send_json</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#register_options">register_options</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#options">options</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#register_openapi">register_openapi</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#openapi">openapi</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#call">call</a>
+    </li>
         </ul>
-    
-
+    </li>
     </ul>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../rest/">Rest entry points</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../coercers/">Serialization/Deserialization</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../framework/">Frameworks</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../idiom/">Idioms</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../util/">Util</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../generators/">Generators</a>
-                </li>
-    </ul>
-	    </li>
-          
-        </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../rest/">Rest entry points</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../coercers/">Serialization/Deserialization</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../framework/">Frameworks</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../idiom/">Idioms</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../util/">Util</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../generators/">Generators</a>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -134,6 +139,7 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
           <div role="main">
@@ -141,52 +147,66 @@
               
                 <h1 id="unrest">unrest<a class="headerlink" href="#unrest" title="Permanent link"></a></h1>
 <h2 id="unrest_1">UnRest<a class="headerlink" href="#unrest_1" title="Permanent link"></a></h2>
-<pre><code class="python">UnRest(self, app=None, session=None, path='/api', version='', framework=None, IdiomClass=None, SerializeClass=None, DeserializeClass=None, RestClass=&lt;class 'unrest.rest.Rest'&gt;, allow_options=True, serve_openapi_file=True, openapi_class=&lt;class 'unrest.generators.openapi.OpenApi'&gt;, options_class=&lt;class 'unrest.generators.options.Options'&gt;, empty_get_as_404=False, info={})
+<pre><code class="language-python">UnRest(self,
+       app=None,
+       session=None,
+       path='/api',
+       version='',
+       framework=None,
+       idiom=None,
+       SerializeClass=None,
+       DeserializeClass=None,
+       RestClass=Rest,
+       allow_options=True,
+       serve_openapi_file=True,
+       OpenApiClass=OpenApi,
+       OptionsClass=Options,
+       empty_get_as_404=False,
+       info={})
 </code></pre>
-
 <p>A troubling rest api library for sqlalchemy models.
 This is the main entry point of unrest.</p>
 <p>Common usage is as following:</p>
-<pre><code class="python">rest = UnRest(app, session)  # app is your application
+<pre><code class="language-python">rest = UnRest(app, session)  # app is your application
 # When called, it instanciate a `Rest` object that will register the
 # REST endpoints. See the `Rest` class.
 rest(Model1)
 rest(Model2)
 </code></pre>
-
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>app</strong>: Your web application,
-        can be set afterwards using <a href="#init_app"><code>init_app</code></a></li>
+        can be set afterwards using <a href="#init_app"><code>init_app</code></a>.</li>
 <li><strong>session</strong>: Your sqlalchemy session,
         can be set afterwards using the <a href="#init_session"><code>init_session</code></a> method.</li>
-<li><strong>path</strong>: Default '/api', sets the root url path for your endpoints</li>
+<li><strong>path</strong>: Default '/api', sets the root url path for your endpoints.</li>
 <li><strong>version</strong>: Adds a version to the root url path if specified
-        (i.e. /api/v2)</li>
+        (i.e. /api/v2).</li>
 <li><strong>framework</strong>: A specific framework class, defaults to auto detect.</li>
-<li><strong>IdiomClass</strong>: An idiom class, defaults to <a href="../idiom/#unrestidiomunrest" title="unrest.idiom.unrest"><code>unrest.idiom.unrest</code></a>.</li>
-<li><strong>SerializeClass</strong>: A global alternative for <a href="../coercers/#serialize" title="unrest.coercers.Serialize"><code>Serialize</code></a> class.</li>
-<li><strong>DeserializeClass</strong>: A global alternative for <a href="../coercers/#deserialize" title="unrest.coercers.Deserialize"><code>Deserialize</code></a> class.</li>
+<li><strong>idiom</strong>: An idiom class, defaults to <a href="../idiom/#unrestidiomunrest" title="unrest.idiom.unrest"><code>unrest.idiom.unrest</code></a>.</li>
+<li><strong>SerializeClass</strong>: A global alternative
+        for <a href="../coercers/#serialize" title="unrest.coercers.Serialize"><code>Serialize</code></a> class.</li>
+<li><strong>DeserializeClass</strong>: A global alternative
+        for <a href="../coercers/#deserialize" title="unrest.coercers.Deserialize"><code>Deserialize</code></a> class.</li>
 <li><strong>RestClass</strong>: Replace the default <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a> class.</li>
 <li><strong>allow_options</strong>: Set it to False to disable OPTIONS requests.</li>
 <li><strong>serve_openapi_file</strong>: Set it to False to disable openapi file generation.</li>
-<li><strong>empty_get_as_404</strong>: If True return a 404 on get with id not found</li>
+<li><strong>empty_get_as_404</strong>: If True return a 404 on get with id not found.</li>
 <li><strong>info</strong>: Additional info for the openapi metadata.</li>
 </ul>
 <p><strong>Frameworks</strong></p>
 <p>Unrest aims to be framework agnostic.
-It currently works with Flask out of the box and provides some other frameworks:
-Tornado and python http.server.
-See <a href="../framework/#framework" title="unrest.framework.Framework"><code>Framework</code></a></p>
+It currently works with Flask out of the box and provides some other
+frameworks: Tornado and python http.server.
+See <a href="../framework/#framework" title="unrest.framework.Framework"><code>Framework</code></a>.</p>
 <h3 id="all">all<a class="headerlink" href="#all" title="Permanent link"></a></h3>
 <p>Return all supported methods. Useful for the rest
 <code>method</code> keyword argument.</p>
 <h3 id="root_path">root_path<a class="headerlink" href="#root_path" title="Permanent link"></a></h3>
-<p>Returns this API root path.</p>
+<p>Return this API root path.</p>
 <h3 id="property">Property<a class="headerlink" href="#property" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.Property(self, name, type=None, formatter=None)
+<pre><code class="language-python">UnRest.Property(name, type=None, formatter=None)
 </code></pre>
-
 <p>A Property wrapper used instead of a string in a <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a>
 properties parameter.</p>
 <p><strong>Arguments</strong></p>
@@ -196,88 +216,75 @@ properties parameter.</p>
 <li><strong>formatter</strong>: An optional function to transform the parameter as string</li>
 </ul>
 <h3 id="resterror">RestError<a class="headerlink" href="#resterror" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.RestError(self, status, message, extra=None)
+<pre><code class="language-python">UnRest.RestError(status, message, extra=None)
 </code></pre>
-
 <p>Exception raised by rest methods. It's catched by the REST method
 wrapper and will return a <code>status</code> http error with the specified
 <code>message</code>.</p>
 <h3 id="validationerror">ValidationError<a class="headerlink" href="#validationerror" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.ValidationError(self, message)
+<pre><code class="language-python">UnRest.ValidationError(message)
 </code></pre>
-
 <p>Exception raised by rest validation methods.</p>
 <h3 id="init_app">init_app<a class="headerlink" href="#init_app" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.init_app(self, app)
+<pre><code class="language-python">UnRest.init_app(app)
 </code></pre>
-
 <p>Sets the app on UnRest if it was missing during instantiation.</p>
 <h3 id="init_session">init_session<a class="headerlink" href="#init_session" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.init_session(self, session)
+<pre><code class="language-python">UnRest.init_session(session)
 </code></pre>
-
 <p>Sets the sqlalchemy session on UnRest
 if it was missing during instantiation.</p>
 <h3 id="raise_error">raise_error<a class="headerlink" href="#raise_error" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.raise_error(self, status, message, extra=None)
+<pre><code class="language-python">UnRest.raise_error(status, message, extra=None)
 </code></pre>
-
 <p>Raise an error that will be handled by the rest wrapper, which
 will return a json response with status as HTTP status code
 and message as content.</p>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>status</strong>: The http status code corresponding to the error
-        (404 for instance)</li>
-<li><strong>message</strong>: The message that will be returned in the json response</li>
-<li><strong>extra</strong>: Mapping of extra fields to return in json response</li>
+<li><strong>status</strong>: The HTTP status code corresponding to the error
+        (404 for instance).</li>
+<li><strong>message</strong>: The message that will be returned in the json response.</li>
+<li><strong>extra</strong>: Mapping of extra fields to return in json response.</li>
 </ul>
 <h3 id="register_index">register_index<a class="headerlink" href="#register_index" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.register_index(self)
+<pre><code class="language-python">UnRest.register_index()
 </code></pre>
-
 <p>Register the API index GET route.</p>
 <h3 id="index">index<a class="headerlink" href="#index" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.index(self, request)
+<pre><code class="language-python">UnRest.index(request)
 </code></pre>
-
 <p>The API index GET route.</p>
 <h3 id="send_json">send_json<a class="headerlink" href="#send_json" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.send_json(self, data)
+<pre><code class="language-python">UnRest.send_json(data)
 </code></pre>
-
 <p>Send <code>data</code> as json.</p>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>data</strong>: An object to send as json</li>
+<li><strong>data</strong>: An object to send as json.</li>
 </ul>
 <p><strong>Returns</strong></p>
-<p>The <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> containing the json data</p>
+<p>The <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> containing the json data.</p>
 <h3 id="register_options">register_options<a class="headerlink" href="#register_options" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.register_options(self)
+<pre><code class="language-python">UnRest.register_options()
 </code></pre>
-
 <p>Register the API index OPTIONS route.</p>
 <h3 id="options">options<a class="headerlink" href="#options" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.options(self, request)
+<pre><code class="language-python">UnRest.options(request)
 </code></pre>
-
 <p>The API index OPTIONS route.</p>
 <h3 id="register_openapi">register_openapi<a class="headerlink" href="#register_openapi" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.register_openapi(self)
+<pre><code class="language-python">UnRest.register_openapi()
 </code></pre>
-
 <p>Register the openapi route.</p>
 <h3 id="openapi">openapi<a class="headerlink" href="#openapi" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.openapi(self, request)
+<pre><code class="language-python">UnRest.openapi(request)
 </code></pre>
-
 <p>The API openapi route.</p>
 <h3 id="call"><strong>call</strong><a class="headerlink" href="#call" title="Permanent link"></a></h3>
-<pre><code class="python">UnRest.__call__(self, *args, **kwargs)
+<pre><code class="language-python">UnRest.__call__(*args, **kwargs)
 </code></pre>
-
-<p>Returns a <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a> instance. See rest entry points.</p>
+<p>Return a <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a> instance. See rest entry points.</p>
               
             </div>
           </div>
@@ -300,7 +307,7 @@ and message as content.</p>
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -310,7 +317,7 @@ and message as content.</p>
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/Kozea/unrest/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -326,6 +333,11 @@ and message as content.</p>
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
       <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>

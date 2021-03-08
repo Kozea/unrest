@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
+  
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>Serialization/Deserialization - UnRest Documentation</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -24,7 +25,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -35,6 +36,7 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
@@ -45,68 +47,47 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="..">Home</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">API Documentation</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../unrest/">UnRest</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../rest/">Rest entry points</a>
-                </li>
-                <li class=" current">
-                    
-    <a class="current" href="./">Serialization/Deserialization</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#unrestcoercers">unrest.coercers</a></li>
-    
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API Documentation</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../unrest/">UnRest</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../rest/">Rest entry points</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Serialization/Deserialization</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#property">Property</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#serialize">Serialize</a>
         <ul>
-        
-            <li><a class="toctree-l4" href="#property">Property</a></li>
-        
-            <li><a class="toctree-l4" href="#serialize">Serialize</a></li>
-        
-            <li><a class="toctree-l4" href="#deserialize">Deserialize</a></li>
-        
+    <li class="toctree-l3"><a class="reference internal" href="#dict">dict</a>
+    </li>
         </ul>
-    
-
-    </ul>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../framework/">Frameworks</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../idiom/">Idioms</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../util/">Util</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../generators/">Generators</a>
-                </li>
-    </ul>
-	    </li>
-          
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#deserialize">Deserialize</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#merge">merge</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#create">create</a>
+    </li>
         </ul>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../framework/">Frameworks</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../idiom/">Idioms</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../util/">Util</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../generators/">Generators</a>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -138,6 +119,7 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
           <div role="main">
@@ -145,9 +127,8 @@
               
                 <h1 id="unrestcoercers">unrest.coercers<a class="headerlink" href="#unrestcoercers" title="Permanent link"></a></h1>
 <h2 id="property">Property<a class="headerlink" href="#property" title="Permanent link"></a></h2>
-<pre><code class="python">Property(self, name, type=None, formatter=None)
+<pre><code class="language-python">Property(self, name, type=None, formatter=None)
 </code></pre>
-
 <p>A Property wrapper used instead of a string in a <a href="../rest/#rest" title="unrest.rest.Rest"><code>Rest</code></a>
 properties parameter.</p>
 <p><strong>Arguments</strong></p>
@@ -157,9 +138,8 @@ properties parameter.</p>
 <li><strong>formatter</strong>: An optional function to transform the parameter as string</li>
 </ul>
 <h2 id="serialize">Serialize<a class="headerlink" href="#serialize" title="Permanent link"></a></h2>
-<pre><code class="python">Serialize(self, model, columns, properties, relationships)
+<pre><code class="language-python">Serialize(self, model, columns, properties, relationships)
 </code></pre>
-
 <p>Base serializer class</p>
 <p>Casts python sqlalchemy data into a JSON compliant type according to
 the sqlalchemy column type.</p>
@@ -168,7 +148,7 @@ Just add a <code>serialize_type</code> method for <code>type</code> and it shall
 <p>The serialize class can be configured with the rest function and
 on the UnRest declaration.</p>
 <p>For example:</p>
-<pre><code class="python">from unrest.coercers import Serialize
+<pre><code class="language-python">from unrest.coercers import Serialize
 
 class BetterSerialize(Serialize):
     def serialize_matrix(self, type, data):
@@ -177,7 +157,6 @@ class BetterSerialize(Serialize):
 rest = UnRest(app, session, SerializeClass=BetterSerialize)
 ...
 </code></pre>
-
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>model</strong>: The sqlachemy item to serialize.</li>
@@ -186,14 +165,12 @@ rest = UnRest(app, session, SerializeClass=BetterSerialize)
 <li><strong>relationships</strong>: The list of relationships to serialize.</li>
 </ul>
 <h3 id="dict">dict<a class="headerlink" href="#dict" title="Permanent link"></a></h3>
-<pre><code class="python">Serialize.dict(self)
+<pre><code class="language-python">Serialize.dict()
 </code></pre>
-
 <p>Serialize the given model to a JSON compatible dict</p>
 <h2 id="deserialize">Deserialize<a class="headerlink" href="#deserialize" title="Permanent link"></a></h2>
-<pre><code class="python">Deserialize(self, payload, columns)
+<pre><code class="language-python">Deserialize(self, payload, columns)
 </code></pre>
-
 <p>Base deserializer class</p>
 <p>Casts raw data back to compatible python sqlalchemy type.</p>
 <p>Not all types are implemented as of now and it's fairly easy to add:
@@ -201,7 +178,7 @@ Just add a <code>deserialize_type</code> method for <code>type</code> and it sha
 <p>The deserialize class can be configured with the rest function and
 on the UnRest declaration.</p>
 <p>For example:</p>
-<pre><code class="python">from unrest.coercers import Deserialize
+<pre><code class="language-python">from unrest.coercers import Deserialize
 
 class BetterDeserialize(Deserialize):
     def deserialize_matrix(self, type, data):
@@ -210,21 +187,18 @@ class BetterDeserialize(Deserialize):
 rest = UnRest(app, session, DeserializeClass=BetterDeserialize)
 ...
 </code></pre>
-
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>payload</strong>: The payload to deserialize</li>
 <li><strong>columns</strong>: The list of columns to deserialize</li>
 </ul>
 <h3 id="merge">merge<a class="headerlink" href="#merge" title="Permanent link"></a></h3>
-<pre><code class="python">Deserialize.merge(self, item, payload=None)
+<pre><code class="language-python">Deserialize.merge(item, payload=None)
 </code></pre>
-
 <p>Deserialize the given payload into the existing sqlalchemy <code>item</code></p>
 <h3 id="create">create<a class="headerlink" href="#create" title="Permanent link"></a></h3>
-<pre><code class="python">Deserialize.create(self, factory)
+<pre><code class="language-python">Deserialize.create(factory)
 </code></pre>
-
 <p>Deserialize objects in the given payload into a list of new items
 created with the <code>factory</code> function.</p>
               
@@ -249,7 +223,7 @@ created with the <code>factory</code> function.</p>
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -259,7 +233,7 @@ created with the <code>factory</code> function.</p>
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/Kozea/unrest/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -275,6 +249,11 @@ created with the <code>factory</code> function.</p>
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
       <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>

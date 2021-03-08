@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   
+  
   <link rel="shortcut icon" href="../img/favicon.ico">
   <title>Rest entry points - UnRest Documentation</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
 
-  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
   
   <script>
     // Current page data
@@ -24,7 +25,7 @@
   
   <script src="../js/jquery-2.1.1.min.js" defer></script>
   <script src="../js/modernizr-2.8.3.min.js" defer></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -35,6 +36,7 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
         <a href=".." class="icon icon-home"> UnRest Documentation</a>
         <div role="search">
@@ -45,64 +47,91 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-	<ul class="current">
-	  
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="..">Home</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">API Documentation</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../unrest/">UnRest</a>
-                </li>
-                <li class=" current">
-                    
-    <a class="current" href="./">Rest entry points</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#unrestrest">unrest.rest</a></li>
-    
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">API Documentation</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../unrest/">UnRest</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Rest entry points</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#rest">Rest</a>
         <ul>
-        
-            <li><a class="toctree-l4" href="#rest">Rest</a></li>
-        
+    <li class="toctree-l3"><a class="reference internal" href="#columns">columns</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mapper">mapper</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#name_parts">name_parts</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#path">path</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#primary_keys">primary_keys</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#query">query</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#session">session</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#table">table</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#undefered_query">undefered_query</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get">get</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#put">put</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#post">post</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#delete">delete</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#patch">patch</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#options">options</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#declare">declare</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#sub">sub</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#parameters_to_pks">parameters_to_pks</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#deserialize">deserialize</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#deserialize_all">deserialize_all</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#serialize">serialize</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#serialize_all">serialize_all</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#set_defaults">set_defaults</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#validatable">Validatable</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#validate">validate</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#validate_all">validate_all</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#raise_error">raise_error</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#route">route</a>
+    </li>
         </ul>
-    
-
+    </li>
     </ul>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../coercers/">Serialization/Deserialization</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../framework/">Frameworks</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../idiom/">Idioms</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../util/">Util</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../generators/">Generators</a>
-                </li>
-    </ul>
-	    </li>
-          
-        </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../coercers/">Serialization/Deserialization</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../framework/">Frameworks</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../idiom/">Idioms</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../util/">Util</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../generators/">Generators</a>
+                    </li>
+                </ul>
       </div>
-      &nbsp;
+    </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -134,6 +163,7 @@
       
     </li>
   </ul>
+  
   <hr/>
 </div>
           <div role="main">
@@ -141,15 +171,35 @@
               
                 <h1 id="unrestrest">unrest.rest<a class="headerlink" href="#unrestrest" title="Permanent link"></a></h1>
 <h2 id="rest">Rest<a class="headerlink" href="#rest" title="Permanent link"></a></h2>
-<pre><code class="python">Rest(self, unrest, Model, methods=['GET'], name=None, only=None, exclude=None, query=None, properties=None, relationships=None, allow_batch=False, auth=None, read_auth=None, write_auth=None, validators=None, validation_error_code=500, primary_keys=None, defaults=None, fixed=None, IdiomClass=&lt;class 'unrest.idiom.unrest.UnRestIdiom'&gt;, SerializeClass=&lt;class 'unrest.coercers.Serialize'&gt;, DeserializeClass=&lt;class 'unrest.coercers.Deserialize'&gt;)
+<pre><code class="language-python">Rest(self,
+     unrest,
+     Model,
+     methods=['GET'],
+     name=None,
+     only=None,
+     exclude=None,
+     query=None,
+     properties=None,
+     relationships=None,
+     allow_batch=False,
+     auth=None,
+     read_auth=None,
+     write_auth=None,
+     validators=None,
+     validation_error_code=500,
+     primary_keys=None,
+     defaults=None,
+     fixed=None,
+     idiom=UnRestIdiom,
+     SerializeClass=Serialize,
+     DeserializeClass=Deserialize)
 </code></pre>
-
 <p>This is the entry point for generating a REST endpoint for a specific model
 The final uri if the path is '/api' and version 'v2' would be:
 <code>/api/v2/model</code> and <code>/api/v2/model/pk1/pk2</code> and if model is not in the
 public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/pk1/pk2</code>.</p>
 <p>Usage:</p>
-<pre><code class="python">    rest = UnRest(app)
+<pre><code class="language-python">    rest = UnRest(app)
 
     def name_validator(field):
         if len(field.value) &gt; 12:
@@ -161,7 +211,6 @@ public schema <code>/api/v2/schema/model</code> and <code>/api/v2/schema/model/p
          query=lambda q: q.filter(Person.age &gt; 16),
          validators={'name': name_validator})
 </code></pre>
-
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>unrest</strong>: The unrest instance given automatically on UnRest call.</li>
@@ -220,14 +269,13 @@ name.</p>
 <h3 id="undefered_query">undefered_query<a class="headerlink" href="#undefered_query" title="Permanent link"></a></h3>
 <p>Gets the query with all attributes undefered.</p>
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.get(self, payload, **pks)
+<pre><code class="language-python">Rest.get(payload, **pks)
 </code></pre>
-
 <p>The GET method</p>
 <ul>
 <li>With no arguments: Returns all query elements. (/api/model/)</li>
-<li>With primary keys: Returns the element in query with the primary keys.
-(/api/model/pk)</li>
+<li>With primary keys: Returns the element in query with the primary
+    keys. (/api/model/pk)</li>
 </ul>
 <p><strong>Arguments</strong></p>
 <ul>
@@ -235,13 +283,12 @@ name.</p>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
 <h3 id="put">put<a class="headerlink" href="#put" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.put(self, payload, **pks)
+<pre><code class="language-python">Rest.put(payload, **pks)
 </code></pre>
-
 <p>The PUT method</p>
 <ul>
-<li>With no arguments: If allow_batch set to true replace all the query elements
-    with the ones in the request payload.</li>
+<li>With no arguments: If allow_batch set to true replace all the
+    query elements with the ones in the request payload.</li>
 <li>With primary keys: Create or replace the element associated
     with the primary keys from the one in the request payload.</li>
 </ul>
@@ -251,9 +298,8 @@ name.</p>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
 <h3 id="post">post<a class="headerlink" href="#post" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.post(self, payload, **pks)
+<pre><code class="language-python">Rest.post(payload, **pks)
 </code></pre>
-
 <p>The POST method</p>
 <ul>
 <li>With no arguments: Add element from request payload.</li>
@@ -265,13 +311,14 @@ name.</p>
 <li><strong>pks</strong>: The primary keys in url if any.</li>
 </ul>
 <h3 id="delete">delete<a class="headerlink" href="#delete" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.delete(self, payload, **pks)
+<pre><code class="language-python">Rest.delete(payload, **pks)
 </code></pre>
-
 <p>The DELETE method</p>
 <ul>
-<li>With no arguments: If allow_batch set to true delete all query elements.</li>
-<li>With primary keys: Delete the element associated with the primary keys.</li>
+<li>With no arguments: If allow_batch set to true delete all query
+    elements.</li>
+<li>With primary keys: Delete the element associated with the primary
+    keys.</li>
 </ul>
 <p><strong>Arguments</strong></p>
 <ul>
@@ -279,9 +326,8 @@ name.</p>
 <li><strong>pks</strong>: The primary keys of the element to delete.</li>
 </ul>
 <h3 id="patch">patch<a class="headerlink" href="#patch" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.patch(self, payload, **pks)
+<pre><code class="language-python">Rest.patch(payload, **pks)
 </code></pre>
-
 <p>The PATCH method</p>
 <ul>
 <li>With no arguments: If allow_batch set to true patch existing elements
@@ -295,18 +341,16 @@ name.</p>
 <li><strong>pks</strong>: The primary keys of the element to patch.</li>
 </ul>
 <h3 id="options">options<a class="headerlink" href="#options" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.options(self, payload, **pks)
+<pre><code class="language-python">Rest.options(payload, **pks)
 </code></pre>
-
 <p>The OPTIONS method</p>
 <p>Returns a description of this rest endpoint.</p>
 <h3 id="declare">declare<a class="headerlink" href="#declare" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.declare(self, method, manual_commit=False)
+<pre><code class="language-python">Rest.declare(method, manual_commit=False)
 </code></pre>
-
 <p>A decorator to register an alternative method.
 The original is still callable with rest.{method}</p>
-<pre><code class="python">fruit = rest(Fruit)
+<pre><code class="language-python">fruit = rest(Fruit)
 
 @fruit.declare('GET')
 def get(payload, fruit_id=None):
@@ -318,16 +362,15 @@ def get(payload, fruit_id=None):
         ]
     }
 </code></pre>
-
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>method</strong>: The method to override ('GET' for exemple)</li>
-<li><strong>manual_commit</strong>: Don't auto commit after the method.</li>
+<li><strong>manual_commit</strong>: Set this to True to prevent auto commit after route
+        call</li>
 </ul>
 <h3 id="sub">sub<a class="headerlink" href="#sub" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.sub(self, query_factory, **kwargs)
+<pre><code class="language-python">Rest.sub(query_factory, **kwargs)
 </code></pre>
-
 <p>This methods return a copy of the current rest endpoint and takes a
 <code>query_factory</code> argument to alter the current query.</p>
 <p><strong>Arguments</strong></p>
@@ -340,15 +383,13 @@ def get(payload, fruit_id=None):
 <p><strong>Returns</strong></p>
 <p>A <a href="./#rest" title="unrest.rest.Rest"><code>Rest</code></a> endpoint copied from this one</p>
 <h3 id="parameters_to_pks">parameters_to_pks<a class="headerlink" href="#parameters_to_pks" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.parameters_to_pks(self, parameters)
+<pre><code class="language-python">Rest.parameters_to_pks(parameters)
 </code></pre>
-
 <p>Transform query parameters into primary keys mapping with
 deserialized values.</p>
 <h3 id="deserialize">deserialize<a class="headerlink" href="#deserialize" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.deserialize(self, payload, item, blank_missing=True)
+<pre><code class="language-python">Rest.deserialize(payload, item, blank_missing=True)
 </code></pre>
-
 <p>Deserialize the payload item in the provided item.</p>
 <p><strong>Arguments</strong></p>
 <ul>
@@ -357,23 +398,20 @@ deserialized values.</p>
 <li><strong>blank_missing</strong>: Set non-provided by payload item attributes at None</li>
 </ul>
 <h3 id="deserialize_all">deserialize_all<a class="headerlink" href="#deserialize_all" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.deserialize_all(self, payload)
+<pre><code class="language-python">Rest.deserialize_all(payload)
 </code></pre>
-
 <p>Deserialize all the payload items.</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>payload</strong>: The payload containing the item list</li>
 </ul>
 <h3 id="serialize">serialize<a class="headerlink" href="#serialize" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.serialize(self, item)
+<pre><code class="language-python">Rest.serialize(item)
 </code></pre>
-
 <p>Serialize an <code>item</code> with the given <code>SerializeClass</code></p>
 <h3 id="serialize_all">serialize_all<a class="headerlink" href="#serialize_all" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.serialize_all(self, items)
+<pre><code class="language-python">Rest.serialize_all(items)
 </code></pre>
-
 <p>Serialize all items and return a mapping containing:</p>
 <p><strong>Returns</strong></p>
 <p><code>A dict containing</code>:</p>
@@ -386,14 +424,12 @@ deserialized values.</p>
 <li>limit if there's a query limit</li>
 </ul>
 <h3 id="set_defaults">set_defaults<a class="headerlink" href="#set_defaults" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.set_defaults(self, payload, columns)
+<pre><code class="language-python">Rest.set_defaults(payload, columns)
 </code></pre>
-
 <p>Sets in payload item all the fixed and defaults values</p>
 <h3 id="validatable">Validatable<a class="headerlink" href="#validatable" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.Validatable(self, value, name, item, ValidationError)
+<pre><code class="language-python">Rest.Validatable(value, name, item, ValidationError)
 </code></pre>
-
 <p>A validatable class that is used as validators argument.</p>
 <p><strong>Arguments</strong></p>
 <ul>
@@ -404,15 +440,13 @@ deserialized values.</p>
         to raise on validation error.</li>
 </ul>
 <h3 id="validate">validate<a class="headerlink" href="#validate" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.validate(self, item, errors=None)
+<pre><code class="language-python">Rest.validate(item, errors=None)
 </code></pre>
-
 <p>Validates all validators columns against validators.</p>
 <p>Raise RestError if validation errors.</p>
 <h3 id="validate_all">validate_all<a class="headerlink" href="#validate_all" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.validate_all(self, items)
+<pre><code class="language-python">Rest.validate_all(items)
 </code></pre>
-
 <p>Calls validate on all the <code>items</code> and raise an error if any does not
 validate.</p>
 <p><strong>Arguments</strong></p>
@@ -422,66 +456,75 @@ validate.</p>
 <p><strong>Raises</strong></p>
 <p>A <a href="../unrest/#resterror" title="unrest.UnRest.RestError"><code>RestError</code></a> on validation error</p>
 <h3 id="raise_error">raise_error<a class="headerlink" href="#raise_error" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.raise_error(self, status, message, extra=None)
+<pre><code class="language-python">Rest.raise_error(status, message, extra=None)
 </code></pre>
-
 <p>Shortcut function to <a href="../unrest/#raise_error" title="unrest.UnRest.raise_error"><code>raise_error</code></a>.</p>
-<h3 id="wrap_route">wrap_route<a class="headerlink" href="#wrap_route" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.wrap_route(self, method, route, manual_commit=False)
+<h3 id="route">route<a class="headerlink" href="#route" title="Permanent link"></a></h3>
+<pre><code class="language-python">Rest.route(method, request)
 </code></pre>
-
-<p>Wrap a method route method ( <a href="#get"><code>get</code></a>, <a href="#post"><code>post</code></a>, <a href="#put"><code>put</code></a>, <a href="#delete"><code>delete</code></a>, <a href="#patch"><code>patch</code></a>, <a href="#options"><code>options</code></a> )
-with a function that takes a <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a> as parameters and:</p>
-<ul>
-<li>converts request parameters into primary keys values</li>
-<li>calls the current idiom <a href="../idiom/#request_to_payload" title="unrest.idiom.Idiom.request_to_payload"><code>request_to_payload</code></a></li>
-<li>checks auth with <code>read_auth</code>, <code>write_auth</code> and <code>auth</code> if defined</li>
-<li>calls the wrapped <code>method</code> with the previously obtained payload</li>
-<li>commits the session if <code>manual_commit</code> is False and method is amongst
-    modification ones</li>
-<li>and finally calls <a href="../idiom/#data_to_response" title="unrest.idiom.Idiom.data_to_response"><code>data_to_response</code></a> with the
+<p>This is the entry point for any route method ( <a href="#get"><code>get</code></a>, <a href="#post"><code>post</code></a>, <a href="#put"><code>put</code></a>,</p>
+<h1 id="delete-patch-options-it-takes-the-request-and">delete, <a href="#patch"><code>patch</code></a>, <a href="#options"><code>options</code></a> ), it takes the <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a> and<a class="headerlink" href="#delete-patch-options-it-takes-the-request-and" title="Permanent link"></a></h1>
+<p>returns the <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a>.</p>
+<p>Exhaustively it
+- converts request parameters into primary keys values
+- calls the current idiom <a href="../idiom/#request_to_payload" title="unrest.idiom.Idiom.request_to_payload"><code>request_to_payload</code></a>
+- checks auth with <code>read_auth</code>, <code>write_auth</code> and <code>auth</code> if defined
+- calls the route associated with the HTTP <code>method</code>, either by default
+    or overidden with <a href="#declare"><code>declare</code></a>, with the previously obtained payload
+- commits the session if <code>manual_commit</code> is <code>False</code> and method is
+    amongst modification ones
+- and finally calls <a href="../idiom/#data_to_response" title="unrest.idiom.Idiom.data_to_response"><code>data_to_response</code></a> with the
     return value of the wrapped function to return
-    the <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a></li>
-</ul>
+    the <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a></p>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><strong>method</strong>: The current http method</li>
-<li><strong>route</strong>: The route associated with this http method</li>
-<li><strong>manual_commit</strong>: Set this to True to prevent auto commit after route call</li>
+<li><strong>method</strong>: The HTTP method which is curried in a partial</li>
+<li><strong>request</strong>: The current <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a></li>
+</ul>
+<p><strong>Returns</strong></p>
+<p>The <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> of this request</p>
+<h3 id="wrap_auth_route">wrap_auth_route<a class="headerlink" href="#wrap_auth_route" title="Permanent link"></a></h3>
+<pre><code class="language-python">Rest.wrap_auth_route(method, route)
+</code></pre>
+<p>This takes a route and apply auth wrappers around it.</p>
+<h3 id="inner_route">inner_route<a class="headerlink" href="#inner_route" title="Permanent link"></a></h3>
+<pre><code class="language-python">Rest.inner_route(request, payload, **pks)
+</code></pre>
+<p>This is the inner route wrapped by the auth wrappers.
+It takes the request and the deserialized payload/primary keys.</p>
+<p><strong>Arguments</strong></p>
+<ul>
+<li><strong>request</strong>: The current <a href="../util/#request" title="unrest.util.Request"><code>Request</code></a></li>
+<li><strong>payload</strong>: The deserialized payload of this request</li>
+<li><strong>**pks</strong>: The deserialized primary keys if any</li>
 </ul>
 <p><strong>Returns</strong></p>
 <p>The <a href="../util/#response" title="unrest.util.Response"><code>Response</code></a> of this request</p>
 <h3 id="register_method">register_method<a class="headerlink" href="#register_method" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.register_method(self, method, route=None, manual_commit=False)
+<pre><code class="language-python">Rest.register_method(method)
 </code></pre>
-
-<p>Register a <code>route</code> function associated with the http <code>method</code>.</p>
+<p>Tells the framework to register the <a href="#route"><code>route</code></a> function or an overidden one
+associated with the http <code>method</code>.</p>
 <p><strong>Arguments</strong></p>
 <ul>
 <li><strong>method</strong>: The http method to register the route with</li>
-<li><strong>route</strong>: The route function, defaults to this rest.{method}</li>
-<li><strong>manual_commit</strong>: Set this to True to prevent auto commit after route call</li>
 </ul>
 <h3 id="has">has<a class="headerlink" href="#has" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.has(self, pks)
+<pre><code class="language-python">Rest.has(pks)
 </code></pre>
-
 <p>Returns whether the pks dict has values in it.</p>
 <h3 id="get_from_pk">get_from_pk<a class="headerlink" href="#get_from_pk" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.get_from_pk(self, query, **pks)
+<pre><code class="language-python">Rest.get_from_pk(query, **pks)
 </code></pre>
-
 <p>Get the item from <code>query</code> that has <code>**pks</code> or None if not found.</p>
 <h3 id="get_all_from_pks">get_all_from_pks<a class="headerlink" href="#get_all_from_pks" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.get_all_from_pks(self, query, items_pks)
+<pre><code class="language-python">Rest.get_all_from_pks(query, items_pks)
 </code></pre>
-
 <p>Get all items from <code>query</code> correponding to the primary keys <code>items_pks</code>
 in one query.</p>
 <h3 id="query_request">query_request<a class="headerlink" href="#query_request" title="Permanent link"></a></h3>
-<pre><code class="python">Rest.query_request(self, request)
+<pre><code class="language-python">Rest.query_request(*args, **kwds)
 </code></pre>
-
 <p>Context manager that sets the <code>_query_alterer</code> to the idiom alter_query
 and restore it to identity at exit.</p>
               
@@ -506,7 +549,7 @@ and restore it to identity at exit.</p>
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
 </footer>
       
         </div>
@@ -516,7 +559,7 @@ and restore it to identity at exit.</p>
 
   </div>
 
-  <div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" aria-label="versions">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/Kozea/unrest/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -532,6 +575,11 @@ and restore it to identity at exit.</p>
     <script>var base_url = '..';</script>
     <script src="../js/theme.js" defer></script>
       <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
 
 </body>
 </html>
