@@ -15,7 +15,7 @@
 * Add a `json_server` idiom (`JsonServerIdiom`).
 * Add a native python framework implementation (`HTTPServerFramework`).
 * Add a tornado framework implementation (`TornadoFramework`).
-* Add a sanic implementation (`TornadoFramework`).
+* Add a sanic implementation (`SanicFramework`).
 * Add cleaner examples.
 * Expire items after add/edit to refresh `column_property` and externally dependent columns (i.e. FDW).
 * Properties can now be used in `primary_keys`.
