@@ -65,7 +65,7 @@ setup(
     test_requires=tests_requirements,
     extras_require={
         'test': tests_requirements,
-        'docs': ['pydoc-markdown'],
+        'docs': ['pydoc-markdown<3.0'],
         'flask': ['flask'],
         'tornado': ['tornado'],
         'yaml': ['pyyaml'],
