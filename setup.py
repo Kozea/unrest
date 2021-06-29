@@ -40,7 +40,7 @@ tests_requirements = [
     'flask',
     'flask-sqlalchemy',
     'tornado',
-    'sanic',
+    'sanic<21',
     'aiohttp',
     'pyyaml',
 ]
