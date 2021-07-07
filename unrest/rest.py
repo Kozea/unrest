@@ -526,10 +526,10 @@ class Rest(object):
 
         if isinstance(items, Query):
             rv['occurences'] = items.offset(None).limit(None).count()
-            if items._offset is not None:
-                rv['offset'] = items._offset
-            if items._limit is not None:
-                rv['limit'] = items._limit
+            if items.selectable._offset is not None:
+                rv['offset'] = items.selectable._offset
+            if items.selectable._limit is not None:
+                rv['limit'] = items.selectable._limit
 
         rv['objects'] = [self.serialize(item) for item in items]
         if 'occurences' not in rv:
