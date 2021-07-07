@@ -1,18 +1,18 @@
-dist: xenial
+dist: focal
 
 language: python
 
 python:
   - 3.6
   - 3.7
-  # - 3.8-dev
-  # - nightly
+  - 3.8
+  - 3.9
 
 install:
   - pip install --upgrade --upgrade-strategy eager pip setuptools coveralls
   - pip install --upgrade --upgrade-strategy eager .[test]
 
-script: py.test --isort --flake8 --cov-report= --cov=unrest
+script: pytest --isort --flake8 --cov-report= --cov=unrest
 
 after_success: coveralls
 
