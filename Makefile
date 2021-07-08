@@ -3,9 +3,12 @@ include Makefile.config
 
 all: install lint check-outdated check
 
-install:
-	test -d $(VENV) || virtualenv $(VENV)
-	$(PIP) install --upgrade --no-cache pip setuptools -e .[test,docs,flask,tornado,yaml]
+install-venv:
+	test -d $(VENV) || python -m venv .venv
+	$(PIP) install --upgrade pip flit
+
+install: install-venv
+	$(FLIT) install -s
 
 clean:
 	rm -fr $(VENV)
@@ -34,13 +37,20 @@ docs-debug:
 run:
 	FLASK_DEBUG=1 FLASK_APP=unrest/tests/flask/demo.py $(VENV)/bin/flask run -h localhost -p 9996
 
-release: check docs
-	rm -fr dist
+build:
+	$(FLIT) build
+
+clean-build:
+	rm -rf dist/*
+
+release: check docs clean-build
+ifndef RELEASE_VERSION
+	$(error RELEASE_VERSION is undefined)
+endif
 	git pull
-	$(eval VERSION := $(shell PROJECT_NAME=$(PROJECT_NAME) $(VENV)/bin/devcore bump $(LEVEL)))
-	git commit -am "Bump $(VERSION)"
-	git tag $(VERSION)
-	$(PYTHON) setup.py sdist bdist_wheel --universal
-	twine upload dist/*
+	sed -i "s/version = .*/version = '$(RELEASE_VERSION)'/" pyproject.toml
+	git commit -am "Bump $(RELEASE_VERSION)"
+	git tag $(RELEASE_VERSION)
+	$(FLIT) publish
 	git push
 	git push --tags

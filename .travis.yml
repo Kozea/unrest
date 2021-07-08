@@ -9,8 +9,8 @@ python:
   - 3.9
 
 install:
-  - pip install --upgrade --upgrade-strategy eager pip setuptools coveralls
-  - pip install --upgrade --upgrade-strategy eager .[test]
+  - pip install --upgrade pip flit
+  - flit install
 
 script: pytest --isort --flake8 --cov-report= --cov=unrest
 
